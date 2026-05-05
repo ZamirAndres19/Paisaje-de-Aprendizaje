@@ -5,6 +5,76 @@
 
 'use strict';
 
+// ============================================================
+// SISTEMA DE AUDIO CENTRALIZADO — Solo 1 audio a la vez
+// ============================================================
+
+const AUDIO = {
+  muted: false,
+  current: null,       // Audio que suena actualmente
+  currentId: null,     // ID del audio actual ('boot', 'map', 'sfx')
+  _wasPlayingId: null, // Para mute/unmute
+
+  // Detiene cualquier audio que esté sonando
+  stopAll() {
+    if (this.current) {
+      this.current.pause();
+      this.current.currentTime = 0;
+    }
+    this.current = null;
+    this.currentId = null;
+  },
+
+  // Reproduce un audio (detiene el anterior primero)
+  play(id, src, opts) {
+    if (this.muted) return;
+    this.stopAll();
+    const audio = new Audio(src);
+    audio.loop   = opts && opts.loop  || false;
+    audio.volume = opts && opts.volume || 0.5;
+    audio.play().catch(() => {});
+    this.current   = audio;
+    this.currentId = id;
+    return audio;
+  },
+
+  // Detiene un audio específico (solo si es el actual)
+  stop(id) {
+    if (this.currentId === id || !id) {
+      this.stopAll();
+    }
+  },
+
+  // Pausa sin resetear posición (para mute)
+  pauseCurrent() {
+    if (this.current && !this.current.paused) {
+      this.current.pause();
+    }
+  },
+
+  // Reanuda el audio pausado
+  resumeCurrent() {
+    if (this.current && this.current.paused && !this.muted) {
+      this.current.play().catch(() => {});
+    }
+  },
+
+  toggleMute() {
+    this.muted = !this.muted;
+    if (this.muted) {
+      this._wasPlayingId = (this.current && !this.current.paused) ? this.currentId : null;
+      this.pauseCurrent();
+    } else {
+      if (this._wasPlayingId && this.current) {
+        this.resumeCurrent();
+      }
+    }
+    const btn = document.getElementById('audio-toggle-btn');
+    if (btn) btn.textContent = this.muted ? '🔇 SIN AUDIO' : '🔊 AUDIO';
+  }
+};
+
+
 // --- ESTADO GLOBAL ---
 let oxygen = 100;
 let gameActive = true;
@@ -15,8 +85,8 @@ let lastDocTitle = null;
 
 // Control de animación de boot
 let bootSkipped = false;
-let TYPE_SPEED_ACTIVE = 18;
-const TYPE_SPEED = 18;
+let TYPE_SPEED_ACTIVE = 8;
+const TYPE_SPEED = 8;
 
 // ============================================================
 // VIDEOS DE REFERENCIA POR NODO
@@ -517,26 +587,62 @@ function startBoot() {
   const bootBtn  = document.getElementById('boot-btn');
   if (!bootText) return;
   bootSkipped = false;
-  TYPE_SPEED_ACTIVE = TYPE_SPEED;
+  window._bootAccelerated = false;
   bootText.innerHTML = '';
   bootBtn.classList.add('hidden');
-  typeInto(bootText, GUION.boot, () => {
-    if (!bootSkipped) bootBtn.classList.remove('hidden');
-  });
+
+  // Inicia el audio de escritura
+  const bootAudio = AUDIO.play('boot', 'assets/sounds/escritura.mp3', { loop: true, volume: 0.45 });
+
+  // Calcula delay por carácter para que el texto dure igual que el audio
+  function beginTyping() {
+    const totalTicks = GUION.boot.length + 1;
+    const dur = (bootAudio && bootAudio.duration > 0)
+      ? bootAudio.duration
+      : null;
+
+    TYPE_SPEED_ACTIVE = dur
+      ? Math.max(1, Math.floor((dur * 1000) / totalTicks))
+      : TYPE_SPEED;
+
+    typeInto(bootText, GUION.boot, () => {
+      AUDIO.stop('boot');
+      if (!bootSkipped) bootBtn.classList.remove('hidden');
+    });
+  }
+
+  // Si los metadatos del audio ya están listos, arranca directo
+  if (bootAudio && bootAudio.duration > 0) {
+    beginTyping();
+  } else if (bootAudio) {
+    bootAudio.addEventListener('loadedmetadata', beginTyping, { once: true });
+    setTimeout(() => { if (!bootText.innerHTML) beginTyping(); }, 1500);
+  } else {
+    beginTyping();
+  }
 }
 
 function skipIntro() {
   bootSkipped = true;
+  if (!AUDIO.muted) {
+    const sfx = new Audio('assets/sounds/boton-saltar.mp3');
+    sfx.volume = 0.9;
+    sfx.play().catch(() => {});
+  }
   goToMap();
 }
 
 function accelerateBoot() {
-  TYPE_SPEED_ACTIVE = 2;
+  TYPE_SPEED_ACTIVE = 1;
+  window._bootAccelerated = true; // Acelera TODO, incluyendo la primera línea
 }
 
 function goToMap() {
+  AUDIO.stopAll();
   showScene('map');
   updateMapUI();
+  // Inicia música del mapa
+  AUDIO.play('map', 'assets/sounds/map-theme.mp3', { loop: true, volume: 0.35 });
 }
 
 // ============================================================
@@ -603,6 +709,8 @@ function tryZone(id) {
 function goToScene(id) {
   const node = GUION.nodes[id];
   if (!node) return;
+  // Suena el botón de acceder (reemplaza toda música anterior)
+  AUDIO.play('sfx', 'assets/sounds/boton-acceder.mp3', { volume: 0.8 });
   currentNode = node;
   enterNode(node);
 }
@@ -1092,25 +1200,38 @@ function typeInto(el, text, callback, useHtml) {
   el.innerHTML = '';
   const parts = text.split('\n');
   let partIdx = 0, charIdx = 0;
+  // Primera línea: 1 carácter a la vez, lento (75ms). Resto: 3 por tick, rápido.
+  // Si se aceleró, todo va a máxima velocidad.
+  function charsPerTick() { return (window._bootAccelerated || partIdx > 0) ? 2 : 1; }
+  function tickDelay()    { return (window._bootAccelerated || partIdx > 0) ? TYPE_SPEED_ACTIVE : 75; }
+
+  // Auto-scroll solo si el usuario está cerca del fondo
+  function smartScroll() {
+    if (el.scrollTop === undefined) return;
+    const threshold = 60;
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
+    if (atBottom) el.scrollTop = el.scrollHeight;
+  }
 
   function tick() {
     if (bootSkipped && el.id === 'boot-text') return;
-    if (partIdx >= parts.length) {
-      if (callback) callback();
-      return;
+
+    for (let i = 0; i < charsPerTick(); i++) {
+      if (partIdx >= parts.length) {
+        if (callback) callback();
+        return;
+      }
+      const line = parts[partIdx];
+      if (charIdx < line.length) {
+        el.innerHTML += line.charAt(charIdx);
+        charIdx++;
+      } else {
+        el.innerHTML += '<br>';
+        partIdx++; charIdx = 0;
+      }
     }
-    const line = parts[partIdx];
-    if (charIdx < line.length) {
-      el.innerHTML += line.charAt(charIdx);
-      charIdx++;
-      if (el.scrollTop !== undefined) el.scrollTop = el.scrollHeight;
-      setTimeout(tick, TYPE_SPEED_ACTIVE);
-    } else {
-      el.innerHTML += '<br>';
-      partIdx++; charIdx = 0;
-      if (el.scrollTop !== undefined) el.scrollTop = el.scrollHeight;
-      setTimeout(tick, TYPE_SPEED_ACTIVE);
-    }
+    smartScroll();
+    setTimeout(tick, tickDelay());
   }
   tick();
 }
@@ -1132,7 +1253,128 @@ function renderControls(actions) {
 // INIT
 // ============================================================
 
-window.addEventListener('DOMContentLoaded', () => {
+function injectAudioToggle() {
+  // Inyecta botón mute/unmute flotante en la esquina
+  const btn = document.createElement('button');
+  btn.id = 'audio-toggle-btn';
+  btn.textContent = '🔊 AUDIO';
+  btn.title = 'Activar/Desactivar sonido';
+  btn.style.cssText = [
+    'position:fixed',
+    'bottom:16px',
+    'right:16px',
+    'z-index:9999',
+    'background:rgba(0,0,0,0.75)',
+    'color:var(--c-green,#00ff41)',
+    'border:1px solid var(--c-green,#00ff41)',
+    'font-family:"Share Tech Mono",monospace',
+    'font-size:0.7rem',
+    'letter-spacing:2px',
+    'padding:6px 12px',
+    'cursor:pointer',
+    'border-radius:2px',
+    'opacity:0.75',
+    'transition:opacity 0.2s'
+  ].join(';');
+  btn.addEventListener('mouseenter', () => btn.style.opacity = '1');
+  btn.addEventListener('mouseleave', () => btn.style.opacity = '0.75');
+  btn.addEventListener('click', () => AUDIO.toggleMute());
+  document.body.appendChild(btn);
+}
+
+// ============================================================
+// MODAL SALIR / VOLVER A INTRO
+// ============================================================
+
+function confirmExit() {
+  const modal   = document.getElementById('modal-exit');
+  const title   = document.getElementById('modal-exit-title');
+  const msg     = document.getElementById('modal-exit-msg');
+  const confirm = document.getElementById('modal-exit-confirm-btn');
+  if (!modal) return;
+  title.textContent  = '⚠ ADVERTENCIA DEL SISTEMA';
+  msg.innerHTML      = 'Esta acción terminará la sesión.<br><strong>Perderás todo el progreso actual.</strong>';
+  confirm.textContent = '✕ SALIR DEL JUEGO';
+  confirm.onclick     = () => {
+    if (!AUDIO.muted) { const s = new Audio('assets/sounds/boton-saltar.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
+    setTimeout(() => location.reload(), 300);
+  };
+  modal.style.display = 'flex';
+}
+
+function confirmGoIntro() {
+  const modal   = document.getElementById('modal-exit');
+  const title   = document.getElementById('modal-exit-title');
+  const msg     = document.getElementById('modal-exit-msg');
+  const confirm = document.getElementById('modal-exit-confirm-btn');
+  if (!modal) return;
+  title.textContent  = '◀◀ VOLVER A LA INTRODUCCIÓN';
+  msg.innerHTML      = 'Regresarás a la pantalla de inicio.<br><strong>Perderás todo el progreso actual.</strong>';
+  confirm.textContent = '◀◀ VOLVER AL INICIO';
+  confirm.onclick     = () => {
+    if (!AUDIO.muted) { const s = new Audio('assets/sounds/boton-saltar.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
+    closeExitModal();
+    AUDIO.stopAll();
+    // Reinicia estado del juego
+    oxygen = 100; gameActive = true; currentNode = null;
+    completedNodes = []; lastDocContent = null; lastDocTitle = null;
+    // Muestra la pantalla de audio prompt de nuevo
+    const prompt = document.getElementById('audio-prompt');
+    if (prompt) { prompt.style.opacity = '1'; prompt.style.display = 'flex'; }
+    document.querySelectorAll('.scene').forEach(s => {
+      s.classList.remove('active'); s.style.display = 'none';
+    });
+  };
+  modal.style.display = 'flex';
+}
+
+function closeExitModal() {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/boton-saltar.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
+  const modal = document.getElementById('modal-exit');
+  if (modal) modal.style.display = 'none';
+}
+
+// Función global para el botón de inicio — suena el SFX
+function playBootBtn() {
+  // Reproduce el sonido del botón de forma independiente (no lo mata stopAll)
+  if (!AUDIO.muted) {
+    const sfx = new Audio('assets/sounds/boton-iniciar.mp3');
+    sfx.volume = 0.9;
+    sfx.play().catch(() => {});
+  }
+}
+
+// Arranca desde el prompt de audio — NO inicia el boot directamente
+function startWithAudio() {
+  const prompt = document.getElementById('audio-prompt');
+  if (prompt) {
+    prompt.style.opacity = '0';
+    prompt.style.transition = 'opacity 0.4s';
+    setTimeout(() => { prompt.style.display = 'none'; }, 400);
+  }
+  AUDIO.muted = false;
   showScene('boot');
   startBoot();
+}
+
+function startWithoutAudio() {
+  const prompt = document.getElementById('audio-prompt');
+  if (prompt) {
+    prompt.style.opacity = '0';
+    prompt.style.transition = 'opacity 0.4s';
+    setTimeout(() => { prompt.style.display = 'none'; }, 400);
+  }
+  AUDIO.muted = true;
+  showScene('boot');
+  startBoot();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  injectAudioToggle();
+  // Oculta la escena de boot hasta que el usuario elija en el prompt
+  const bootScene = document.getElementById('scene-boot');
+  if (bootScene) {
+    bootScene.classList.remove('active');
+    bootScene.style.display = 'none';
+  }
 });

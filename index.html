@@ -12,6 +12,25 @@
 </head>
 <body>
 
+  <!-- ===== AUDIO PROMPT — aparece ANTES del boot ===== -->
+  <div id="audio-prompt" class="audio-prompt-overlay">
+    <div class="audio-prompt-box">
+      <div class="audio-prompt-logo">▲ USCSS NOSTROMO</div>
+      <div class="audio-prompt-icon">🔊</div>
+      <div class="audio-prompt-title">PARA UNA MEJOR EXPERIENCIA</div>
+      <div class="audio-prompt-msg">Activa el audio para vivir la inmersión completa de la misión</div>
+      <div class="audio-prompt-actions">
+        <button id="btn-audio-yes" class="audio-prompt-btn primary" onclick="startWithAudio()">
+          🔊 ACTIVAR AUDIO E INICIAR
+        </button>
+        <button id="btn-audio-no" class="audio-prompt-btn ghost" onclick="startWithoutAudio()">
+          🔇 CONTINUAR SIN AUDIO
+        </button>
+      </div>
+      <div class="audio-prompt-note">Puedes cambiar esto en cualquier momento con el botón de audio</div>
+    </div>
+  </div>
+
   <div id="scene-boot" class="scene active">
     <div class="scanlines-global"></div>
     <div class="boot-actions-top">
@@ -25,7 +44,7 @@
       <div id="boot-text" class="boot-text"></div>
       <div class="boot-bottom-actions">
         <button id="boot-fast-btn" class="btn-secondary-action" onclick="accelerateBoot()">⚡ ACELERAR TEXTO</button>
-        <button id="boot-btn" class="btn-boot hidden" onclick="goToMap()">[ PRESIONA ENTER PARA INICIAR EL RESCATE DEL SISTEMA ]</button>
+        <button id="boot-btn" class="btn-boot hidden" onclick="playBootBtn(); goToMap()">INICIAR RESCATE DE SISTEMA</button>
       </div>
     </div>
   </div>
@@ -46,6 +65,10 @@
       <div class="hud-section">
         <span class="hud-label">FECHA ESTELAR</span>
         <span class="hud-value">2122.06.03</span>
+      </div>
+      <div class="hud-nav-btns">
+        <button class="btn-hud-nav" onclick="confirmGoIntro()" title="Volver a la introducción">◀◀</button>
+        <button class="btn-hud-exit" onclick="confirmExit()" title="Salir del juego">✕</button>
       </div>
     </div>
 
@@ -143,10 +166,13 @@
     <div class="node-header" id="node-header">
       <button class="btn-back" onclick="goToMap()">◀ MAPA</button>
       <div id="node-title-bar" class="node-title-bar">01: PUENTE DE MANDO</div>
-      <div class="node-o2-wrap">
-        <span class="node-o2-label">O₂</span>
-        <div class="node-o2-bar-outer"><div id="node-o2-bar" class="node-o2-bar"></div></div>
-        <span id="node-o2-val" class="node-o2-val">100%</span>
+      <div class="node-header-right">
+        <div class="node-o2-wrap">
+          <span class="node-o2-label">O₂</span>
+          <div class="node-o2-bar-outer"><div id="node-o2-bar" class="node-o2-bar"></div></div>
+          <span id="node-o2-val" class="node-o2-val">100%</span>
+        </div>
+        <button class="btn-hud-exit node-exit-btn" onclick="confirmExit()" title="Salir">✕</button>
       </div>
     </div>
 
@@ -299,6 +325,19 @@
         <div id="ending-grade" class="ending-grade"></div>
         <div class="ending-detail" id="ending-detail"></div>
         <button class="btn-restart" onclick="location.reload()">[ REINICIAR SIMULACIÓN ]</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL CONFIRMAR SALIDA ===== -->
+  <div id="modal-exit" class="modal-overlay" style="display:none">
+    <div class="modal-exit-box">
+      <div class="modal-exit-icon">⚠</div>
+      <div class="modal-exit-title" id="modal-exit-title">ADVERTENCIA DEL SISTEMA</div>
+      <div class="modal-exit-msg" id="modal-exit-msg">Esta acción terminará la sesión.<br>Perderás todo el progreso actual.</div>
+      <div class="modal-exit-actions">
+        <button class="modal-exit-btn confirm" id="modal-exit-confirm-btn">CONFIRMAR</button>
+        <button class="modal-exit-btn cancel" onclick="closeExitModal()">CANCELAR</button>
       </div>
     </div>
   </div>
