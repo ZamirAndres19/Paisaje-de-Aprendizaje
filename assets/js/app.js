@@ -85,8 +85,8 @@ let lastDocTitle = null;
 
 // Control de animación de boot
 let bootSkipped = false;
-let TYPE_SPEED_ACTIVE = 8;
-const TYPE_SPEED = 8;
+let TYPE_SPEED_ACTIVE = 1;
+const TYPE_SPEED = 1;
 
 // ============================================================
 // VIDEOS DE REFERENCIA POR NODO
@@ -820,6 +820,7 @@ function closeVideoModal() {
 // ============================================================
 
 function openDoc(node) {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/boton-doc.mp3'); s.volume=0.8; s.play().catch(()=>{}); }
   lastDocContent = node.docContent;
   lastDocTitle   = node.docTitle;
 
@@ -1202,7 +1203,7 @@ function typeInto(el, text, callback, useHtml) {
   let partIdx = 0, charIdx = 0;
   // Primera línea: 1 carácter a la vez, lento (75ms). Resto: 3 por tick, rápido.
   // Si se aceleró, todo va a máxima velocidad.
-  function charsPerTick() { return (window._bootAccelerated || partIdx > 0) ? 2 : 1; }
+  function charsPerTick() { return (window._bootAccelerated || partIdx > 0) ? 4 : 1; }
   function tickDelay()    { return (window._bootAccelerated || partIdx > 0) ? TYPE_SPEED_ACTIVE : 75; }
 
   // Auto-scroll solo si el usuario está cerca del fondo
