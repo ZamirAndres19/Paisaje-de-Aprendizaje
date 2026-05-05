@@ -98,12 +98,12 @@ const TYPE_SPEED = 1;
 // ============================================================
 const NODE_VIDEOS = {
   bridge: {
-    youtubeId: 'p7YpVl35pac',  // <-- Video de instalación Windows Server
+    youtubeId: 'P0YuVZj3ny0',  // <-- Video de instalación Windows Server
     title: 'TRANSMISION INTERCEPTADA — INSTALACION WINDOWS SERVER',
     subtitle: 'Referencia técnica clasificada W-Y · Ver antes de proceder'
   },
   lab: {
-    youtubeId: 'p7YpVl35pac',    // <-- ID del video de instalación Ubuntu Server
+    youtubeId: '2HjPb9xT8sI',    // <-- ID del video de instalación Ubuntu Server
     title: 'TRANSMISION INTERCEPTADA — INSTALACION UBUNTU SERVER',
     subtitle: 'Diario recuperado de Ash · Ver antes de proceder'
   }
