@@ -64,6 +64,7 @@ const AUDIO = {
     if (this.muted) {
       this._wasPlayingId = (this.current && !this.current.paused) ? this.currentId : null;
       this.pauseCurrent();
+      if (typeof currentDocAudio !== 'undefined' && currentDocAudio) currentDocAudio.pause();
     } else {
       if (this._wasPlayingId && this.current) {
         this.resumeCurrent();
@@ -82,6 +83,7 @@ let currentNode = null;
 let completedNodes = [];
 let lastDocContent = null;
 let lastDocTitle = null;
+let currentDocAudio = null;
 
 // Control de animación de boot
 let bootSkipped = false;
@@ -638,6 +640,7 @@ function accelerateBoot() {
 }
 
 function goToMap() {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   AUDIO.stopAll();
   showScene('map');
   updateMapUI();
@@ -774,6 +777,7 @@ function setPhasePill(phase) {
 // ============================================================
 
 function openVideoModal(nodeId) {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/efecto-manual.mp3'); s.volume=0.8; s.play().catch(()=>{}); }
   const data = NODE_VIDEOS[nodeId];
   if (!data) return;
 
@@ -809,6 +813,7 @@ function openVideoModal(nodeId) {
 }
 
 function closeVideoModal() {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   const overlay   = document.getElementById('modal-video');
   const frameWrap = document.getElementById('video-frame-wrap');
   if (overlay)   overlay.style.display = 'none';
@@ -820,7 +825,8 @@ function closeVideoModal() {
 // ============================================================
 
 function openDoc(node) {
-  if (!AUDIO.muted) { const s = new Audio('assets/sounds/boton-doc.mp3'); s.volume=0.8; s.play().catch(()=>{}); }
+  if (currentDocAudio) { currentDocAudio.pause(); currentDocAudio.currentTime = 0; }
+  if (!AUDIO.muted) { currentDocAudio = new Audio('assets/sounds/efecto-manual.mp3'); currentDocAudio.volume=0.8; currentDocAudio.play().catch(()=>{}); }
   lastDocContent = node.docContent;
   lastDocTitle   = node.docTitle;
 
@@ -837,17 +843,29 @@ function openDoc(node) {
 }
 
 function closeDoc() {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
+  if (currentDocAudio) { currentDocAudio.pause(); currentDocAudio.currentTime = 0; currentDocAudio = null; }
   const overlay = document.getElementById('modal-doc');
   if (overlay) overlay.style.display = 'none';
 }
 
+function skipTheory() {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
+  closeDoc();
+  if (currentNode) startFaseB(currentNode, 0);
+}
+
 function reopenDoc() {
-  if (!lastDocContent) return;
+  if (currentDocAudio) { currentDocAudio.pause(); currentDocAudio.currentTime = 0; }
+  if (!AUDIO.muted) { currentDocAudio = new Audio('assets/sounds/efecto-manual.mp3'); currentDocAudio.volume=0.8; currentDocAudio.play().catch(()=>{}); }
+  const docBody = lastDocContent || (currentNode ? currentNode.docContent : null);
+  const docTitle = lastDocTitle || (currentNode ? currentNode.docTitle : null);
+  if (!docBody) return;
   const overlay = document.getElementById('modal-doc');
   const title   = document.getElementById('modal-doc-title');
   const body    = document.getElementById('modal-doc-body');
-  title.textContent = lastDocTitle;
-  body.innerHTML    = lastDocContent;
+  title.textContent = docTitle;
+  body.innerHTML    = docBody;
   overlay.style.display = 'flex';
 }
 
@@ -865,6 +883,7 @@ let faseBNode = null;
 let faseBAwaitingNext = false;
 
 function startFaseB(node, stepIndex) {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/efecto-manual.mp3'); s.volume=0.8; s.play().catch(()=>{}); }
   closeDoc();
   faseBNode = node;
   faseBStep = stepIndex;
@@ -918,6 +937,7 @@ function handlePracticeAnswer(opt, idx, node, stepIndex) {
   btns.forEach(b => b.disabled = true);
 
   if (opt.correct) {
+    if (!AUDIO.muted) { const s = new Audio('assets/sounds/check.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
     btns[idx].classList.add('correct');
     feedbackEl.className   = 'practice-feedback';
     feedbackEl.textContent = '> CORRECTO. Continuando...';
@@ -937,6 +957,7 @@ function handlePracticeAnswer(opt, idx, node, stepIndex) {
       }
     }, 900);
   } else {
+    if (!AUDIO.muted) { const s = new Audio('assets/sounds/re-mal.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
     btns[idx].classList.add('wrong');
     feedbackEl.className   = 'practice-feedback error';
     feedbackEl.textContent = '> ERROR: ' + (opt.msg || 'Respuesta incorrecta. Intente de nuevo.');
@@ -950,9 +971,16 @@ function handlePracticeAnswer(opt, idx, node, stepIndex) {
 }
 
 function skipPractice() {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   const overlay = document.getElementById('modal-practice');
   if (overlay) overlay.style.display = 'none';
   if (faseBNode) startQuizPhase(faseBNode);
+}
+
+function closePractice() {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
+  const overlay = document.getElementById('modal-practice');
+  if (overlay) overlay.style.display = 'none';
 }
 
 // ============================================================
@@ -976,7 +1004,7 @@ function openQuiz(node) {
   const timerWrap = document.getElementById('quiz-timer-wrap');
 
   labelEl.textContent = 'PROTOCOLO — ' + node.title;
-  if (timerWrap) timerWrap.style.display = node.useTimer ? 'flex' : 'none';
+  if (timerWrap) timerWrap.style.display = 'flex';
 
   overlay.style.display = 'flex';
 
@@ -985,12 +1013,12 @@ function openQuiz(node) {
     current: 0,
     onComplete: () => nodeSuccess(node),
     damage: node.quizDamage,
-    useTimer: node.useTimer,
+    useTimer: true,
     timer: null
   };
 
   renderQuizQuestion();
-  if (node.useTimer) startQuizTimer();
+  startQuizTimer();
 }
 
 function renderQuizQuestion() {
@@ -1023,6 +1051,7 @@ function handleQuizAnswer(opt, idx) {
   btns.forEach(b => b.disabled = true);
 
   if (opt.correct) {
+    if (!AUDIO.muted) { const s = new Audio('assets/sounds/check.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
     btns[idx].classList.add('correct');
     feedbackEl.className   = 'quiz-feedback';
     feedbackEl.textContent = '> RESPUESTA CORRECTA.';
@@ -1078,6 +1107,7 @@ function clearQuizTimer() {
 // ============================================================
 
 function nodeSuccess(node) {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/nivel-desbloqueado.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   completedNodes.push(node.id);
   updateProgressSidebar();
   updateO2();
@@ -1119,10 +1149,34 @@ function showEnding() {
     setTimeout(() => {
       flashEl.classList.add('hidden');
       contentEl.classList.remove('hidden');
-      const grade = Math.max(0, Math.min(10, (oxygen / 100) * 10)).toFixed(1);
-      textEl.textContent   = GUION.ending;
-      gradeEl.textContent  = grade + ' / 10';
+      
+      gradeEl.style.display = 'none';
+      detailEl.style.display = 'none';
+      const restartBtn = contentEl.querySelector('.btn-restart');
+      if (restartBtn) restartBtn.style.display = 'none';
+
+      const gradeVal = Math.max(0, Math.min(10, (oxygen / 100) * 10));
+      gradeEl.textContent  = gradeVal.toFixed(1) + ' / 10';
+      if (gradeVal >= 8.0) {
+        gradeEl.style.color = 'var(--c-green)';
+        gradeEl.style.textShadow = '0 0 30px var(--c-green)';
+      } else if (gradeVal >= 6.0) {
+        gradeEl.style.color = 'var(--c-gold)';
+        gradeEl.style.textShadow = '0 0 30px var(--c-gold)';
+      } else {
+        gradeEl.style.color = 'var(--c-red)';
+        gradeEl.style.textShadow = '0 0 30px var(--c-red)';
+      }
       detailEl.textContent = `OXIGENO FINAL: ${oxygen}% — MODULOS COMPLETADOS: ${completedNodes.length}/4`;
+
+      AUDIO.play('boot', 'assets/sounds/escritura.mp3', { loop: true, volume: 0.45 });
+      typeInto(textEl, GUION.ending, () => {
+        AUDIO.stop('boot');
+        if (!AUDIO.muted) { const s = new Audio('assets/sounds/victoria.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
+        gradeEl.style.display = 'block';
+        detailEl.style.display = 'block';
+        if (restartBtn) restartBtn.style.display = 'inline-block';
+      }, true);
     }, 800);
   }, 1200);
 }
@@ -1161,10 +1215,24 @@ function updateO2() {
 
 function updateGradePreview() {
   const el = document.getElementById('grade-preview');
-  if (el) el.textContent = (oxygen / 10).toFixed(1) + ' / 10';
+  if (!el) return;
+  const val = oxygen / 10;
+  el.textContent = val.toFixed(1) + ' / 10';
+  
+  if (val >= 8.0) {
+    el.style.color = 'var(--c-green)';
+    el.style.textShadow = '0 0 16px var(--c-green)';
+  } else if (val >= 6.0) {
+    el.style.color = 'var(--c-gold)';
+    el.style.textShadow = '0 0 16px var(--c-gold)';
+  } else {
+    el.style.color = 'var(--c-red)';
+    el.style.textShadow = '0 0 16px var(--c-red)';
+  }
 }
 
 function showDamageToast(msg, amount) {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/incorrecto.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   const toast = document.getElementById('damage-toast');
   const msgEl = document.getElementById('damage-msg');
   if (!toast) return;
@@ -1181,6 +1249,8 @@ function flashDamage() {
 }
 
 function showGameOver() {
+  AUDIO.stopAll();
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/game-over.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   clearQuizTimer();
   const el = document.getElementById('gameover-screen');
   if (el) el.style.display = 'flex';
@@ -1203,8 +1273,20 @@ function typeInto(el, text, callback, useHtml) {
   let partIdx = 0, charIdx = 0;
   // Primera línea: 1 carácter a la vez, lento (75ms). Resto: 3 por tick, rápido.
   // Si se aceleró, todo va a máxima velocidad.
-  function charsPerTick() { return (window._bootAccelerated || partIdx > 0) ? 4 : 1; }
-  function tickDelay()    { return (window._bootAccelerated || partIdx > 0) ? TYPE_SPEED_ACTIVE : 75; }
+  function charsPerTick() { 
+    if (el.id === 'boot-text' && !window._bootAccelerated) {
+      return (partIdx === 0) ? 1 : 2;
+    }
+    if (el.id === 'ending-text') return 1;
+    return 4; 
+  }
+  function tickDelay() { 
+    if (el.id === 'boot-text' && !window._bootAccelerated) {
+      return (partIdx === 0) ? 75 : 8;
+    }
+    if (el.id === 'ending-text') return 45;
+    return 1; 
+  }
 
   // Auto-scroll solo si el usuario está cerca del fondo
   function smartScroll() {
@@ -1288,6 +1370,7 @@ function injectAudioToggle() {
 // ============================================================
 
 function confirmExit() {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   const modal   = document.getElementById('modal-exit');
   const title   = document.getElementById('modal-exit-title');
   const msg     = document.getElementById('modal-exit-msg');
@@ -1304,6 +1387,7 @@ function confirmExit() {
 }
 
 function confirmGoIntro() {
+  if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   const modal   = document.getElementById('modal-exit');
   const title   = document.getElementById('modal-exit-title');
   const msg     = document.getElementById('modal-exit-msg');
