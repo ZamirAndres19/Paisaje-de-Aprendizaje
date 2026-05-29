@@ -53,7 +53,6 @@ html, body {
   overflow: hidden;
 }
 
-/* Barra superior con botón saltar intro */
 .boot-actions-top {
   position: absolute;
   top: 12px; right: 16px;
@@ -62,7 +61,6 @@ html, body {
   gap: 8px;
 }
 
-/* Contenedor principal boot */
 .boot-container {
   width: 760px;
   max-width: 95vw;
@@ -83,7 +81,6 @@ html, body {
   100% { filter: brightness(1); }
 }
 
-/* Logo Weyland-Yutani */
 .boot-logo { flex-shrink: 0; margin-bottom: 4px; }
 
 .weyland-logo {
@@ -101,7 +98,6 @@ html, body {
   font-family: var(--font-body);
 }
 
-/* Texto del boot */
 .boot-text {
   flex: 1;
   overflow-y: auto;
@@ -119,7 +115,6 @@ html, body {
 .boot-text::-webkit-scrollbar-thumb { background: rgba(0,255,65,0.4); border-radius: 2px; }
 .boot-text::-webkit-scrollbar-track { background: transparent; }
 
-/* Fila inferior del boot: acelerar + botón enter */
 .boot-bottom-actions {
   display: flex;
   flex-direction: column;
@@ -129,7 +124,6 @@ html, body {
   margin-top: 12px;
 }
 
-/* Botón fantasma (secundario, pequeño) — usado en boot y modales */
 .btn-ghost-action {
   background: transparent;
   border: 1px solid rgba(0,255,65,0.3);
@@ -147,7 +141,6 @@ html, body {
   background: rgba(0,255,65,0.06);
 }
 
-/* Botón secundario de acción — acelerar boot, saltar teoría, saltar práctica */
 .btn-secondary-action {
   background: transparent;
   border: 1px solid rgba(0,255,65,0.25);
@@ -227,7 +220,6 @@ html, body {
   overflow: hidden;
 }
 
-/* Panel MADRE */
 .madre-side {
   width: 220px; flex-shrink: 0;
   display: flex; flex-direction: column;
@@ -259,7 +251,6 @@ html, body {
 .madre-speech-label { font-size: 0.85rem; letter-spacing: 2px; color: rgba(0,255,65,0.5); margin-bottom: 6px; font-family: var(--font-body); }
 .madre-speech { font-size: 1rem; line-height: 1.6; color: var(--c-green); text-shadow: 0 0 4px var(--c-green); font-family: var(--font-body); }
 
-/* Mapa central */
 .ship-map {
   flex: 1;
   display: flex; flex-direction: column;
@@ -275,7 +266,6 @@ html, body {
   width: 100%; max-width: 740px;
 }
 
-/* Zonas */
 .zone-card {
   position: relative;
   height: 160px;
@@ -348,13 +338,11 @@ html, body {
 .zone-corner.bl { bottom:6px;left:6px;  border-width:0 0 2px 2px; }
 .zone-corner.br { bottom:6px;right:6px; border-width:0 2px 2px 0; }
 
-/* Temas de color por zona */
 .theme-bridge  { color: var(--c-green); }
 .theme-lab     { color: var(--c-amber); }
 .theme-comms   { color: var(--c-cyan);  }
 .theme-engines { color: var(--c-red);   }
 
-/* Panel progreso */
 .progress-side {
   width: 240px; flex-shrink: 0;
   display: flex; flex-direction: column;
@@ -430,7 +418,6 @@ html, body {
   background: rgba(0,0,0,0.75);
 }
 
-/* Visor */
 .node-visor {
   position: relative;
   width: 100%; height: 180px;
@@ -489,7 +476,6 @@ html, body {
   font-family: var(--font-body);
 }
 
-/* Madre strip */
 .node-madre-strip {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 14px;
@@ -507,7 +493,6 @@ html, body {
 }
 .node-madre-status { font-size: 0.9rem; letter-spacing: 1px; font-family: var(--font-body); opacity: 0.85; }
 
-/* Objetivos */
 .node-objectives { padding: 12px 14px; border-bottom: 1px solid var(--c-border); }
 .obj-title { font-size: 0.82rem; letter-spacing: 3px; color: rgba(0,255,65,0.5); font-family: var(--font-body); margin-bottom: 8px; }
 .obj-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
@@ -523,7 +508,6 @@ html, body {
 .obj-list li.done { opacity: 0.4; text-decoration: line-through; }
 .obj-list li.done::before { content: '✓'; color: var(--c-green); opacity: 1; }
 
-/* Fases */
 .node-phases { padding: 12px 14px; }
 .phases-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
 .phase-pill {
@@ -537,7 +521,6 @@ html, body {
 .phase-pill.active { opacity: 1; border-color: currentColor; box-shadow: 0 0 8px currentColor; }
 .phase-pill.done   { opacity: 0.5; }
 
-/* Panel derecho terminal */
 .node-right { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
 .node-screen {
@@ -596,7 +579,6 @@ html, body {
 .node-theme-engines .node-o2-bar,
 .node-theme-engines .o2-bar{ background: var(--c-red); box-shadow: 0 0 6px var(--c-red); }
 
-/* Botones de nodo coloreados por tema */
 .node-theme-lab .btn-back:hover,
 .node-theme-lab .node-controls button:hover { background: var(--c-amber); color: #000; }
 .node-theme-comms .btn-back:hover,
@@ -635,7 +617,6 @@ html, body {
 }
 .modal-doc-title { font-size: 1.4rem; letter-spacing: 3px; text-shadow: 0 0 10px currentColor; }
 
-/* Fila de acciones dentro del header del modal doc */
 .modal-doc-actions {
   display: flex;
   align-items: center;
@@ -706,6 +687,58 @@ html, body {
   margin: 12px 0;
 }
 
+/* ===================== IEEE REFERENCIAS ===================== */
+.ieee-refs {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(0,255,65,0.25);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: rgba(0,255,65,0.5);
+  letter-spacing: 0.5px;
+}
+.ieee-refs-title {
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  letter-spacing: 3px;
+  color: rgba(0,255,65,0.45);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.ieee-refs ol {
+  padding-left: 20px;
+  margin: 0;
+}
+.ieee-refs ol li {
+  margin-bottom: 5px;
+  color: rgba(0,255,65,0.45);
+}
+.modal-doc-body sup {
+  font-size: 0.7rem;
+  color: currentColor;
+  opacity: 0.75;
+  vertical-align: super;
+  line-height: 0;
+  cursor: default;
+  margin-left: 1px;
+}
+/* Tema lab: refs en ambar */
+.node-theme-lab .ieee-refs,
+.node-theme-lab .ieee-refs ol li { color: rgba(255,176,0,0.45); }
+.node-theme-lab .ieee-refs       { border-top-color: rgba(255,176,0,0.2); }
+.node-theme-lab .ieee-refs-title { color: rgba(255,176,0,0.4); }
+/* Tema comms: refs en cyan */
+.node-theme-comms .ieee-refs,
+.node-theme-comms .ieee-refs ol li { color: rgba(0,229,255,0.45); }
+.node-theme-comms .ieee-refs       { border-top-color: rgba(0,229,255,0.2); }
+.node-theme-comms .ieee-refs-title { color: rgba(0,229,255,0.4); }
+/* Tema engines: refs en rojo */
+.node-theme-engines .ieee-refs,
+.node-theme-engines .ieee-refs ol li { color: rgba(255,34,68,0.45); }
+.node-theme-engines .ieee-refs       { border-top-color: rgba(255,34,68,0.2); }
+.node-theme-engines .ieee-refs-title { color: rgba(255,34,68,0.4); }
+
 /* ===================== MODAL PRACTICA GUIADA ===================== */
 .modal-practice-box {
   width: 700px; max-width: 94vw;
@@ -723,7 +756,6 @@ html, body {
 }
 .practice-title { font-size: 1.3rem; letter-spacing: 3px; text-shadow: 0 0 10px currentColor; }
 
-/* Acciones del header de práctica: botón saltar + número de paso */
 .practice-header-actions {
   display: flex;
   align-items: center;
@@ -924,7 +956,6 @@ html, body {
 }
 .gameover-screen button:hover { background: var(--c-red); color: #fff; }
 
-/* Overlay de daño en pantalla */
 .damage-flash-overlay {
   position: fixed; inset: 0;
   background: rgba(255,0,0,0.12);
@@ -978,7 +1009,6 @@ html, body {
   background: rgba(255,34,68,0.15);
 }
 
-/* Botón ✕ dentro del header de nodo */
 .node-header-right {
   display: flex;
   align-items: center;
@@ -1074,7 +1104,6 @@ html, body {
   background: rgba(0,255,65,0.06);
 }
 
-
 /* ===================== AUDIO PROMPT OVERLAY ===================== */
 .audio-prompt-overlay {
   position: fixed; inset: 0;
@@ -1103,7 +1132,6 @@ html, body {
   position: relative;
 }
 
-/* Esquinas decorativas */
 .audio-prompt-box::before,
 .audio-prompt-box::after {
   content: '';
