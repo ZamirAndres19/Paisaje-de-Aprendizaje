@@ -1305,19 +1305,20 @@ function typeInto(el, text, callback, useHtml) {
   let partIdx = 0, charIdx = 0;
   // Primera línea: 1 carácter a la vez, lento (75ms). Resto: 3 por tick, rápido.
   // Si se aceleró, todo va a máxima velocidad.
+  
   function charsPerTick() { 
     if (el.id === 'boot-text' && !window._bootAccelerated) {
       return (partIdx === 0) ? 1 : 2;
     }
     if (el.id === 'ending-text') return 1;
-    return 4; 
+    return 1; // Cambiado de 4 a 1: Imprime solo un carácter a la vez
   }
   function tickDelay() { 
     if (el.id === 'boot-text' && !window._bootAccelerated) {
       return (partIdx === 0) ? 75 : 8;
     }
     if (el.id === 'ending-text') return 45;
-    return 1; 
+    return 25; // Cambiado de 1 a 25: Añade 25 milisegundos de pausa entre cada letra
   }
 
   // Auto-scroll solo si el usuario está cerca del fondo
