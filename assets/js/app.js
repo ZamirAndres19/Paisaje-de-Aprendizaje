@@ -1179,6 +1179,27 @@ function showEnding() {
       }, true);
     }, 800);
   }, 1200);
+
+  AUDIO.play('boot', 'assets/sounds/escritura.mp3', { loop: true, volume: 0.45 });
+      typeInto(textEl, GUION.ending, () => {
+        AUDIO.stop('boot');
+        if (!AUDIO.muted) { const s = new Audio('assets/sounds/victoria.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
+        gradeEl.style.display = 'block';
+        detailEl.style.display = 'block';
+        if (restartBtn) restartBtn.style.display = 'inline-block';
+
+        // --- NUEVO CÓDIGO: ENVIAR PUNTAJE (VICTORIA) ---
+        setTimeout(() => {
+          let nombreJugador = prompt("MISIÓN COMPLETADA.\nIngresa tu nombre o código de ingeniero para el registro:");
+          if (!nombreJugador) nombreJugador = "Ingeniero Anónimo";
+          
+          if (window.enviarPuntajeFirebase) {
+            window.enviarPuntajeFirebase(nombreJugador, gradeVal.toFixed(1), oxygen);
+          }
+        }, 1500); // Esperamos 1.5 segundos para no interrumpir la animación final
+        // ----------------------------------------------
+
+      }, true);
 }
 
 // ============================================================
@@ -1254,8 +1275,19 @@ function showGameOver() {
   clearQuizTimer();
   const el = document.getElementById('gameover-screen');
   if (el) el.style.display = 'flex';
-}
 
+  // --- NUEVO CÓDIGO: ENVIAR PUNTAJE (DERROTA) ---
+  setTimeout(() => {
+    let nombreJugador = prompt("SOPORTE VITAL TERMINADO.\nIngresa tu nombre para el registro de bajas:");
+    if (!nombreJugador) nombreJugador = "Ingeniero Caído";
+    
+    if (window.enviarPuntajeFirebase) {
+      // Enviamos calificación 0 y oxígeno 0
+      window.enviarPuntajeFirebase(nombreJugador, 0, 0); 
+    }
+  }, 1000);
+  // ----------------------------------------------
+}
 // ============================================================
 // TERMINAL — typeWriter + controles
 // ============================================================

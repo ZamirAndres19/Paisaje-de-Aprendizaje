@@ -366,6 +366,43 @@
       if (e.target === document.getElementById('modal-video')) closeVideoModal();
     }
   </script>
+
+  <script type="module">
+    // Importar las funciones de la versión modular de Firebase (v10) mediante CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // 1. REEMPLAZA ESTO con la configuración real de tu proyecto
+    const firebaseConfig = {
+      apiKey: "AIzaSyChLBwCp3UVnKjEPvDiInpRYEtj4ZYKtps",
+      authDomain: "paisaje-de-aprendizaje-grupo3.firebaseapp.com",
+      projectId: "paisaje-de-aprendizaje-grupo3",
+      storageBucket: "paisaje-de-aprendizaje-grupo3.firebasestorage.app",
+      messagingSenderId: "465512740049",
+      appId: "1:465512740049:web:0abc2f88af079bd8aec1f0",
+      measurementId: "G-K8JQE4Y61F"
+    };
+
+    // 2. Inicializar la aplicación y la base de datos
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 3. Crear una función global para que app.js pueda enviar los datos
+    window.enviarPuntajeFirebase = async function(nombre, puntaje, oxigeno) {
+      try {
+        const docRef = await addDoc(collection(db, "puntajes_nostromo"), {
+          jugador: nombre,
+          calificacion: Number(puntaje),
+          oxigeno_restante: Number(oxigeno),
+          fecha: serverTimestamp()
+        });
+        console.log("Puntaje guardado exitosamente en Firestore con ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error al guardar el puntaje: ", e);
+      }
+    };
+  </script>
+
   <script src="assets/js/app.js"></script>
 </body>
 </html>
