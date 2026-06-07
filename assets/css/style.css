@@ -228,7 +228,15 @@ html, body {
 
 /* ===================== MAPA ===================== */
 #scene-map {
-  background: #000000;
+  background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.72)),
+              url('../../assets/images/bg-ship-space.jpg') center/cover no-repeat fixed;
+  animation: bg-pan-slow 35s ease-in-out infinite alternate;
+}
+
+@keyframes bg-pan-slow {
+  0%   { background-size: 100% 100%; background-position: 48% 50%; }
+  50%  { background-size: 106% 106%; background-position: 52% 48%; }
+  100% { background-size: 102% 102%; background-position: 50% 52%; }
 }
 
 .map-body {
