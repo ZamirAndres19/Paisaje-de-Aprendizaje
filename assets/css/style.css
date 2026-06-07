@@ -228,8 +228,7 @@ html, body {
 
 /* ===================== MAPA ===================== */
 #scene-map {
-  background: linear-gradient(rgba(0,0,0,0.82), rgba(0,0,0,0.9)),
-              url('../../assets/images/bg-nostromo.jpg') center/cover no-repeat fixed;
+  background: #000000;
 }
 
 .map-body {
