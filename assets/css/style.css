@@ -213,11 +213,11 @@ html, body {
 .hud-label   { font-size: 0.75rem; letter-spacing: 3px; color: rgba(0,255,65,0.5); font-family: var(--font-body); }
 .hud-value   { font-size: 1.3rem; letter-spacing: 2px; text-shadow: 0 0 8px var(--c-green); }
 
-.o2-bar-wrap { width: 220px; height: 8px; background: rgba(0,255,65,0.1); border: 1px solid rgba(0,255,65,0.3); margin: 4px 0; }
+.o2-bar-wrap { width: 220px; height: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.3); margin: 4px 0; }
 .o2-bar {
   height: 100%; width: 100%;
-  background: var(--c-green);
-  box-shadow: 0 0 8px var(--c-green);
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffffff;
   transition: width 0.8s ease, background 0.8s ease;
 }
 .o2-pct { font-size: 1.1rem; }
@@ -1061,10 +1061,11 @@ CSS
 }
 
 .btn-hud-nav {
-  background: rgba(0,255,65,0.15);
-  border: 1px solid var(--c-green);
-  color: var(--c-green);
-  box-shadow: 0 0 10px rgba(0,255,65,0.4);
+  background: rgba(0, 255, 65, 0.25);
+  border: 1px solid #39FF14;
+  color: #39FF14;
+  box-shadow: 0 0 12px rgba(57, 255, 20, 0.6), inset 0 0 8px rgba(57, 255, 20, 0.3);
+  text-shadow: 0 0 8px #39FF14;
   font-family: var(--font-body);
   font-size: 0.85rem;
   letter-spacing: 2px;
@@ -1073,16 +1074,19 @@ CSS
   transition: all 0.2s;
 }
 .btn-hud-nav:hover {
-  background: rgba(0,255,65,0.3);
-  box-shadow: 0 0 15px var(--c-green);
+  background: rgba(0, 255, 65, 0.45);
+  box-shadow: 0 0 18px #39FF14, inset 0 0 10px #39FF14;
+  color: #ffffff;
+  text-shadow: 0 0 10px #ffffff;
   transform: scale(1.05);
 }
 
 .btn-hud-exit {
-  background: rgba(255,34,68,0.15);
-  border: 1px solid var(--c-red);
-  color: var(--c-red);
-  box-shadow: 0 0 10px rgba(255,34,68,0.4);
+  background: rgba(255, 34, 68, 0.25);
+  border: 1px solid #ff2244;
+  color: #ff2244;
+  box-shadow: 0 0 12px rgba(255, 34, 68, 0.6), inset 0 0 8px rgba(255, 34, 68, 0.3);
+  text-shadow: 0 0 8px #ff2244;
   font-family: var(--font-body);
   font-size: 0.85rem;
   letter-spacing: 2px;
@@ -1091,8 +1095,10 @@ CSS
   transition: all 0.2s;
 }
 .btn-hud-exit:hover {
-  background: rgba(255,34,68,0.3);
-  box-shadow: 0 0 15px var(--c-red);
+  background: rgba(255, 34, 68, 0.45);
+  box-shadow: 0 0 18px #ff2244, inset 0 0 10px #ff2244;
+  color: #ffffff;
+  text-shadow: 0 0 10px #ffffff;
   transform: scale(1.05);
 }
 
