@@ -7,10 +7,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/video-modal.css">
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  
+  <link rel="stylesheet" href="assets/css/v2-components.css">
+  <link rel="stylesheet" href="assets/css/cinematic-intro.css">
 </head>
 <body>
 
@@ -33,6 +34,64 @@
     </div>
   </div>
 
+  <!-- ===== CINEMÁTICA INTRODUCTORIA v2 ===== -->
+  <div id="cinematic-intro" class="cinematic-intro">
+    <!-- Canvas renderer para evadir el bug de aceleración por hardware del navegador -->
+    <canvas id="cin-canvas" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;"></canvas>
+    
+    <video id="cin-video" src="assets/img/inicio.mp4" preload="auto" playsinline style="display: none;"></video>
+    
+    <div class="cin-slide hidden" id="cin-bridge-scene" style="z-index: 2; position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+      <div class="cin-bg" style="background-image: url('assets/img/nostromo_bridge.png')"></div>
+      <div class="cin-overlay cin-overlay-amber"></div>
+      <div class="cin-content">
+        <div class="cin-terminal-block">
+          <div class="cin-terminal-header">▲ MU/TH/UR 6000 — SISTEMA DE INTELIGENCIA DE VUELO</div>
+          <div class="cin-terminal-body" id="cin-terminal-text">
+            <span id="cin-typing-cursor" class="cin-cursor">_</span>
+          </div>
+        </div>
+      </div>
+      <div class="cin-scanlines"></div>
+      <div class="cin-film-grain"></div>
+    </div>
+    
+    <video id="cin-video-2" src="assets/img/0531 (2)(1).mp4" preload="auto" playsinline style="display: none;"></video>
+
+    <div class="cin-skip-bar" style="z-index: 10;">
+      <span class="cin-skip-label">TRANSMISIÓN EN CURSO...</span>
+      <button class="cin-skip-btn" onclick="skipCinematic()">⏭ OMITIR INTRO</button>
+    </div>
+  </div>
+
+  <!-- ===== PANTALLA DE CREDENCIALES v2 ===== -->
+  <div id="credential-screen">
+    <div class="cred-container">
+      <div class="cred-logo-row">
+        <span class="cred-logo">▲ WEYLAND-YUTANI CORP</span>
+        <span class="cred-sub">Building Better Worlds™</span>
+      </div>
+      <div class="cred-terminal" id="cred-terminal-text">
+> TRANSMISIÓN ENCRIPTADA — INICIANDO CONEXIÓN SEGURA...
+> ORIGEN: USCSS NOSTROMO — CARGUERO COMERCIAL CLASE M.
+> SISTEMA MU/TH/UR 6000 — EN LÍNEA.
+
+IDENTIFICACIÓN DE TRIPULANTE REQUERIDA.
+USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
+</div>
+      <div class="cred-input-row">
+        <span class="cred-input-label">CORREO:</span>
+        <input type="email" id="cred-name-input" class="cred-input" placeholder="usuario@institucion.edu" maxlength="60" autocomplete="email" spellcheck="false">
+      </div>
+      <div class="cred-error" id="cred-error"></div>
+      <button class="cred-btn" id="cred-submit-btn" onclick="submitCredentials()">
+        [ CONFIRMAR ACCESO — SISTEMA NOSTROMO ]
+      </button>
+      <div class="cred-note">🔐 ACCESO CON CORREO INSTITUCIONAL · PUEDES REINGRESAR CUANDO QUIERAS</div>
+    </div>
+  </div>
+
+  <!-- ===== ESCENA BOOT ===== -->
   <div id="scene-boot" class="scene active">
     <div class="scanlines-global"></div>
     <div class="boot-actions-top">
@@ -51,13 +110,22 @@
     </div>
   </div>
 
+  <!-- ===== ESCENA MAPA ===== -->
   <div id="scene-map" class="scene">
+    <!-- Video de fondo de la nave para ambientación -->
+    <video autoplay muted loop playsinline class="map-bg-video">
+      <source src="assets/images/bg-ship-video.mp4" type="video/mp4">
+    </video>
     <div class="scanlines-global"></div>
 
     <div class="hud-top">
       <div class="hud-section">
         <span class="hud-label">NAVE</span>
         <span class="hud-value blink-slow">USCSS NOSTROMO</span>
+      </div>
+      <div class="hud-section">
+        <span class="hud-label">TRIPULANTE</span>
+        <span class="hud-value" style="color: var(--c-amber); text-shadow: 0 0 8px var(--c-amber);">GAQUIROZR</span>
       </div>
       <div class="hud-section hud-center">
         <span class="hud-label">SOPORTE VITAL — O₂</span>
@@ -77,7 +145,7 @@
     <div class="map-body">
       <aside class="madre-side">
         <div class="madre-avatar-wrap">
-          <img src="assets/img/mother_interface.gif" alt="MADRE" onerror="this.style.display='none'">
+          <img src="assets/images/mother-interface.gif" alt="MADRE" onerror="this.style.display='none'">
           <div class="madre-placeholder" id="madre-avatar">MU/TH/UR<br>6000</div>
         </div>
         <div class="madre-speech-wrap">
@@ -95,7 +163,7 @@
         <div class="map-title">— SELECCIONA UNA ZONA —</div>
         <div class="zones-grid">
           <button id="zone-bridge" class="zone-card theme-bridge" onclick="goToScene('bridge')">
-            <div class="zone-bg" style="background-image:url('assets/img/zones/bridge_thumb.svg')"></div>
+            <div class="zone-bg" style="background-image:url('assets/images/bg-bridge.jpg')"></div>
             <div class="zone-overlay"></div>
             <div class="zone-pulse"></div>
             <div class="zone-content">
@@ -109,7 +177,7 @@
           </button>
 
           <button id="zone-lab" class="zone-card theme-lab locked-zone" onclick="tryZone('lab')">
-            <div class="zone-bg" style="background-image:url('assets/img/zones/lab_thumb.svg')"></div>
+            <div class="zone-bg" style="background-image:url('assets/images/bg-lab.jpg')"></div>
             <div class="zone-overlay locked-overlay"></div>
             <div class="zone-content">
               <div class="zone-num">02</div>
@@ -122,7 +190,7 @@
           </button>
 
           <button id="zone-comms" class="zone-card theme-comms locked-zone" onclick="tryZone('comms')">
-            <div class="zone-bg" style="background-image:url('assets/img/zones/comms_thumb.svg')"></div>
+            <div class="zone-bg" style="background-image:url('assets/images/bg-comms.jpg')"></div>
             <div class="zone-overlay locked-overlay"></div>
             <div class="zone-content">
               <div class="zone-num">03</div>
@@ -135,7 +203,7 @@
           </button>
 
           <button id="zone-engines" class="zone-card theme-engines locked-zone" onclick="tryZone('engines')">
-            <div class="zone-bg" style="background-image:url('assets/img/zones/engines_thumb.svg')"></div>
+            <div class="zone-bg" style="background-image:url('assets/images/bg-engines.jpg')"></div>
             <div class="zone-overlay locked-overlay"></div>
             <div class="zone-content">
               <div class="zone-num">04</div>
@@ -157,12 +225,13 @@
         <div class="progress-item locked" id="prog-engines"><span class="prog-dot"></span> 04 Motores <span id="prog-engines-status" class="prog-status">BLOQUEADO</span></div>
         <div class="progress-divider"></div>
         <div class="progress-title">▸ CALIFICACIÓN</div>
-        <div class="grade-preview" id="grade-preview">— / 10</div>
+        <div class="grade-preview" id="grade-preview"><span id="grade-val">—</span>&nbsp;/&nbsp;10</div>
         <div class="grade-note">O₂ restante × 10</div>
       </aside>
     </div>
   </div>
 
+  <!-- ===== ESCENA NODO ===== -->
   <div id="scene-node" class="scene">
     <div class="scanlines-global"></div>
     <div class="node-header" id="node-header">
@@ -217,7 +286,7 @@
     </div>
   </div>
 
-  <!-- ===== MODAL DOCUMENTO ===== -->
+  <!-- ===== MODAL DOCUMENTO v2 ===== -->
   <div id="modal-doc" class="modal-overlay" style="display:none">
     <div class="modal-doc-box" id="modal-doc-box">
       <div class="modal-doc-header">
@@ -231,7 +300,89 @@
         <span class="stamp stamp-red">WEYLAND-YUTANI</span>
         <span class="stamp stamp-yellow">CONFIDENCIAL</span>
       </div>
-      <div id="modal-doc-body" class="modal-doc-body"></div>
+
+      <!-- v2: Resumen ejecutivo -->
+      <div class="doc-summary-section">
+        <div class="doc-summary-title">▸ RESUMEN EJECUTIVO</div>
+        <ul id="doc-summary-list" class="doc-summary-list"></ul>
+      </div>
+
+      <!-- v2: Acciones de documento -->
+      <div class="doc-actions-row">
+        <button id="btn-open-pdf" class="btn-doc-action" onclick="openPdfModal()">
+          <span class="doc-btn-icon">📄</span>
+          <span class="doc-btn-text">
+            <span class="doc-btn-label">ABRIR DOCUMENTO COMPLETO</span>
+            <span class="doc-btn-file" id="doc-pdf-filename">MANUAL_W-Y.pdf</span>
+          </span>
+        </button>
+        <button id="btn-open-video" class="btn-doc-action" onclick="openVideoFromDoc()" disabled>
+          <span class="doc-btn-icon">📡</span>
+          <span class="doc-btn-text">
+            <span class="doc-btn-label">VER VIDEO DE REFERENCIA</span>
+            <span class="doc-btn-file" id="doc-video-lock-status">🔒 LEE EL DOCUMENTO PRIMERO</span>
+          </span>
+        </button>
+      </div>
+
+      <!-- v2: Learn more link -->
+      <div class="doc-learn-more" onclick="openLearnMore()">
+        <span class="doc-learn-more-icon">i</span>
+        <span class="doc-learn-more-text" id="doc-learn-more-text"></span>
+      </div>
+
+      <!-- v2: Unlock status -->
+      <div class="doc-unlock-status">
+        <span class="doc-unlock-dot" id="doc-unlock-dot"></span>
+        <span id="doc-unlock-msg">Abre el documento para desbloquear el video de referencia</span>
+      </div>
+
+      <div id="modal-doc-body" class="modal-doc-body" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL PDF v2 ===== -->
+  <div id="modal-pdf">
+    <div class="pdf-modal-box">
+      <div class="pdf-modal-header">
+        <div id="pdf-modal-title" class="pdf-modal-title">MANUAL_W-Y.pdf</div>
+        <span class="pdf-scroll-note">Desplázate para desbloquear el video</span>
+        <button class="btn-close-pdf" onclick="closePdfModal()">✕ CERRAR</button>
+      </div>
+      <iframe id="pdf-iframe" class="pdf-iframe" src="" style="display:none"></iframe>
+      <div id="pdf-fallback-content" style="display:none; flex:1; overflow-y:auto; padding:20px;">
+        <div id="pdf-fallback-body"></div>
+        <div id="pdf-scroll-sentinel" style="height:1px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL SELECCIÓN DE FASE v2 ===== -->
+  <div id="modal-phase-select" class="modal-overlay" style="display:none">
+    <div class="modal-doc-box" style="max-width:520px;">
+      <div class="modal-doc-header">
+        <div id="phase-select-title" class="modal-doc-title">SELECCIONAR PROTOCOLO</div>
+        <div class="modal-doc-actions">
+          <span style="font-size:0.85rem; letter-spacing:2px; opacity:0.5;">O₂: <span id="phase-o2-val">100%</span></span>
+          <button class="modal-close-btn" onclick="closePhaseSelect()">✕</button>
+        </div>
+      </div>
+      <div class="phase-select-panel" style="padding:20px;">
+        <button class="btn-phase-select" onclick="startPracticeFromModal()">
+          <span class="phase-icon">🔧</span>
+          <span class="phase-desc">
+            <span class="phase-name">PRÁCTICA GUIADA</span>
+            <span class="phase-sub">Secuencia de instalación paso a paso</span>
+          </span>
+        </button>
+        <button class="btn-phase-select" onclick="startQuizFromModal()">
+          <span class="phase-icon">⚡</span>
+          <span class="phase-desc">
+            <span class="phase-name">PROTOCOLO DE VERIFICACIÓN</span>
+            <span class="phase-sub">Minijuego interactivo — Arrastra y conecta</span>
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -310,6 +461,8 @@
       <div id="quiz-q-num" class="quiz-q-num">PREGUNTA 1 / 3</div>
       <div id="quiz-question" class="quiz-question"></div>
       <div id="quiz-options" class="quiz-options"></div>
+      <!-- v2: DnD game mount point -->
+      <div id="dnd-game-mount"></div>
       <div id="quiz-feedback" class="quiz-feedback" style="display:none"></div>
       <div id="quiz-timer-wrap" class="quiz-timer-wrap" style="display:none">
         <div class="quiz-timer-label">⏱ TIEMPO RESTANTE</div>
@@ -318,7 +471,7 @@
     </div>
   </div>
 
-  <!-- ===== ENDING ===== -->
+  <!-- ===== ENDING (legacy v1) ===== -->
   <div id="scene-ending" class="scene">
     <div class="ending-wrap">
       <div id="ending-flash" class="ending-flash hidden"></div>
@@ -351,7 +504,7 @@
     <div id="damage-msg" class="damage-msg"></div>
   </div>
 
-  <!-- ===== GAME OVER ===== -->
+  <!-- ===== GAME OVER (legacy v1) ===== -->
   <div id="gameover-screen" class="gameover-screen" style="display:none">
     <div class="gameover-inner">
       <div class="gameover-alert blink-fast">⚠ ALERTA CRÍTICA ⚠</div>
@@ -359,6 +512,60 @@
       <div class="gameover-sub">EL ORGANISMO HA GANADO</div>
       <div class="gameover-grade">CALIFICACIÓN FINAL: 0 / 10</div>
       <button onclick="location.reload()">[ REINICIAR SIMULACIÓN ]</button>
+    </div>
+  </div>
+
+  <!-- ===== XENOMORPH JUMPSCARE v2 ===== -->
+  <div id="xenomorph-modal" class="xeno-modal hidden">
+    <div class="xeno-overlay"></div>
+    <div class="xeno-content">
+      <img src="assets/img/xenomorph.png" alt="Xenomorph" class="xeno-img">
+      <div class="xeno-text" id="xeno-text">⚠ ORGANISMO DETECTADO EN TU SECTOR</div>
+      <div class="xeno-countdown" id="xeno-countdown"></div>
+    </div>
+  </div>
+
+  <!-- ===== BAD ENDING v2 ===== -->
+  <div id="bad-ending-screen" class="ending-screen hidden">
+    <div id="bad-static" class="bad-static"></div>
+    <div class="ending-content">
+      <div class="ending-title bad-title">☠ MISIÓN FALLIDA</div>
+      <div id="bad-end-text" class="ending-text"></div>
+      <button id="bad-restart-btn" class="ending-btn" onclick="location.reload()">↻ REINTENTAR MISIÓN</button>
+    </div>
+  </div>
+
+  <!-- ===== GOOD ENDING v2 ===== -->
+  <div id="good-ending-screen" class="ending-screen hidden">
+    <div class="ending-content good-content">
+      <div class="ending-title good-title">🚀 MISIÓN COMPLETADA</div>
+      <div id="good-end-text" class="ending-text"></div>
+      <div id="mission-report" class="mission-report hidden">
+        <div class="rpt-title">📋 REPORTE DE MISIÓN</div>
+        <div class="rpt-row"><span>TRIPULANTE:</span><span id="rpt-name"></span></div>
+        <div class="rpt-row"><span>TIEMPO:</span><span id="rpt-time"></span></div>
+        <div class="rpt-row"><span>MÓDULOS:</span><span id="rpt-modules"></span></div>
+        <div class="rpt-row"><span>O₂ RESTANTE:</span><span id="rpt-o2"></span></div>
+        <div class="rpt-row"><span>INTENTOS:</span><span id="rpt-attempts"></span></div>
+        <div class="rpt-row rpt-grade"><span>CALIFICACIÓN:</span><span id="rpt-grade"></span></div>
+      </div>
+      <button id="good-restart-btn" class="ending-btn" onclick="location.reload()">↻ NUEVA MISIÓN</button>
+    </div>
+  </div>
+
+  <!-- ===== HUD OVERLAY v2 ===== -->
+  <div class="hud-overlay">
+    <div class="hud-section hud-left">
+      <span class="hud-label">TRIPULANTE</span>
+      <span class="hud-value" id="hud-player-name">—</span>
+    </div>
+    <div class="hud-section hud-center" id="hud-player-section">
+      <span class="hud-label">SOPORTE VITAL</span>
+      <span class="hud-value" id="hud-o2">O₂ 100%</span>
+    </div>
+    <div class="hud-section hud-right">
+      <span class="hud-label">FECHA ESTELAR</span>
+      <span class="hud-value" id="hud-date">—</span>
     </div>
   </div>
 
@@ -372,9 +579,9 @@
   <script type="module">
     // Importar las funciones de la versión modular de Firebase (v10) mediante CDN
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, getDoc, setDoc, updateDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // 1. REEMPLAZA ESTO con la configuración real de tu proyecto
+    // Configuración del proyecto Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyChLBwCp3UVnKjEPvDiInpRYEtj4ZYKtps",
       authDomain: "paisaje-de-aprendizaje-grupo3.firebaseapp.com",
@@ -385,11 +592,11 @@
       measurementId: "G-K8JQE4Y61F"
     };
 
-    // 2. Inicializar la aplicación y la base de datos
+    // Inicializar la aplicación y la base de datos
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 3. Crear una función global para que app.js pueda enviar los datos
+    // v1 legacy: Enviar puntaje simple
     window.enviarPuntajeFirebase = async function(nombre, puntaje, oxigeno) {
       try {
         const docRef = await addDoc(collection(db, "puntajes_nostromo"), {
@@ -403,8 +610,97 @@
         console.error("Error al guardar el puntaje: ", e);
       }
     };
+
+    // v2: Registrar jugador con correo (devuelve docId para seguimiento de sesión)
+    window.firebaseRegisterPlayer = async function(correo) {
+      try {
+        // Buscar si el correo ya existe
+        const q = query(
+          collection(db, "sesiones_nostromo"),
+          where("correo", "==", correo),
+          limit(1)
+        );
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+          // Usuario que regresa — crear nueva sesión pero marcar como returning
+          const newDoc = await addDoc(collection(db, "sesiones_nostromo"), {
+            correo: correo,
+            jugador: correo.split('@')[0].toUpperCase(),
+            fecha_inicio: serverTimestamp(),
+            status: 'in_progress',
+            calificacion: 0,
+            oxigeno_restante: 100,
+            total_attempts: 0,
+            is_returning: true
+          });
+          return { ok: true, docId: newDoc.id, isReturning: true };
+        }
+
+        // Nuevo usuario
+        const newDoc = await addDoc(collection(db, "sesiones_nostromo"), {
+          correo: correo,
+          jugador: correo.split('@')[0].toUpperCase(),
+          fecha_inicio: serverTimestamp(),
+          status: 'in_progress',
+          calificacion: 0,
+          oxigeno_restante: 100,
+          total_attempts: 0,
+          is_returning: false
+        });
+        return { ok: true, docId: newDoc.id, isReturning: false };
+      } catch (e) {
+        console.error("Error en firebaseRegisterPlayer:", e);
+        return { ok: false, error: 'ERROR DE CONEXIÓN — ' + e.message };
+      }
+    };
+
+    // v2: Actualizar sesión en progreso
+    window.firebaseUpdateSession = async function(docId, data) {
+      if (!docId) return;
+      try {
+        const docRef = doc(db, "sesiones_nostromo", docId);
+        await updateDoc(docRef, {
+          ...data,
+          ultima_actualizacion: serverTimestamp()
+        });
+      } catch (e) {
+        console.error("Error en firebaseUpdateSession:", e);
+      }
+    };
+
+    // v2: Finalizar sesión (victoria o game over)
+    window.firebaseFinalizeSession = async function(docId, data) {
+      if (!docId) return;
+      try {
+        const docRef = doc(db, "sesiones_nostromo", docId);
+        await updateDoc(docRef, {
+          ...data,
+          fecha_fin: serverTimestamp(),
+          ultima_actualizacion: serverTimestamp()
+        });
+        console.log("[NOSTROMO] Sesión finalizada en Firebase:", data.status);
+      } catch (e) {
+        console.error("Error en firebaseFinalizeSession:", e);
+      }
+
+      // También guardar en la colección legacy de puntajes
+      try {
+        await addDoc(collection(db, "puntajes_nostromo"), {
+          jugador: window._playerName || 'TRIPULANTE',
+          calificacion: Number(data.calificacion || 0),
+          oxigeno_restante: Number(data.oxigeno_restante || 0),
+          fecha: serverTimestamp()
+        });
+      } catch (e) {
+        console.error("Error al guardar puntaje legacy:", e);
+      }
+    };
   </script>
 
   <script src="assets/js/app.js"></script>
+  <script src="assets/js/dnd-games.js"></script>
+  <script src="assets/js/v2-app.js"></script>
+  <script src="assets/js/ieee-patch.js"></script>
 </body>
 </html>

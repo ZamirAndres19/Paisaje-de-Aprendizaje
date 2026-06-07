@@ -2,7 +2,8 @@
 .modal-video-box {
   width: 860px;
   max-width: 95vw;
-  background: rgba(0, 5, 0, 0.99);
+  background: linear-gradient(rgba(0,10,0,0.92), rgba(0,5,0,0.95)),
+              url('../images/bg-modal.jpg') center/cover no-repeat;
   border: 1px solid var(--c-green);
   box-shadow: 0 0 60px rgba(0,255,65,0.18), inset 0 0 40px rgba(0,0,0,0.7);
   display: flex;

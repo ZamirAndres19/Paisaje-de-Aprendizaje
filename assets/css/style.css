@@ -21,9 +21,6 @@ html, body {
   font-family: var(--font-main);
   font-size: 18px;
   overflow: hidden;
-  /* Usamos currentColor para que el brillo mute de color junto con el texto */
-  text-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
-  opacity: 0.95;
 }
 
 /* EFECTO MONITOR CRT NOSTROMO */
@@ -43,6 +40,16 @@ html, body {
   position: absolute; inset: 0;
   background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.85) 100%);
   pointer-events: none;
+}
+
+/* Grano y ruido estático CRT */
+.scanlines-global::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.055;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 /* ESCENAS */
@@ -193,15 +200,15 @@ html, body {
 .hud-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px 24px;
-  background: rgba(0,0,0,0.9);
+  align-items: flex-start;
+  padding: 16px 24px 12px;
+  background: rgba(0,0,0,0.92);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
   gap: 20px;
-  z-index: 10;
+  z-index: 100;
 }
-.hud-section { display: flex; flex-direction: column; gap: 2px; }
+.hud-section { display: flex; flex-direction: column; gap: 4px; }
 .hud-center  { align-items: center; flex: 1; }
 .hud-label   { font-size: 0.75rem; letter-spacing: 3px; color: rgba(0,255,65,0.5); font-family: var(--font-body); }
 .hud-value   { font-size: 1.3rem; letter-spacing: 2px; text-shadow: 0 0 8px var(--c-green); }
@@ -222,7 +229,7 @@ html, body {
 /* ===================== MAPA ===================== */
 #scene-map {
   background: linear-gradient(rgba(0,0,0,0.82), rgba(0,0,0,0.9)),
-              url('../../assets/img/bg_ship.jpg') center/cover no-repeat fixed;
+              url('../../assets/images/bg-nostromo.jpg') center/cover no-repeat fixed;
 }
 
 .map-body {
@@ -231,6 +238,7 @@ html, body {
   overflow: hidden;
 }
 
+/* Panel MADRE */
 .madre-side {
   width: 220px; flex-shrink: 0;
   display: flex; flex-direction: column;
@@ -241,7 +249,7 @@ html, body {
   gap: 16px;
 }
 .madre-avatar-wrap {
-  width: 120px; height: 120px;
+  width: 130px; height: 150px;
   border: 2px solid var(--c-green);
   box-shadow: 0 0 20px var(--c-green);
   overflow: hidden;
@@ -252,15 +260,34 @@ html, body {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,30,0,0.9);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   letter-spacing: 2px;
   text-align: center;
   line-height: 1.4;
   color: var(--c-green);
   text-shadow: 0 0 10px var(--c-green);
 }
-.madre-speech-label { font-size: 0.85rem; letter-spacing: 2px; color: rgba(0,255,65,0.5); margin-bottom: 6px; font-family: var(--font-body); }
+.madre-speech-wrap {
+  border-left: 2px solid var(--c-green);
+  padding-left: 12px;
+  width: 100%;
+  margin-top: 4px;
+}
+.madre-speech-label { font-size: 0.85rem; letter-spacing: 2px; color: var(--c-green); text-shadow: 0 0 4px var(--c-green); margin-bottom: 6px; font-family: var(--font-body); }
 .madre-speech { font-size: 1rem; line-height: 1.6; color: var(--c-green); text-shadow: 0 0 4px var(--c-green); font-family: var(--font-body); }
+
+/* Video de fondo para el mapa */
+.map-bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.28;
+}
 
 .ship-map {
   flex: 1;
@@ -282,14 +309,22 @@ html, body {
   height: 160px;
   cursor: pointer;
   overflow: hidden;
-  border: 1px solid currentColor;
-  background: none;
+  border: none;
+  background:
+    linear-gradient(currentColor, currentColor) top left/12px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) top left/2px 12px no-repeat,
+    linear-gradient(currentColor, currentColor) top right/12px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) top right/2px 12px no-repeat,
+    linear-gradient(currentColor, currentColor) bottom left/12px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) bottom left/2px 12px no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right/12px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) bottom right/2px 12px no-repeat;
   transition: transform 0.2s, box-shadow 0.2s;
   padding: 0;
 }
 .zone-card:hover:not(.locked-zone) {
   transform: scale(1.03);
-  box-shadow: 0 0 30px currentColor;
+  box-shadow: 0 0 30px rgba(0,255,65,0.2) inset;
 }
 .zone-card.locked-zone { cursor: not-allowed; opacity: 0.45; }
 
@@ -310,11 +345,11 @@ html, body {
 .zone-content {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
-  justify-content: flex-end;
-  padding: 12px 14px; gap: 2px;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 12px 14px; gap: 4px;
 }
 .zone-num   { font-size: 0.85rem; opacity: 0.6; letter-spacing: 3px; font-family: var(--font-body); }
-.zone-name  { font-size: 1.3rem; letter-spacing: 1px; text-shadow: 0 0 10px currentColor; }
+.zone-name  { font-size: 1.3rem; letter-spacing: 1px; text-shadow: 0 0 10px currentColor; margin: 4px 0; }
 .zone-topic { font-size: 0.82rem; opacity: 0.75; font-family: var(--font-body); }
 
 .zone-badge {
@@ -377,13 +412,13 @@ html, body {
 .prog-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-green); flex-shrink: 0; }
 .prog-status { font-size: 0.75rem; margin-left: auto; font-family: var(--font-body); opacity: 0.7; }
 .progress-divider { border-top: 1px solid var(--c-border); margin: 6px 0; }
-.grade-preview { font-size: 2.4rem; text-align: center; letter-spacing: 3px; text-shadow: 0 0 16px var(--c-gold); color: var(--c-gold); }
+.grade-preview { font-size: 1.8rem; text-align: center; letter-spacing: 2px; text-shadow: 0 0 16px var(--c-gold); color: var(--c-gold); white-space: nowrap; }
 .grade-note { font-size: 0.78rem; text-align: center; opacity: 0.45; font-family: var(--font-body); }
 
 /* ===================== ESCENA NODO ===================== */
 #scene-node {
   background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.95)),
-              url('../../assets/img/bg_ship.jpg') center/cover no-repeat fixed;
+              url('../../assets/images/bg-nostromo.jpg') center/cover no-repeat fixed;
 }
 
 .node-header {
@@ -618,7 +653,8 @@ CSS
 .modal-doc-box {
   width: 720px; max-width: 94vw; max-height: 88vh;
   display: flex; flex-direction: column;
-  background: rgba(2,12,2,0.99);
+  background: linear-gradient(rgba(0,10,0,0.92), rgba(0,5,0,0.95)),
+              url('../../assets/images/bg-modal.jpg') center/cover no-repeat;
   border: 1px solid var(--c-green);
   box-shadow: 0 0 40px rgba(0,255,65,0.2), inset 0 0 30px rgba(0,0,0,0.6);
 }
@@ -756,7 +792,8 @@ CSS
 /* ===================== MODAL PRACTICA GUIADA ===================== */
 .modal-practice-box {
   width: 700px; max-width: 94vw;
-  background: rgba(2,10,2,0.99);
+  background: linear-gradient(rgba(0,10,0,0.92), rgba(0,5,0,0.95)),
+              url('../../assets/images/bg-modal.jpg') center/cover no-repeat;
   border: 1px solid currentColor;
   box-shadow: 0 0 50px rgba(0,255,65,0.15);
   overflow: hidden;
@@ -842,7 +879,8 @@ CSS
 /* ===================== MODAL QUIZ ===================== */
 .modal-quiz-box {
   width: 700px; max-width: 94vw;
-  background: rgba(2,10,2,0.99);
+  background: linear-gradient(rgba(0,10,0,0.92), rgba(0,5,0,0.95)),
+              url('../../assets/images/bg-modal.jpg') center/cover no-repeat;
   border: 1px solid currentColor;
   box-shadow: 0 0 50px rgba(0,255,65,0.15);
   overflow: hidden;
@@ -1005,37 +1043,39 @@ CSS
 }
 
 .btn-hud-nav {
-  background: transparent;
-  border: 1px solid rgba(0,255,65,0.35);
-  color: rgba(0,255,65,0.65);
+  background: rgba(0,255,65,0.15);
+  border: 1px solid var(--c-green);
+  color: var(--c-green);
+  box-shadow: 0 0 10px rgba(0,255,65,0.4);
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   letter-spacing: 2px;
-  padding: 5px 12px;
+  padding: 6px 14px;
   cursor: pointer;
-  transition: border-color 0.18s, color 0.18s, background 0.18s;
+  transition: all 0.2s;
 }
 .btn-hud-nav:hover {
-  border-color: var(--c-green);
-  color: var(--c-green);
-  background: rgba(0,255,65,0.06);
+  background: rgba(0,255,65,0.3);
+  box-shadow: 0 0 15px var(--c-green);
+  transform: scale(1.05);
 }
 
 .btn-hud-exit {
-  background: transparent;
-  border: 1px solid rgba(255,34,68,0.4);
-  color: rgba(255,34,68,0.7);
+  background: rgba(255,34,68,0.15);
+  border: 1px solid var(--c-red);
+  color: var(--c-red);
+  box-shadow: 0 0 10px rgba(255,34,68,0.4);
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   letter-spacing: 2px;
-  padding: 5px 12px;
+  padding: 6px 14px;
   cursor: pointer;
-  transition: border-color 0.18s, color 0.18s, background 0.18s;
+  transition: all 0.2s;
 }
 .btn-hud-exit:hover {
-  border-color: var(--c-red);
-  color: #fff;
-  background: rgba(255,34,68,0.15);
+  background: rgba(255,34,68,0.3);
+  box-shadow: 0 0 15px var(--c-red);
+  transform: scale(1.05);
 }
 
 .node-header-right {
@@ -1294,4 +1334,23 @@ CSS
 button {
   text-transform: uppercase;
   letter-spacing: 1px; /* Separar un poco las letras las hace más legibles en mayúsculas */
+}
+/* --- CAMBIOS VISUALES APROBADOS ---*/
+#hud-player-name {
+  color: #ffffff !important;
+  text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px var(--c-amber) !important;
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+}
+
+.hud-label, .madre-speech-label, .map-title, .progress-title, .obj-title, .node-o2-label, .practice-step-label, .quiz-timer-label {
+  color: rgba(0,255,65,0.95) !important;
+  text-shadow: 0 0 5px rgba(0,255,65,0.6) !important;
+  opacity: 1 !important;
+}
+.grade-note {
+  opacity: 0.95 !important;
+  text-shadow: 0 0 5px currentColor !important;
 }
