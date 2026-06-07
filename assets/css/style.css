@@ -416,8 +416,7 @@ html, body {
 
 /* ===================== ESCENA NODO ===================== */
 #scene-node {
-  background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.95)),
-              url('../../assets/images/bg-nostromo.jpg') center/cover no-repeat fixed;
+  background: #000000;
 }
 
 .node-header {
