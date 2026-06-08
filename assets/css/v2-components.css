@@ -1,0 +1,1087 @@
+/* ================================================================
+   USCSS NOSTROMO — v2.0 COMPONENTS
+   Credential Screen · DnD Games · Jumpscare · Cinematics
+   ================================================================ */
+
+
+
+/* ================================================================
+   SKILL 2: CREDENTIAL SCREEN — Terminal CRT de Bienvenida
+   ================================================================ */
+#credential-screen {
+  position: fixed; inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  z-index: 200;
+  flex-direction: column;
+}
+#credential-screen.active { display: flex; }
+
+.cred-container {
+  width: 640px;
+  max-width: 95vw;
+  padding: 40px 48px;
+  border: 1px solid rgba(0,255,65,0.35);
+  background: rgba(0,8,0,0.97);
+  box-shadow: 0 0 80px rgba(0,255,65,0.12), inset 0 0 60px rgba(0,0,0,0.9);
+  animation: turn-on 0.9s ease-out forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.cred-container::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    to bottom, transparent 0, transparent 3px,
+    rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cred-logo-row {
+  text-align: center;
+  margin-bottom: 28px;
+  position: relative; z-index: 2;
+}
+.cred-logo {
+  font-size: 1.8rem;
+  letter-spacing: 8px;
+  color: var(--c-green);
+  text-shadow: 0 0 20px var(--c-green);
+  display: block;
+  margin-bottom: 4px;
+}
+.cred-sub {
+  font-size: 0.9rem;
+  letter-spacing: 3px;
+  color: rgba(0,255,65,0.5);
+  font-family: var(--font-body);
+}
+
+.cred-terminal {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--c-green);
+  text-shadow: 0 0 4px var(--c-green);
+  white-space: pre-wrap;
+  margin-bottom: 24px;
+  min-height: 80px;
+  position: relative; z-index: 2;
+}
+
+.cred-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(0,255,65,0.4);
+  padding: 10px 16px;
+  background: rgba(0,30,0,0.5);
+  margin-bottom: 20px;
+  position: relative; z-index: 2;
+}
+.cred-input-label {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  color: var(--c-green);
+  text-shadow: 0 0 6px var(--c-green);
+}
+.cred-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--c-green);
+  color: var(--c-green);
+  font-family: var(--font-main);
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  padding: 2px 4px;
+  outline: none;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px var(--c-green);
+  caret-color: var(--c-green);
+}
+.cred-input::placeholder { color: rgba(0,255,65,0.3); }
+
+.cred-error {
+  color: var(--c-red);
+  text-shadow: 0 0 8px var(--c-red);
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  min-height: 20px;
+  margin-bottom: 12px;
+  position: relative; z-index: 2;
+  animation: blink 0.5s step-start 3;
+}
+
+.cred-btn {
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  border: 1px solid var(--c-green);
+  color: var(--c-green);
+  font-family: var(--font-main);
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  cursor: pointer;
+  text-align: center;
+  text-shadow: 0 0 8px var(--c-green);
+  transition: background 0.2s, color 0.2s;
+  position: relative; z-index: 2;
+  animation: blink-border 1.2s step-start infinite;
+}
+.cred-btn:hover { background: var(--c-green); color: #000; text-shadow: none; }
+.cred-btn:disabled { opacity: 0.4; cursor: not-allowed; animation: none; }
+
+.cred-note {
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(0,255,65,0.35);
+  margin-top: 12px;
+  letter-spacing: 2px;
+  font-family: var(--font-body);
+  position: relative; z-index: 2;
+}
+
+/* ================================================================
+   SKILL 3: VISOR DOCUMENTAL REDISEÑADO
+   ================================================================ */
+
+/* Panel de selección de fase DESPUÉS de leer */
+.phase-select-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0;
+}
+.phase-select-title {
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+  color: rgba(0,255,65,0.5);
+  font-family: var(--font-body);
+  margin-bottom: 4px;
+}
+.btn-phase-select {
+  padding: 14px 20px;
+  border: 1px solid currentColor;
+  background: transparent;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  text-align: left;
+  color: var(--c-green);
+  text-shadow: 0 0 6px var(--c-green);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn-phase-select:hover:not(:disabled) {
+  background: rgba(0,255,65,0.1);
+  box-shadow: 0 0 20px rgba(0,255,65,0.3);
+}
+.btn-phase-select:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.btn-phase-select .phase-icon { font-size: 1.4rem; }
+.btn-phase-select .phase-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.btn-phase-select .phase-name {
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+.btn-phase-select .phase-sub {
+  font-size: 0.78rem;
+  opacity: 0.6;
+  font-family: var(--font-body);
+}
+
+/* Modal de documento rediseñado — interfaz expandida */
+.doc-interface {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+}
+.doc-interface.active { display: flex; }
+
+.doc-summary-section {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--c-border);
+  background: rgba(0,20,0,0.5);
+  flex-shrink: 0;
+}
+.doc-summary-title {
+  font-size: 0.82rem;
+  letter-spacing: 3px;
+  color: rgba(0,255,65,0.5);
+  font-family: var(--font-body);
+  margin-bottom: 10px;
+}
+.doc-summary-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.doc-summary-list li {
+  font-size: 0.92rem;
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.5;
+  font-family: var(--font-body);
+  color: var(--c-green);
+  opacity: 0.85;
+}
+.doc-summary-list li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--c-green);
+}
+
+.doc-actions-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.btn-doc-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 1px solid rgba(0,255,65,0.35);
+  background: rgba(0,255,65,0.04);
+  color: var(--c-green);
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+  text-shadow: 0 0 4px var(--c-green);
+}
+.btn-doc-action:hover:not(:disabled) {
+  border-color: var(--c-green);
+  background: rgba(0,255,65,0.1);
+  box-shadow: 0 0 12px rgba(0,255,65,0.2);
+}
+.btn-doc-action:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.btn-doc-action .doc-btn-icon { font-size: 1.2rem; flex-shrink: 0; }
+.btn-doc-action .doc-btn-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.btn-doc-action .doc-btn-label { font-size: 0.9rem; letter-spacing: 1px; }
+.btn-doc-action .doc-btn-file  { font-size: 0.75rem; opacity: 0.55; font-family: var(--font-body); }
+
+/* Item "i" de aprender más */
+.doc-learn-more {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+.doc-learn-more:hover { opacity: 1; }
+.doc-learn-more-icon {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--c-cyan);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  color: var(--c-cyan);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.doc-learn-more-text {
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  color: var(--c-cyan);
+  line-height: 1.4;
+}
+.doc-learn-more-text a {
+  color: var(--c-cyan);
+  text-decoration: underline;
+}
+
+/* Unlock indicator */
+.doc-unlock-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  font-family: var(--font-body);
+  border-top: 1px solid var(--c-border);
+  background: rgba(0,0,0,0.4);
+  flex-shrink: 0;
+}
+.doc-unlock-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--c-red);
+  flex-shrink: 0;
+}
+.doc-unlock-dot.unlocked { background: var(--c-green); animation: pulse-dot 2s infinite; }
+
+/* PDF iframe modal */
+#modal-pdf {
+  position: fixed; inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.95);
+  z-index: 1000;
+}
+#modal-pdf.active { display: flex; }
+.pdf-modal-box {
+  width: 90vw; height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0,255,65,0.4);
+  background: #000;
+}
+.pdf-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+.pdf-modal-title {
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: var(--c-green);
+  text-shadow: 0 0 8px var(--c-green);
+}
+.pdf-scroll-note {
+  font-size: 0.78rem;
+  color: rgba(0,255,65,0.4);
+  font-family: var(--font-body);
+}
+.pdf-iframe {
+  flex: 1;
+  border: none;
+  background: #111;
+}
+.btn-close-pdf {
+  padding: 6px 14px;
+  border: 1px solid var(--c-red);
+  background: transparent;
+  color: var(--c-red);
+  font-family: var(--font-main);
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.2s;
+}
+.btn-close-pdf:hover { background: rgba(255,34,68,0.1); }
+
+/* ================================================================
+   SKILL 4: DnD MINIJUEGOS
+   ================================================================ */
+
+.dnd-game-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.dnd-game-title {
+  font-size: 1rem;
+  letter-spacing: 3px;
+  text-align: center;
+  color: var(--c-green);
+  text-shadow: 0 0 10px var(--c-green);
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0,255,65,0.3);
+  flex-shrink: 0;
+}
+
+.dnd-game-subtitle {
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-align: center;
+  opacity: 0.65;
+  font-family: var(--font-body);
+  flex-shrink: 0;
+}
+
+/* --- CABLE ROUTING GAME (Zona 01) --- */
+.cable-game-board {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.cable-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.cable-column-label {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  opacity: 0.5;
+  font-family: var(--font-body);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.cable-node {
+  width: 80px; height: 56px;
+  border: 1px solid currentColor;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  font-family: var(--font-body);
+  cursor: grab;
+  transition: all 0.2s;
+  position: relative;
+  background: rgba(0,0,0,0.6);
+  user-select: none;
+}
+.cable-node:active { cursor: grabbing; }
+.cable-node.source { color: var(--c-green); border-color: var(--c-green); }
+.cable-node.target { color: var(--c-green); border-color: rgba(0,255,65,0.4); }
+.cable-node.connected { border-color: var(--c-green) !important; background: rgba(0,255,65,0.1); box-shadow: 0 0 12px rgba(0,255,65,0.4); }
+.cable-node.wrong-connect { border-color: var(--c-red) !important; background: rgba(255,34,68,0.1); animation: shake 0.3s; }
+.cable-node.dragging { opacity: 0.5; transform: scale(0.95); }
+.cable-node-icon { font-size: 1.3rem; }
+.cable-node-label { font-size: 0.7rem; opacity: 0.8; text-align: center; padding: 0 4px; }
+
+.cable-drop-zone {
+  width: 90px; height: 56px;
+  border: 1px dashed rgba(0,255,65,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+  color: rgba(0,255,65,0.4);
+  transition: all 0.2s;
+  background: rgba(0,255,65,0.02);
+}
+.cable-drop-zone.drag-over {
+  border-color: var(--c-green);
+  background: rgba(0,255,65,0.08);
+  color: var(--c-green);
+  box-shadow: 0 0 16px rgba(0,255,65,0.2);
+}
+.cable-drop-zone.filled {
+  border-style: solid;
+  border-color: var(--c-green);
+  background: rgba(0,255,65,0.1);
+  color: var(--c-green);
+}
+
+/* Connectors SVG overlay */
+.cable-svg {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.cable-line {
+  stroke: var(--c-green);
+  stroke-width: 2;
+  fill: none;
+  filter: drop-shadow(0 0 4px var(--c-green));
+  animation: cable-pulse 1.5s infinite;
+}
+@keyframes cable-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* --- COMMAND MATCH GAME (Zona 02 y 03) --- */
+.match-game-board {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+.match-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.match-column-header {
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  opacity: 0.5;
+  font-family: var(--font-body);
+  text-align: center;
+  padding: 6px;
+  border-bottom: 1px solid var(--c-border);
+  margin-bottom: 4px;
+}
+
+.match-card {
+  padding: 10px 14px;
+  border: 1px solid rgba(0,255,65,0.35);
+  background: rgba(0,20,0,0.6);
+  font-size: 0.82rem;
+  font-family: var(--font-body);
+  cursor: grab;
+  transition: all 0.2s;
+  user-select: none;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 50px;
+}
+.match-card:active { cursor: grabbing; }
+.match-card.dragging { opacity: 0.4; transform: scale(0.97); }
+.match-card.matched {
+  border-color: var(--c-green);
+  background: rgba(0,255,65,0.08);
+  cursor: default;
+  opacity: 0.7;
+}
+.match-card.hover-drag {
+  border-color: var(--c-green);
+  background: rgba(0,255,65,0.05);
+}
+
+.match-card code {
+  font-family: var(--font-main);
+  color: var(--c-cyan);
+  font-size: 0.85rem;
+}
+
+.match-drop-slot {
+  min-height: 50px;
+  border: 1px dashed rgba(0,255,65,0.25);
+  background: rgba(0,255,65,0.02);
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  font-family: var(--font-body);
+  color: rgba(0,255,65,0.3);
+  transition: all 0.2s;
+  gap: 8px;
+}
+.match-drop-slot.drag-over {
+  border-color: var(--c-green);
+  background: rgba(0,255,65,0.06);
+  color: var(--c-green);
+  box-shadow: 0 0 12px rgba(0,255,65,0.15);
+}
+.match-drop-slot.correct {
+  border-color: var(--c-green);
+  border-style: solid;
+  background: rgba(0,255,65,0.08);
+  color: var(--c-green);
+}
+.match-drop-slot.wrong {
+  border-color: var(--c-red);
+  background: rgba(255,34,68,0.06);
+  animation: shake 0.3s;
+}
+.match-slot-label {
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  opacity: 0.6;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* --- SCRIPT ASSEMBLY GAME (Zona 04) --- */
+.script-game-board {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+}
+
+.script-pool {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.script-pool-label {
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  color: rgba(0,255,65,0.5);
+  font-family: var(--font-body);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.script-target {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.script-target-label {
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  color: rgba(0,255,65,0.5);
+  font-family: var(--font-body);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.script-block {
+  padding: 10px 14px;
+  border: 1px solid rgba(0,255,65,0.3);
+  background: rgba(0,20,0,0.7);
+  font-family: var(--font-main);
+  font-size: 0.82rem;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+}
+.script-block:active { cursor: grabbing; }
+.script-block.dragging { opacity: 0.35; }
+.script-block.placed {
+  border-color: var(--c-green);
+  background: rgba(0,255,65,0.06);
+  cursor: default;
+}
+.script-block code {
+  color: var(--c-cyan);
+  font-size: 0.82rem;
+}
+.script-block .block-num {
+  width: 20px;
+  font-size: 0.7rem;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.script-drop-slot {
+  min-height: 42px;
+  border: 1px dashed rgba(0,255,65,0.2);
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  color: rgba(0,255,65,0.25);
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.script-drop-slot.drag-over {
+  border-color: var(--c-green);
+  background: rgba(0,255,65,0.06);
+  color: var(--c-green);
+}
+.script-drop-slot.correct {
+  border-color: var(--c-green);
+  border-style: solid;
+  background: rgba(0,255,65,0.06);
+}
+.script-drop-slot.wrong {
+  border-color: var(--c-red);
+  animation: shake 0.3s;
+}
+
+/* DnD Game result */
+.dnd-result {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+  flex: 1;
+}
+.dnd-result.show { display: flex; }
+.dnd-result-icon { font-size: 3rem; }
+.dnd-result-msg {
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  color: var(--c-green);
+  text-shadow: 0 0 12px var(--c-green);
+}
+.dnd-result-msg.fail {
+  color: var(--c-red);
+  text-shadow: 0 0 12px var(--c-red);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-6px); }
+  75%       { transform: translateX(6px); }
+}
+
+/* Progress bar for DnD */
+.dnd-progress-bar {
+  height: 4px;
+  background: rgba(0,255,65,0.1);
+  border: 1px solid rgba(0,255,65,0.2);
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+.dnd-progress-fill {
+  height: 100%;
+  background: var(--c-green);
+  box-shadow: 0 0 6px var(--c-green);
+  transition: width 0.5s ease;
+}
+
+/* ================================================================
+   SKILL 5: XENOMORFO JUMPSCARE
+   ================================================================ */
+#xenomorph-modal {
+  position: fixed; inset: 0;
+  display: none;
+  z-index: 99999;
+  background: #000;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#xenomorph-modal.active {
+  display: flex;
+  animation: xeno-appear 0.1s ease-out forwards;
+}
+@keyframes xeno-appear {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.xeno-bg-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.7) contrast(1.4) saturate(0.3);
+  animation: xeno-zoom 4s ease-out forwards;
+}
+@keyframes xeno-zoom {
+  0% { transform: scale(1.1); filter: brightness(0) contrast(1); }
+  15% { transform: scale(1.05); filter: brightness(0.5) contrast(1.4) saturate(0.3); }
+  100% { transform: scale(1.15); filter: brightness(0.6) contrast(1.5) saturate(0.2); }
+}
+
+.xeno-overlay {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at center, transparent 20%, rgba(255,0,0,0.15) 60%, rgba(0,0,0,0.8) 100%);
+}
+
+.xeno-crt {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    to bottom, transparent 0, transparent 3px,
+    rgba(0,0,0,0.4) 3px, rgba(0,0,0,0.4) 4px
+  );
+  pointer-events: none;
+  animation: xeno-flicker 0.08s infinite;
+}
+@keyframes xeno-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.xeno-glitch-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(2rem, 6vw, 5rem);
+  letter-spacing: 10px;
+  color: var(--c-red);
+  text-shadow: 0 0 30px var(--c-red), 0 0 60px var(--c-red);
+  text-align: center;
+  animation: glitch 0.15s infinite;
+  white-space: nowrap;
+  z-index: 5;
+}
+@keyframes glitch {
+  0%, 100% { transform: translate(-50%, -50%) skewX(0); color: var(--c-red); text-shadow: 0 0 30px var(--c-red); }
+  25%  { transform: translate(-52%, -50%) skewX(-3deg); color: #ff0; text-shadow: -3px 0 var(--c-red), 3px 0 cyan; }
+  50%  { transform: translate(-48%, -50%) skewX(2deg); clip-path: inset(20% 0 60% 0); }
+  75%  { transform: translate(-50%, -48%) skewX(0); color: var(--c-red); }
+}
+
+.xeno-countdown {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  letter-spacing: 4px;
+  color: rgba(255,34,68,0.7);
+  text-align: center;
+  z-index: 5;
+}
+
+/* ================================================================
+   SKILL 6: CINEMÁTICAS — BAD ENDING
+   ================================================================ */
+#bad-ending-screen {
+  position: fixed; inset: 0;
+  display: none;
+  z-index: 9999;
+  background: #000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#bad-ending-screen.active { display: flex; }
+
+.bad-end-crt-static {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px,
+    transparent 1px, transparent 4px
+  );
+  animation: static-noise 0.05s infinite;
+  z-index: 1;
+}
+@keyframes static-noise {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 4px; }
+}
+
+.bad-end-content {
+  position: relative; z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+  max-width: 700px;
+}
+
+.bad-end-pov-text {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: rgba(255,34,68,0.7);
+  text-shadow: 0 0 8px rgba(255,34,68,0.5);
+  white-space: pre-wrap;
+  font-family: var(--font-body);
+  text-align: left;
+  letter-spacing: 1px;
+}
+
+.bad-end-static-overlay {
+  position: fixed; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  animation: bad-static 0.07s infinite;
+  z-index: 10;
+  display: none;
+}
+.bad-end-static-overlay.show { display: block; }
+@keyframes bad-static {
+  0%, 100% { background-position: 0 0; opacity: 0.3; }
+  33%       { background-position: 50px 30px; opacity: 0.5; }
+  66%       { background-position: -20px 60px; opacity: 0.35; }
+}
+
+/* ================================================================
+   SKILL 6: CINEMÁTICAS — GOOD ENDING (NARCISSUS)
+   ================================================================ */
+#good-ending-screen {
+  position: fixed; inset: 0;
+  display: none;
+  z-index: 9998;
+  background: #000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#good-ending-screen.active { display: flex; }
+
+.good-end-stars {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, #0a0a1a 0%, #000 70%);
+  overflow: hidden;
+}
+.good-end-stars::before {
+  content: '';
+  position: absolute; inset: -50%;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8) 0%, transparent 0%),
+    radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.6) 0%, transparent 0%),
+    radial-gradient(1px 1px at 70% 15%, rgba(255,255,255,0.9) 0%, transparent 0%),
+    radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,0.7) 0%, transparent 0%),
+    radial-gradient(1px 1px at 50% 85%, rgba(255,255,255,0.5) 0%, transparent 0%),
+    radial-gradient(2px 2px at 25% 45%, rgba(0,255,65,0.4) 0%, transparent 0%),
+    radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.8) 0%, transparent 0%),
+    radial-gradient(1px 1px at 90% 50%, rgba(255,255,255,0.6) 0%, transparent 0%);
+  animation: starfield 60s linear infinite;
+}
+@keyframes starfield {
+  from { transform: translateY(0); }
+  to   { transform: translateY(50%); }
+}
+
+.good-end-content {
+  position: relative; z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 760px;
+  padding: 40px;
+  width: 100%;
+}
+
+.good-end-logo {
+  font-size: 1.1rem;
+  letter-spacing: 6px;
+  color: var(--c-green);
+  text-shadow: 0 0 20px var(--c-green);
+  text-align: center;
+}
+
+.good-end-narrative {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  color: var(--c-green);
+  text-shadow: 0 0 6px var(--c-green);
+  text-align: center;
+  font-family: var(--font-body);
+  letter-spacing: 1px;
+  max-width: 600px;
+}
+
+/* Firebase Report Card */
+.mission-report-card {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid rgba(0,255,65,0.4);
+  background: rgba(0,20,0,0.85);
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 0 40px rgba(0,255,65,0.15);
+}
+.mission-report-card.show { display: flex; }
+
+.report-header {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0,255,65,0.05);
+}
+.report-header-icon { font-size: 1.2rem; }
+.report-header-title {
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+  color: var(--c-green);
+  text-shadow: 0 0 8px var(--c-green);
+}
+.report-header-sig {
+  font-size: 0.75rem;
+  opacity: 0.4;
+  margin-left: auto;
+  font-family: var(--font-body);
+}
+
+.report-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(0,255,65,0.08);
+  gap: 16px;
+}
+.report-row:last-child { border-bottom: none; }
+.report-label {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  opacity: 0.6;
+  font-family: var(--font-body);
+  white-space: nowrap;
+}
+.report-value {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-align: right;
+}
+.report-value.highlight {
+  color: var(--c-gold);
+  text-shadow: 0 0 12px var(--c-gold);
+  font-size: 1.3rem;
+}
+
+.btn-restart-v2 {
+  padding: 14px 32px;
+  border: 1px solid var(--c-green);
+  background: transparent;
+  color: var(--c-green);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-shadow: 0 0 8px var(--c-green);
+  animation: blink-border 1.5s step-start infinite;
+}
+.btn-restart-v2:hover { background: var(--c-green); color: #000; text-shadow: none; animation: none; }
+
+/* HUD player name (mapa) */
+.hud-player-name {
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  color: var(--c-green);
+  text-shadow: 0 0 8px var(--c-green);
+  white-space: nowrap;
+}
+
+/* Inline tooltip for locked states */
+.locked-msg-inline {
+  display: none;
+  font-size: 0.78rem;
+  color: rgba(0,255,65,0.4);
+  font-family: var(--font-body);
+  padding: 4px 8px;
+  border: 1px solid rgba(0,255,65,0.15);
+  background: rgba(0,0,0,0.4);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
