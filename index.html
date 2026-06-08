@@ -250,7 +250,39 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
         <div class="node-visor" id="node-visor">
           <div class="visor-placeholder">
             <div class="visor-grid"></div>
+            <!-- Anillos concéntricos -->
+            <div class="radar-ring rr-1"></div>
+            <div class="radar-ring rr-2"></div>
+            <div class="radar-ring rr-3"></div>
+            <!-- Ejes polares de referencia -->
+            <div class="radar-axis-h"></div>
+            <div class="radar-axis-v"></div>
+            <div class="radar-diagonal-1"></div>
+            <div class="radar-diagonal-2"></div>
+            <!-- Haz de barrido giratorio -->
+            <div class="radar-sweep"></div>
+            <!-- Objetivo 1: Cuadrante Superior Izquierdo (~321° - Delay 4.46s) -->
+            <div class="radar-target target-1">
+              <div class="radar-echo-dot"></div>
+              <div class="radar-echo-ripple"></div>
+            </div>
+            <!-- Objetivo 2: Cuadrante Inferior Derecho (~124° - Delay 1.72s) -->
+            <div class="radar-target target-2">
+              <div class="radar-echo-dot"></div>
+              <div class="radar-echo-ripple"></div>
+            </div>
+            <!-- Objetivo 3: Cuadrante Superior Derecho (~66° - Delay 0.92s) -->
+            <div class="radar-target target-3">
+              <div class="radar-echo-dot"></div>
+              <div class="radar-echo-ripple"></div>
+            </div>
+            <!-- Retícula central -->
             <div class="visor-crosshair"></div>
+            <!-- Telemetría en esquinas -->
+            <div class="visor-telemetry tl"><span class="telemetry-lbl">TRK:</span>&nbsp;<span class="telemetry-val-azm"></span></div>
+            <div class="visor-telemetry tr"><span class="telemetry-lbl">RNG:</span>&nbsp;<span class="telemetry-val-rng"></span></div>
+            <div class="visor-telemetry bl"><span class="telemetry-lbl">SYS:</span>&nbsp;<span class="telemetry-val-sys"></span></div>
+            <div class="visor-telemetry br"><span class="telemetry-lbl">SEC:</span>&nbsp;<span class="telemetry-val-sec"></span></div>
           </div>
           <img id="node-visor-img" src="" alt="Visor" style="display:none">
           <div class="visor-scanlines"></div>

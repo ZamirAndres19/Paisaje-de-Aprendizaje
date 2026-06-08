@@ -483,19 +483,197 @@ html, body {
     linear-gradient(90deg, rgba(0,255,65,0.05) 1px, transparent 1px);
   background-size: 20px 20px;
 }
+/* Custom Radar Elements */
 .visor-crosshair {
   position: absolute;
-  width: 40px; height: 40px;
-  border: 1px solid rgba(0,255,65,0.5);
-  border-radius: 50%;
+  width: 28px; height: 28px;
+  border: 1px solid currentColor;
+  border-radius: 50% !important;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 5;
 }
 .visor-crosshair::before, .visor-crosshair::after {
   content: '';
   position: absolute;
-  background: rgba(0,255,65,0.5);
+  background: currentColor;
 }
-.visor-crosshair::before { width:1px; height:20px; top:-10px; left:50%; }
-.visor-crosshair::after  { height:1px; width:20px; left:-10px; top:50%; }
+.visor-crosshair::before { width: 1px; height: 12px; top: -6px; left: 50%; }
+.visor-crosshair::after  { height: 1px; width: 12px; left: -6px; top: 50%; }
+
+/* Anillos del Radar */
+.radar-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid currentColor;
+  border-radius: 50% !important;
+  pointer-events: none;
+  z-index: 2;
+}
+.rr-1 { width: 45px; height: 45px; opacity: 0.22; border-style: dashed; }
+.rr-2 { width: 95px; height: 95px; opacity: 0.16; border-style: solid; }
+.rr-3 { width: 145px; height: 145px; opacity: 0.12; border-style: dashed; }
+
+/* Ejes Polares del Radar */
+.radar-axis-h, .radar-axis-v, .radar-diagonal-1, .radar-diagonal-2 {
+  position: absolute;
+  top: 50%; left: 50%;
+  background: currentColor;
+  pointer-events: none;
+  z-index: 1;
+}
+.radar-axis-h { width: 160px; height: 1px; transform: translate(-50%, -50%); opacity: 0.08; }
+.radar-axis-v { width: 1px; height: 160px; transform: translate(-50%, -50%); opacity: 0.08; }
+.radar-diagonal-1 { width: 160px; height: 1px; transform: translate(-50%, -50%) rotate(45deg); opacity: 0.04; }
+.radar-diagonal-2 { width: 160px; height: 1px; transform: translate(-50%, -50%) rotate(-45deg); opacity: 0.04; }
+
+/* Línea de Barrido (Sweeper) */
+.radar-sweep {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 170px; height: 170px;
+  margin-top: -85px; margin-left: -85px;
+  background: conic-gradient(from 0deg, currentColor 0deg, transparent 90deg, transparent 360deg);
+  border-radius: 50% !important;
+  pointer-events: none;
+  opacity: 0.28;
+  filter: drop-shadow(0 0 3px currentColor);
+  animation: radar-sweep-rotation 5s linear infinite;
+  transform-origin: center;
+  z-index: 3;
+}
+
+@keyframes radar-sweep-rotation {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Objetivos de Radar (Radar Targets) */
+.radar-target {
+  position: absolute;
+  width: 6px; height: 6px;
+  margin-top: -3px; margin-left: -3px;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Posiciones de Objetivos */
+.target-1 { top: 28%; left: 32%; } /* ~321deg */
+.target-2 { top: 65%; left: 72%; } /* ~124deg */
+.target-3 { top: 42%; left: 68%; } /* ~66deg */
+
+.radar-echo-dot {
+  width: 100%; height: 100%;
+  background: currentColor;
+  border-radius: 50% !important;
+  box-shadow: 0 0 6px currentColor, 0 0 12px currentColor;
+  opacity: 0;
+}
+
+.radar-echo-ripple {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px; height: 6px;
+  border: 1px solid currentColor;
+  border-radius: 50% !important;
+  opacity: 0;
+}
+
+/* Asignar animaciones y delays específicos */
+.target-1 .radar-echo-dot    { animation: blip-flash-dot 5s infinite 4.46s; }
+.target-1 .radar-echo-ripple { animation: blip-flash-ripple 5s infinite 4.46s; }
+
+.target-2 .radar-echo-dot    { animation: blip-flash-dot 5s infinite 1.72s; }
+.target-2 .radar-echo-ripple { animation: blip-flash-ripple 5s infinite 1.72s; }
+
+.target-3 .radar-echo-dot    { animation: blip-flash-dot 5s infinite 0.92s; }
+.target-3 .radar-echo-ripple { animation: blip-flash-ripple 5s infinite 0.92s; }
+
+@keyframes blip-flash-dot {
+  0% { opacity: 0; transform: scale(0.8); }
+  1% { opacity: 1; transform: scale(1.3); }
+  15% { opacity: 0.7; transform: scale(1); }
+  45% { opacity: 0.15; }
+  65% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes blip-flash-ripple {
+  0% { opacity: 0; width: 6px; height: 6px; }
+  1% { opacity: 0.8; }
+  22% { opacity: 0; width: 36px; height: 36px; }
+  100% { opacity: 0; }
+}
+
+/* Telemetría del Radar */
+.visor-telemetry {
+  position: absolute;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  color: currentColor;
+  opacity: 0.55;
+  letter-spacing: 1px;
+  pointer-events: none;
+  z-index: 5;
+  text-shadow: 0 0 2px currentColor;
+}
+.visor-telemetry.tl { top: 8px; left: 10px; }
+.visor-telemetry.tr { top: 8px; right: 10px; }
+.visor-telemetry.bl { bottom: 24px; left: 10px; }
+.visor-telemetry.br { bottom: 24px; right: 10px; }
+
+.telemetry-lbl {
+  opacity: 0.7;
+}
+
+/* Ciclo dinámico de texto para la telemetría en CSS */
+.telemetry-val-azm::after {
+  content: "142.84°";
+  animation: cycle-azm 8s linear infinite;
+}
+.telemetry-val-rng::after {
+  content: "14.8M";
+  animation: cycle-rng 10s linear infinite;
+}
+.telemetry-val-sys::after {
+  content: "MU/TH/UR";
+}
+.telemetry-val-sec::after {
+  content: "B-01";
+  animation: cycle-sec 6s steps(4) infinite;
+}
+
+@keyframes cycle-azm {
+  0% { content: "142.84°"; }
+  10% { content: "143.12°"; }
+  20% { content: "143.50°"; }
+  30% { content: "143.98°"; }
+  40% { content: "144.22°"; }
+  50% { content: "144.05°"; }
+  60% { content: "143.78°"; }
+  70% { content: "143.35°"; }
+  80% { content: "142.90°"; }
+  90% { content: "142.71°"; }
+  100% { content: "142.84°"; }
+}
+
+@keyframes cycle-rng {
+  0% { content: "14.8M"; }
+  25% { content: "14.6M"; }
+  50% { content: "14.5M"; }
+  75% { content: "14.7M"; }
+  100% { content: "14.8M"; }
+}
+
+@keyframes cycle-sec {
+  0% { content: "B-01"; }
+  25% { content: "B-02"; }
+  50% { content: "B-03"; }
+  75% { content: "B-04"; }
+  100% { content: "B-01"; }
+}
 
 CSS
 #node-visor-img {
