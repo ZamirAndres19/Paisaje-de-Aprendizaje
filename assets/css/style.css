@@ -1547,3 +1547,12 @@ button {
   text-shadow: none !important;
   opacity: 0.6 !important;
 }
+
+/* Efectos de Hover para la Miniatura de Video */
+.video-preview-card:hover .video-preview-overlay {
+  background: rgba(0, 0, 0, 0.35) !important;
+}
+.video-preview-card:hover .video-play-btn {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px currentColor !important;
+}

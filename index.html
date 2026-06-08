@@ -798,6 +798,66 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
         }
       }
     }, 150);
+
+    // Mutar los IDs de video globales para usar los IDs válidos sin tocar app.js
+    if (typeof NODE_VIDEOS !== 'undefined') {
+      if (NODE_VIDEOS.bridge) NODE_VIDEOS.bridge.youtubeId = 'P0YuVZj3ny0';
+      if (NODE_VIDEOS.lab) NODE_VIDEOS.lab.youtubeId = '2HjPb9xT8sI';
+    }
+
+    // Interceptar y reemplazar openVideoModal para renderizar una miniatura con enlace externo seguro
+    (function() {
+      window.openVideoModal = function(nodeId) {
+        if (typeof AUDIO !== 'undefined' && !AUDIO.muted) {
+          const s = new Audio('assets/sounds/efecto-manual.mp3');
+          s.volume = 0.8; s.play().catch(() => {});
+        }
+        const data = NODE_VIDEOS[nodeId];
+        if (!data) return;
+
+        const overlay    = document.getElementById('modal-video');
+        const titleEl    = document.getElementById('video-modal-title');
+        const subtitleEl = document.getElementById('video-modal-subtitle');
+        const frameWrap  = document.getElementById('video-frame-wrap');
+
+        if (!overlay) return;
+
+        titleEl.textContent    = data.title;
+        subtitleEl.textContent = data.subtitle;
+
+        if (!data.youtubeId || data.youtubeId.startsWith('REEMPLAZAR')) {
+          frameWrap.innerHTML =
+            '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+            'height:100%;gap:16px;color:rgba(0,255,65,0.5);font-family:monospace;text-align:center;padding:20px">' +
+            '<div style="font-size:3rem">▶</div>' +
+            '<div style="letter-spacing:3px">VIDEO PENDIENTE DE CONFIGURACIÓN</div>' +
+            '</div>';
+        } else {
+          const thumbnailUrl = `https://img.youtube.com/vi/${data.youtubeId}/hqdefault.jpg`;
+          const videoUrl = `https://www.youtube.com/watch?v=${data.youtubeId}`;
+          
+          frameWrap.innerHTML = `
+            <div class="video-preview-card" onclick="window.open('${videoUrl}', '_blank')" style="position:relative; width:100%; height:100%; background: url('${thumbnailUrl}') center/cover no-repeat; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-direction:column; border:1px solid currentColor;">
+              <div class="video-preview-overlay" style="position:absolute; inset:0; background:rgba(0,0,0,0.55); transition:background 0.3s; z-index: 1;"></div>
+              
+              <!-- Botón Play -->
+              <div class="video-play-btn" style="position:relative; z-index:2; width:70px; height:70px; border:3px solid currentColor; border-radius:50% !important; display:flex; align-items:center; justify-content:center; font-size:2rem; box-shadow:0 0 15px currentColor; transition: transform 0.2s, box-shadow 0.2s; color: currentColor;">
+                ▶
+              </div>
+              
+              <div class="video-preview-text" style="position:relative; z-index:2; margin-top:20px; font-family:var(--font-mono, monospace); font-size:0.85rem; letter-spacing:2px; color:currentColor; text-shadow:0 0 5px currentColor; font-weight:bold; text-align:center; padding: 0 10px;">
+                CLIC PARA TRANSMITIR EN CANAL EXTERNO (YOUTUBE)
+              </div>
+              <div class="video-preview-sub" style="position:relative; z-index:2; margin-top:6px; font-family:var(--font-body); font-size:0.7rem; opacity:0.6; text-transform:uppercase; text-align:center; color: #fff;">
+                Evita errores de reproducción de red y protocolo local
+              </div>
+            </div>
+          `;
+        }
+
+        overlay.style.display = 'flex';
+      };
+    })();
   </script>
 </body>
 </html>
