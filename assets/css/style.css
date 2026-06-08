@@ -1005,6 +1005,7 @@ CSS
   text-shadow: 0 0 4px currentColor;
   min-height: 80px;
   font-family: var(--font-body);
+  white-space: pre-wrap;
 }
 .practice-options {
   display: flex; flex-direction: column; gap: 8px;
@@ -1077,7 +1078,7 @@ CSS
 .quiz-progress-wrap { height: 4px; background: rgba(255,255,255,0.08); }
 .quiz-progress-bar { height: 100%; background: currentColor; box-shadow: 0 0 8px currentColor; transition: width 0.5s ease; }
 .quiz-q-num { padding: 14px 24px 0; font-size: 0.85rem; letter-spacing: 3px; opacity: 0.55; font-family: var(--font-body); }
-.quiz-question { padding: 16px 24px; font-size: 1.3rem; line-height: 1.5; text-shadow: 0 0 6px currentColor; min-height: 80px; }
+.quiz-question { padding: 16px 24px; font-size: 1.3rem; line-height: 1.5; text-shadow: 0 0 6px currentColor; min-height: 80px; white-space: pre-wrap; }
 .quiz-options { display: flex; flex-direction: column; gap: 8px; padding: 0 24px 20px; }
 .quiz-options button {
   background: rgba(0,255,65,0.05);

@@ -49,7 +49,7 @@ Tripulante — tu misión empieza ahora.`;
 const NODE_DOCS = {
   bridge: {
     title: 'MANUAL_DESPLIEGUE_W-Y_01.pdf',
-    pdfPath: 'assets/docs/manual_windows_server.pdf',
+    pdfPath: '',
     learnMoreUrl: 'https://ieeexplore.ieee.org/document/6823453',
     learnMoreText: '¿Quieres aprender más? — IEEE Xplore: Infraestructura TI en Centros de Datos (ANSI/TIA-942)',
     summary: [
@@ -62,7 +62,7 @@ const NODE_DOCS = {
   },
   lab: {
     title: 'MANUAL_POSTGRESQL_ASH_02.pdf',
-    pdfPath: 'assets/docs/manual_postgresql.pdf',
+    pdfPath: '',
     learnMoreUrl: 'https://www.postgresql.org/docs/current/',
     learnMoreText: '¿Quieres aprender más? — Documentación oficial PostgreSQL + IEEE: Gestión de Bases de Datos',
     summary: [
@@ -75,7 +75,7 @@ const NODE_DOCS = {
   },
   comms: {
     title: 'MANUAL_FIREWALL_COMMS_03.pdf',
-    pdfPath: 'assets/docs/manual_firewall.pdf',
+    pdfPath: '',
     learnMoreUrl: 'https://ieeexplore.ieee.org/document/7876269',
     learnMoreText: '¿Quieres aprender más? — IEEE: Seguridad en Redes y Configuración de Firewalls',
     summary: [
@@ -88,7 +88,7 @@ const NODE_DOCS = {
   },
   engines: {
     title: 'MANUAL_SCRIPTS_MOTORES_04.pdf',
-    pdfPath: 'assets/docs/manual_scripts.pdf',
+    pdfPath: '',
     learnMoreUrl: 'https://ieeexplore.ieee.org/document/9382481',
     learnMoreText: '¿Quieres aprender más? — IEEE: Automatización con Bash/PowerShell en Infraestructura',
     summary: [
@@ -536,19 +536,28 @@ function renderV2DocButton(node) {
   if (!ctrl) return;
   ctrl.innerHTML = '';
 
-  const btn = document.createElement('button');
-  btn.className = 'primary';
-  btn.innerHTML = `📁 LEER ${node.docTitle || 'MANUAL DE DESPLIEGUE'}`;
-  btn.addEventListener('click', () => openDocV2(node));
-  ctrl.appendChild(btn);
+  // Botón 1: LEER MANUAL
+  const btnDoc = document.createElement('button');
+  btnDoc.innerHTML = `📁 LEER ${node.docTitle || 'MANUAL DE DESPLIEGUE'}`;
+  btnDoc.addEventListener('click', () => openDocV2(node));
+  ctrl.appendChild(btnDoc);
+
+  // Botón 2: INICIAR VERIFICACIÓN DE PROTOCOLOS (abre modal de selección)
+  const btnVerif = document.createElement('button');
+  btnVerif.className = 'primary';
+  btnVerif.innerHTML = '[ INICIAR VERIFICACIÓN DE PROTOCOLOS ]';
+  btnVerif.addEventListener('click', () => {
+    window._currentNodeRef = node;
+    showPhaseSelectModal(node);
+  });
+  ctrl.appendChild(btnVerif);
 }
 
 /* ================================================================
    VISOR DOCUMENTAL v2 — Resumen + PDF + Video + Info
    ================================================================ */
 window.openDocV2 = function openDocV2(node) {
-  // Desbloquear inmediatamente al ingresar al documento
-  window._docRead = true;
+  // El documento inicia bloqueado hasta que se abra el archivo completo o se salte la teoría
 
   const docData = NODE_DOCS[node.id] || {};
   const overlay = document.getElementById('modal-doc');
@@ -633,6 +642,14 @@ window.openPdfModal = function() {
   const node = window._currentDocNode;
   if (!node) return;
   const docData = NODE_DOCS[node.id] || {};
+
+  const pdfPath = docData.pdfPath || '';
+  if (pdfPath && (pdfPath.startsWith('http://') || pdfPath.startsWith('https://'))) {
+    window.open(pdfPath, '_blank');
+    unlockVideoAfterRead();
+    return;
+  }
+
   const modal = document.getElementById('modal-pdf');
   const iframe = document.getElementById('pdf-iframe');
   const fallback = document.getElementById('pdf-fallback-content');
@@ -643,8 +660,6 @@ window.openPdfModal = function() {
   if (!modal) return;
   if (titleEl) titleEl.textContent = docData.title || 'MANUAL_W-Y.pdf';
 
-  // Intentar cargar PDF
-  const pdfPath = docData.pdfPath || '';
   const isLocal = window.location.protocol === 'file:';
   const pdfExists = pdfPath !== '' && !isLocal;
 
@@ -1265,3 +1280,42 @@ window.launchDndGame = launchDndGame;
 window.launchGoodEnding = launchGoodEnding;
 window.launchBadEnding = launchBadEnding;
 window.launchXenomorphJumpscare = launchXenomorphJumpscare;
+
+/* ================================================================
+   V2 OVERRIDES FOR MODALS (REPLAY MANUAL & SKIP PRACTICE)
+   ================================================================ */
+window.reopenDoc = function() {
+  const practiceOverlay = document.getElementById('modal-practice');
+  if (practiceOverlay) practiceOverlay.style.display = 'none';
+  const quizOverlay = document.getElementById('modal-quiz');
+  if (quizOverlay) quizOverlay.style.display = 'none';
+
+  if (window.currentNode) {
+    openDocV2(window.currentNode);
+  } else if (window._currentDocNode) {
+    openDocV2(window._currentDocNode);
+  }
+};
+
+window.skipPractice = function() {
+  const overlay = document.getElementById('modal-practice');
+  if (overlay) overlay.style.display = 'none';
+  const node = window.currentNode || window._currentNodeRef || window._currentDocNode;
+  if (node) {
+    showPhaseSelectModal(node);
+  }
+};
+
+window.skipTheory = function() {
+  window._docRead = true;
+  if (typeof unlockVideoAfterRead === 'function') unlockVideoAfterRead();
+  if (typeof AUDIO !== 'undefined' && !AUDIO.muted) {
+    const s = new Audio('assets/sounds/botones.mp3');
+    s.volume = 0.9; s.play().catch(() => {});
+  }
+  closeDoc();
+  const node = window.currentNode || window._currentNodeRef || window._currentDocNode;
+  if (node) {
+    setTimeout(() => showPhaseSelectModal(node), 200);
+  }
+};

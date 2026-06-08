@@ -971,7 +971,14 @@ function skipPractice() {
   if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   const overlay = document.getElementById('modal-practice');
   if (overlay) overlay.style.display = 'none';
-  if (faseBNode) startQuizPhase(faseBNode);
+  const node = currentNode || faseBNode;
+  if (node) {
+    if (typeof launchDndGame === 'function') {
+      launchDndGame(node);
+    } else if (typeof openQuiz === 'function') {
+      openQuiz(node);
+    }
+  }
 }
 
 function closePractice() {
@@ -1033,7 +1040,8 @@ function renderQuizQuestion() {
 
   const optionsEl = document.getElementById('quiz-options');
   optionsEl.innerHTML = '';
-  q.options.forEach((opt, i) => {
+  const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+  shuffledOptions.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.textContent = opt.text;
     btn.addEventListener('click', () => handleQuizAnswer(opt, i));
@@ -1219,11 +1227,11 @@ function updateO2() {
   const pct = oxygen;
   const color = pct > 60 ? 'var(--c-green)' : pct > 30 ? 'var(--c-amber)' : 'var(--c-red)';
 
-  ['map-o2-bar','node-o2-bar'].forEach(id => {
+  ['map-o2-bar','node-o2-bar','quiz-o2-bar'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.style.width = pct + '%'; el.style.background = color; el.style.boxShadow = `0 0 6px ${color}`; }
   });
-  ['map-o2-pct','node-o2-val'].forEach(id => {
+  ['map-o2-pct','node-o2-val','quiz-o2-val'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = pct + '%';
   });
