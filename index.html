@@ -124,7 +124,7 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
       </div>
       <div class="hud-section">
         <span class="hud-label">TRIPULANTE</span>
-        <span class="hud-value" style="color: var(--c-amber); text-shadow: 0 0 8px var(--c-amber);">GAQUIROZR</span>
+        <span class="hud-value" id="map-hud-player-name" style="color: var(--c-amber); text-shadow: 0 0 8px var(--c-amber);">GAQUIROZR</span>
       </div>
       <div class="hud-section hud-center">
         <span class="hud-label">SOPORTE VITAL — O₂</span>
@@ -700,5 +700,21 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
   <script src="assets/js/dnd-games.js"></script>
   <script src="assets/js/v2-app.js"></script>
   <script src="assets/js/ieee-patch.js"></script>
+  <script>
+    // MutationObserver to sync bottom HUD player name to the top HUD
+    (function() {
+      const targetNode = document.getElementById('hud-player-name');
+      const topHudName = document.getElementById('map-hud-player-name');
+      if (targetNode && topHudName) {
+        if (targetNode.textContent !== '—' && targetNode.textContent !== '') {
+          topHudName.textContent = targetNode.textContent;
+        }
+        const observer = new MutationObserver(() => {
+          topHudName.textContent = targetNode.textContent;
+        });
+        observer.observe(targetNode, { childList: true, characterData: true, subtree: true });
+      }
+    })();
+  </script>
 </body>
 </html>

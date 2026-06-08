@@ -449,7 +449,7 @@ html, body {
 .node-o2-wrap { display: flex; align-items: center; gap: 8px; }
 .node-o2-label { font-size: 0.85rem; letter-spacing: 2px; opacity: 0.6; font-family: var(--font-body); }
 .node-o2-bar-outer { width: 100px; height: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); }
-.node-o2-bar { height: 100%; width: 100%; background: var(--c-green); box-shadow: 0 0 6px currentColor; transition: width 0.8s ease, background 0.8s ease; }
+.node-o2-bar { height: 100%; width: 100%; background: #ffffff; box-shadow: 0 0 6px #ffffff; transition: width 0.8s ease, background 0.8s ease; }
 .node-o2-val { font-size: 1.1rem; min-width: 50px; text-align: right; }
 
 .node-layout { display: flex; flex: 1; overflow: hidden; }
@@ -620,11 +620,11 @@ CSS
 .node-theme-engines { color: var(--c-red);   --hue: 0deg;   --c-border: rgba(255,34,68,0.35); }
 
 .node-theme-lab .node-o2-bar,
-.node-theme-lab .o2-bar    { background: var(--c-amber); box-shadow: 0 0 6px var(--c-amber); }
+.node-theme-lab .o2-bar    { background: #ffffff; box-shadow: 0 0 6px #ffffff; }
 .node-theme-comms .node-o2-bar,
-.node-theme-comms .o2-bar  { background: var(--c-cyan); box-shadow: 0 0 6px var(--c-cyan); }
+.node-theme-comms .o2-bar  { background: #ffffff; box-shadow: 0 0 6px #ffffff; }
 .node-theme-engines .node-o2-bar,
-.node-theme-engines .o2-bar{ background: var(--c-red); box-shadow: 0 0 6px var(--c-red); }
+.node-theme-engines .o2-bar{ background: #ffffff; box-shadow: 0 0 6px #ffffff; }
 
 .node-theme-lab .btn-back:hover,
 .node-theme-lab .node-controls button:hover { background: var(--c-amber); color: #000; }
