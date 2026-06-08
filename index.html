@@ -39,8 +39,6 @@
     <!-- Canvas renderer para evadir el bug de aceleración por hardware del navegador -->
     <canvas id="cin-canvas" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;"></canvas>
     
-    <video id="cin-video" src="assets/img/inicio.mp4" preload="auto" playsinline style="display: none;"></video>
-    
     <div class="cin-slide hidden" id="cin-bridge-scene" style="z-index: 2; position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
       <div class="cin-bg" style="background-image: url('assets/img/nostromo_bridge.png')"></div>
       <div class="cin-overlay cin-overlay-amber"></div>
@@ -56,7 +54,9 @@
       <div class="cin-film-grain"></div>
     </div>
     
-    <video id="cin-video-2" src="assets/img/0531 (2)(1).mp4" preload="auto" playsinline style="display: none;"></video>
+    <!-- Videos ocultos, se dibujan en el canvas -->
+    <video id="cin-video" src="assets/img/inicio.mp4" preload="auto" playsinline style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
+    <video id="cin-video-2" src="assets/img/0531 (2)(1).mp4" preload="auto" playsinline style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
 
     <div class="cin-skip-bar" style="z-index: 10;">
       <span class="cin-skip-label">TRANSMISIÓN EN CURSO...</span>
