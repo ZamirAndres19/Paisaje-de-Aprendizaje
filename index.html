@@ -747,6 +747,20 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
         observer.observe(targetNode, { childList: true, characterData: true, subtree: true });
       }
     })();
+
+    // Interceptar y filtrar el botón de video de referencia para que no se renderice
+    (function() {
+      const originalRenderControls = window.renderControls;
+      window.renderControls = function(actions) {
+        const filteredActions = actions.filter(a => {
+          const label = a.label || '';
+          return !label.includes('VIDEO DE REFERENCIA');
+        });
+        if (typeof originalRenderControls === 'function') {
+          originalRenderControls(filteredActions);
+        }
+      };
+    })();
   </script>
 </body>
 </html>

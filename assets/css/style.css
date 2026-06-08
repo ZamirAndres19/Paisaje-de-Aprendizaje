@@ -1536,3 +1536,8 @@ button {
   opacity: 0.95 !important;
   text-shadow: 0 0 5px currentColor !important;
 }
+
+/* Ocultar botón de video de referencia en modal */
+#btn-open-video {
+  display: none !important;
+}
