@@ -850,6 +850,8 @@ function closeDoc() {
 }
 
 function skipTheory() {
+  window._docRead = true;
+  if (typeof unlockVideoAfterRead === 'function') unlockVideoAfterRead();
   if (!AUDIO.muted) { const s = new Audio('assets/sounds/botones.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   closeDoc();
   if (currentNode) startFaseB(currentNode, 0);
@@ -867,11 +869,6 @@ function reopenDoc() {
   title.textContent = docTitle;
   body.innerHTML    = docBody;
   overlay.style.display = 'flex';
-}
-
-function skipTheory() {
-  closeDoc();
-  if (currentNode) startFaseB(currentNode, 0);
 }
 
 // ============================================================
