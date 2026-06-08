@@ -761,6 +761,43 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
         }
       };
     })();
+
+    // Chequeador periódico para deshabilitar el botón de práctica guiada hasta leer el manual
+    setInterval(function() {
+      const sceneNode = document.getElementById('scene-node');
+      const isNodeActive = sceneNode && sceneNode.classList.contains('active');
+      if (!isNodeActive) {
+        window._guidedPracticeUnlocked = false;
+        return;
+      }
+      const docModal = document.getElementById('modal-doc');
+      const isDocOpen = docModal && docModal.style.display === 'flex';
+      
+      if (isDocOpen && typeof window._docRead === 'undefined') {
+        window._guidedPracticeUnlocked = true;
+      } else if (window._docRead === true) {
+        window._guidedPracticeUnlocked = true;
+      } else if (isDocOpen && window._docRead === false && !document.getElementById('modal-pdf')) {
+        window._guidedPracticeUnlocked = true;
+      }
+
+      const ctrl = document.getElementById('node-controls');
+      if (ctrl) {
+        const buttons = ctrl.getElementsByTagName('button');
+        for (let i = 0; i < buttons.length; i++) {
+          const btn = buttons[i];
+          if (btn.textContent.includes('PRACTICA GUIADA')) {
+            if (!window._guidedPracticeUnlocked) {
+              btn.disabled = true;
+              btn.setAttribute('title', 'Lee el manual primero para desbloquear');
+            } else {
+              btn.disabled = false;
+              btn.removeAttribute('title');
+            }
+          }
+        }
+      }
+    }, 150);
   </script>
 </body>
 </html>
