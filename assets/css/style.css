@@ -833,12 +833,16 @@ CSS
               url('../../assets/images/bg-modal.jpg') center/cover no-repeat;
   border: 1px solid var(--c-green);
   box-shadow: 0 0 40px rgba(0,255,65,0.2), inset 0 0 30px rgba(0,0,0,0.6);
+  overflow-y: auto;
 }
 .modal-doc-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex; justify-content: space-between; align-items: center;
   padding: 14px 20px;
   border-bottom: 1px solid var(--c-border);
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,5,0,0.98);
   flex-shrink: 0;
 }
 .modal-doc-title { font-size: 1.4rem; letter-spacing: 3px; text-shadow: 0 0 10px currentColor; }
@@ -967,12 +971,12 @@ CSS
 
 /* ===================== MODAL PRACTICA GUIADA ===================== */
 .modal-practice-box {
-  width: 700px; max-width: 94vw;
+  width: 700px; max-width: 94vw; max-height: 90vh;
   background: linear-gradient(rgba(0,10,0,0.92), rgba(0,5,0,0.95)),
               url('../../assets/images/bg-modal.jpg') center/cover no-repeat;
   border: 1px solid currentColor;
   box-shadow: 0 0 50px rgba(0,255,65,0.15);
-  overflow: hidden;
+  overflow-y: auto;
   animation: modal-in 0.3s ease;
 }
 .practice-header {
@@ -1054,12 +1058,12 @@ CSS
 
 /* ===================== MODAL QUIZ ===================== */
 .modal-quiz-box {
-  width: 700px; max-width: 94vw;
+  width: 700px; max-width: 94vw; max-height: 90vh;
   background: linear-gradient(rgba(0,10,0,0.92), rgba(0,5,0,0.95)),
               url('../../assets/images/bg-modal.jpg') center/cover no-repeat;
   border: 1px solid currentColor;
   box-shadow: 0 0 50px rgba(0,255,65,0.15);
-  overflow: hidden;
+  overflow-y: auto;
   animation: modal-in 0.3s ease;
 }
 .quiz-header {
