@@ -519,11 +519,17 @@ window.renderControls = function(actions) {
     return;
   }
 
+  // Encontrar el nodo activo actual
+  let activeNode = window._currentNodeRef || window.currentNode;
+  if (!activeNode && window._currentNodeId && typeof NODES !== 'undefined') {
+    activeNode = NODES[window._currentNodeId];
+  }
+
   // Detectar si es la fase de llegada (tiene acción de "leer doc")
   const hasDoc = actions.some(a => a.label && (a.label.includes('LEER') || a.label.includes('MANUAL')));
-  if (hasDoc && window.currentNode) {
+  if (hasDoc && activeNode) {
     // Mostrar SOLO el botón de leer manual
-    renderV2DocButton(window.currentNode);
+    renderV2DocButton(activeNode);
     return;
   }
 
