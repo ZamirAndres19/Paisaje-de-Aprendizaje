@@ -1082,104 +1082,114 @@ window.showEnding = function() {
     if (el) el.style.display = 'none';
   });
 
-  // Ir a la cinemática de good ending
   launchGoodEnding();
 };
 
 function launchGoodEnding() {
   const screen = document.getElementById('good-ending-screen');
   if (!screen) {
-    // Fallback al ending original
     if (typeof _originalShowEnding === 'function') _originalShowEnding();
     return;
   }
 
+  // Crear o actualizar video de fondo
+  let bgVideo = document.getElementById('v2-good-bg-video');
+  if (!bgVideo) {
+    bgVideo = document.createElement('video');
+    bgVideo.id = 'v2-good-bg-video';
+    bgVideo.style.position = 'absolute';
+    bgVideo.style.top = '0';
+    bgVideo.style.left = '0';
+    bgVideo.style.width = '100%';
+    bgVideo.style.height = '100%';
+    bgVideo.style.objectFit = 'cover';
+    bgVideo.style.zIndex = '0';
+    bgVideo.style.opacity = '1';
+    bgVideo.style.pointerEvents = 'none';
+    bgVideo.autoplay = true;
+    bgVideo.loop = false; // Detener al final
+    bgVideo.muted = false; // Permitir audio
+    bgVideo.playsInline = true;
+    screen.insertBefore(bgVideo, screen.firstChild);
+  }
+  bgVideo.src = 'assets/img/final GANASTE.mp4';
+
   screen.classList.add('active');
 
-  if (typeof AUDIO !== 'undefined' && !AUDIO.muted) {
-    const s = new Audio('assets/sounds/victoria.mp3');
-    s.volume = 0.9; s.play().catch(() => {});
-  }
-
   const textEl       = document.getElementById('good-end-text');
+  const titleEl      = document.querySelector('.ending-title.good-title');
   const reportCard   = document.getElementById('mission-report');
-  const rptName      = document.getElementById('rpt-name');
-  const rptGrade     = document.getElementById('rpt-grade');
-  const rptO2        = document.getElementById('rpt-o2');
-  const rptModules   = document.getElementById('rpt-modules');
-  const rptTime      = document.getElementById('rpt-time');
-  const rptAttempts  = document.getElementById('rpt-attempts');
   const restartBtn   = document.getElementById('good-restart-btn');
 
-  // Calcular métricas finales
+  // Ocultar textos viejos
+  if (textEl) textEl.style.display = 'none';
+  if (titleEl) titleEl.style.display = 'none';
+  if (reportCard) {
+    reportCard.classList.remove('show');
+    reportCard.style.display = 'none';
+  }
+  if (restartBtn) restartBtn.style.display = 'none';
+
+  // Calcular métricas
   const o2Final      = typeof oxygen !== 'undefined' ? oxygen : 100;
   const gradeVal     = Math.max(0, Math.min(10, o2Final / 10));
   const completedCnt = typeof completedNodes !== 'undefined' ? completedNodes.length : 4;
   const elapsed      = window._sessionStart ? Math.floor((Date.now() - window._sessionStart) / 1000) : 0;
-  const elapsedStr   = `${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(elapsed%60).padStart(2,'0')}`;
   const attempts     = window._sessionAttempts || 0;
-  const playerName   = window._playerName || 'TRIPULANTE';
+  // Enviar a firebase
+  if (window._sessionDocId && window.firebaseFinalizeSession) {
+    window.firebaseFinalizeSession(window._sessionDocId, {
+      calificacion: parseFloat(gradeVal.toFixed(1)),
+      oxigeno_restante: o2Final,
+      total_attempts: attempts,
+      max_score: parseFloat(gradeVal.toFixed(1)),
+      success_rate: Math.round((completedCnt / 4) * 100),
+      status: 'completed'
+    });
+  }
 
-  const goodEndNarrative =
-`> SISTEMA OPERATIVO — RESTAURADO.
-> DOMINIO NOSTROMO.CORP — ACTIVO.
-> SECUENCIA DE ESCAPE INICIADA.
+  // Contenedor para la nota final
+  let notaEl = document.getElementById('good-ending-nota');
+  if (!notaEl) {
+    notaEl = document.createElement('div');
+    notaEl.id = 'good-ending-nota';
+    notaEl.style.position = 'absolute';
+    notaEl.style.bottom = '20%';
+    notaEl.style.width = '100%';
+    notaEl.style.textAlign = 'center';
+    notaEl.style.color = '#33ff33';
+    notaEl.style.fontFamily = 'monospace';
+    notaEl.style.fontSize = '24px';
+    notaEl.style.textShadow = '0 0 10px #00ff00';
+    notaEl.style.display = 'none';
+    notaEl.style.zIndex = '10';
+    screen.appendChild(notaEl);
+  }
+  notaEl.innerHTML = `CALIFICACIÓN FINAL: ${gradeVal.toFixed(1)} / 10<br>MISIÓN COMPLETADA`;
 
-${playerName}, has completado la misión.
-
-La cápsula Narcissus se separa de la Nostromo
-a las 22:14:06, hora estelar.
-
-A través de la ventana, las estrellas se expanden.
-La Nostromo se achica en el horizonte.
-
-Jonesy duerme en su jaula.
-La capitana activa el criosueño.
-
-Señal S.O.S. transmitida al cuadro de luz
-de la constelación Orión.
-
-La infraestructura sobrevivió.
-La misión fue un éxito.
-
-> REPORTE DE MISIÓN — TRANSMITIDO.`;
-
-  let charIdx = 0;
-  const chars = goodEndNarrative.split('');
-  const typeInterval = setInterval(() => {
-    if (charIdx >= chars.length) {
-      clearInterval(typeInterval);
-      // Mostrar reporte Firebase
-      setTimeout(() => {
-        if (rptName)    rptName.textContent    = playerName;
-        if (rptGrade)   rptGrade.textContent   = gradeVal.toFixed(1) + ' / 10';
-        if (rptO2)      rptO2.textContent       = o2Final + '%';
-        if (rptModules) rptModules.textContent  = completedCnt + ' / 4';
-        if (rptTime)    rptTime.textContent     = elapsedStr;
-        if (rptAttempts) rptAttempts.textContent = attempts;
-
-        if (reportCard) reportCard.classList.add('show');
-        setTimeout(() => {
-          if (restartBtn) restartBtn.style.display = 'block';
-        }, 800);
-
-        // Firebase: finalizar sesión con victoría
-        if (window._sessionDocId && window.firebaseFinalizeSession) {
-          window.firebaseFinalizeSession(window._sessionDocId, {
-            calificacion: parseFloat(gradeVal.toFixed(1)),
-            oxigeno_restante: o2Final,
-            total_attempts: attempts,
-            max_score: parseFloat(gradeVal.toFixed(1)),
-            success_rate: Math.round((completedCnt / 4) * 100),
-            status: 'completed'
-          });
-        }
-      }, 800);
-      return;
+  // Al finalizar el video
+  bgVideo.onended = () => {
+    // Sonido de victoria
+    if (typeof AUDIO !== 'undefined' && !AUDIO.muted) {
+      const s = new Audio('assets/sounds/victoria.mp3');
+      s.volume = 0.9;
+      s.play().catch(() => {});
     }
-    if (textEl) textEl.textContent += chars[charIdx];
-    charIdx++;
-  }, 22);
+    
+    // Mostrar nota
+    if (notaEl) notaEl.style.display = 'block';
+
+    // Mostrar botón de reinicio
+    if (restartBtn) {
+      restartBtn.style.opacity = '1';
+      restartBtn.style.display = 'block';
+      restartBtn.style.position = 'absolute';
+      restartBtn.style.bottom = '10%';
+      restartBtn.style.left = '50%';
+      restartBtn.style.transform = 'translateX(-50%)';
+      restartBtn.style.zIndex = '10';
+    }
+  };
 }
 
 /* ================================================================
