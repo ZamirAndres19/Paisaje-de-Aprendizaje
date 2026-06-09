@@ -1267,11 +1267,11 @@ function updateO2() {
   const pct = oxygen;
   const color = pct > 60 ? 'var(--c-green)' : pct > 30 ? 'var(--c-amber)' : 'var(--c-red)';
 
-  ['map-o2-bar','node-o2-bar','quiz-o2-bar'].forEach(id => {
+  ['map-o2-bar','node-o2-bar','quiz-o2-bar','dnd-o2-bar'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.style.width = pct + '%'; el.style.background = color; el.style.boxShadow = `0 0 6px ${color}`; }
   });
-  ['map-o2-pct','node-o2-val','quiz-o2-val'].forEach(id => {
+  ['map-o2-pct','node-o2-val','quiz-o2-val','dnd-o2-val'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = pct + '%';
   });

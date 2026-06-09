@@ -901,7 +901,7 @@ window.showGameOver = function() {
   if (typeof clearQuizTimer === 'function') clearQuizTimer();
 
   // Cerrar cualquier modal abierto
-  ['modal-doc','modal-pdf','modal-practice','modal-quiz','modal-video'].forEach(id => {
+  ['modal-doc','modal-pdf','modal-practice','modal-quiz','modal-video', 'modal-dnd-fullscreen'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });

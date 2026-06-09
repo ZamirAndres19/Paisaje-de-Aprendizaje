@@ -1108,6 +1108,201 @@
 .cable-node.source {
   cursor: grab;
   position: relative;
+  33%       { background-position: 50px 30px; opacity: 0.5; }
+  66%       { background-position: -20px 60px; opacity: 0.35; }
+}
+
+/* ================================================================
+   SKILL 6: CINEMÁTICAS — GOOD ENDING (NARCISSUS)
+   ================================================================ */
+#good-ending-screen {
+  position: fixed; inset: 0;
+  display: none;
+  z-index: 9998;
+  background: #000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#good-ending-screen.active { display: flex; }
+
+.good-end-stars {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, #0a0a1a 0%, #000 70%);
+  overflow: hidden;
+}
+.good-end-stars::before {
+  content: '';
+  position: absolute; inset: -50%;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8) 0%, transparent 0%),
+    radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.6) 0%, transparent 0%),
+    radial-gradient(1px 1px at 70% 15%, rgba(255,255,255,0.9) 0%, transparent 0%),
+    radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,0.7) 0%, transparent 0%),
+    radial-gradient(1px 1px at 50% 85%, rgba(255,255,255,0.5) 0%, transparent 0%),
+    radial-gradient(2px 2px at 25% 45%, rgba(0,255,65,0.4) 0%, transparent 0%),
+    radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.8) 0%, transparent 0%),
+    radial-gradient(1px 1px at 90% 50%, rgba(255,255,255,0.6) 0%, transparent 0%);
+  animation: starfield 60s linear infinite;
+}
+@keyframes starfield {
+  from { transform: translateY(0); }
+  to   { transform: translateY(50%); }
+}
+
+.good-end-content {
+  position: relative; z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 760px;
+  padding: 40px;
+  width: 100%;
+}
+
+.good-end-logo {
+  font-size: 1.1rem;
+  letter-spacing: 6px;
+  color: var(--c-green);
+  text-shadow: 0 0 20px var(--c-green);
+  text-align: center;
+}
+
+.good-end-narrative {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  color: var(--c-green);
+  text-shadow: 0 0 6px var(--c-green);
+  text-align: center;
+  font-family: var(--font-body);
+  letter-spacing: 1px;
+  max-width: 600px;
+}
+
+/* Firebase Report Card */
+.mission-report-card {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid rgba(0,255,65,0.4);
+  background: rgba(0,20,0,0.85);
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 0 40px rgba(0,255,65,0.15);
+}
+.mission-report-card.show { display: flex; }
+
+.report-header {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0,255,65,0.05);
+}
+.report-header-icon { font-size: 1.2rem; }
+.report-header-title {
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+  color: var(--c-green);
+  text-shadow: 0 0 8px var(--c-green);
+}
+.report-header-sig {
+  font-size: 0.75rem;
+  opacity: 0.4;
+  margin-left: auto;
+  font-family: var(--font-body);
+}
+
+.report-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(0,255,65,0.08);
+  gap: 16px;
+}
+.report-row:last-child { border-bottom: none; }
+.report-label {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  opacity: 0.6;
+  font-family: var(--font-body);
+  white-space: nowrap;
+}
+.report-value {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-align: right;
+}
+.report-value.highlight {
+  color: var(--c-gold);
+  text-shadow: 0 0 12px var(--c-gold);
+  font-size: 1.3rem;
+}
+
+.btn-restart-v2 {
+  padding: 14px 32px;
+  border: 1px solid var(--c-green);
+  background: transparent;
+  color: var(--c-green);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-shadow: 0 0 8px var(--c-green);
+  animation: blink-border 1.5s step-start infinite;
+}
+.btn-restart-v2:hover { background: var(--c-green); color: #000; text-shadow: none; animation: none; }
+
+/* HUD player name (mapa) */
+.hud-player-name {
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  color: var(--c-green);
+  text-shadow: 0 0 8px var(--c-green);
+  white-space: nowrap;
+}
+
+/* Inline tooltip for locked states */
+.locked-msg-inline {
+  display: none;
+  font-size: 0.78rem;
+  color: rgba(0,255,65,0.4);
+  font-family: var(--font-body);
+  padding: 4px 8px;
+  border: 1px solid rgba(0,255,65,0.15);
+  background: rgba(0,0,0,0.4);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ================================================================
+   SKILL 6: ALIEN NOSTROMO CABLES (DND FULLSCREEN)
+   ================================================================ */
+.alien-panel-bg {
+  background: url('../img/alien-panel-bg.png') center/cover no-repeat;
+  position: relative;
+}
+.alien-panel-bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(0, 10, 0, 0.75); /* Darken to match the alien terminal feel */
+  pointer-events: none;
+}
+#dnd-svg-layer line {
+  stroke-width: 8;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 10px currentColor);
+  transition: stroke 0.2s ease;
+}
+.cable-node.source {
+  cursor: grab;
+  position: relative;
   z-index: 5;
 }
 .cable-node.source:active { cursor: grabbing; }
@@ -1117,7 +1312,7 @@
   width: 90vw;
   max-width: 1200px;
   height: 80vh;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.4); /* Reduced opacity to see bg */
   border: 2px solid var(--c-green);
   box-shadow: 0 0 50px rgba(0,255,65,0.2), inset 0 0 40px rgba(0,0,0,0.9);
   display: flex; flex-direction: column;

@@ -863,7 +863,17 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
     </script>
 
     <!-- ===== MODAL DND PANTALLA COMPLETA (ALIEN NOSTROMO) ===== -->
-    <div id="modal-dnd-fullscreen" class="modal-overlay alien-panel-bg" style="display:none; z-index: 9999;">
+    <div id="modal-dnd-fullscreen" class="modal-overlay alien-panel-bg" style="display:none; z-index: 9000;">
+      <!-- O2 Header UI for DnD -->
+      <div style="position:absolute; top:20px; right:40px; z-index:20; text-align:right;">
+        <div style="color:var(--c-green); font-size:1.5rem; font-weight:bold; letter-spacing:2px; text-shadow:0 0 10px currentColor;">
+          O₂: <span id="dnd-o2-val">100%</span>
+        </div>
+        <div style="width:200px; height:8px; background:rgba(0,0,0,0.5); border:1px solid var(--c-green); margin-top:8px;">
+          <div id="dnd-o2-bar" style="width:100%; height:100%; background:var(--c-green); transition:width 0.3s, background 0.3s;"></div>
+        </div>
+      </div>
+
       <!-- SVG para dibujar cables -->
       <svg id="dnd-svg-layer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index: 2;"></svg>
       <div id="dnd-fullscreen-mount" style="position:relative; z-index: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"></div>
