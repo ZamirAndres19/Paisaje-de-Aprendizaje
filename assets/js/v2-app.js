@@ -979,11 +979,11 @@ function launchBadEnding() {
     bgVideo.style.height = '100%';
     bgVideo.style.objectFit = 'cover';
     bgVideo.style.zIndex = '0';
-    bgVideo.style.opacity = '1';
+    bgVideo.style.opacity = '1'; // Mostrar video completo
     bgVideo.style.pointerEvents = 'none';
     bgVideo.autoplay = true;
-    bgVideo.loop = true;
-    bgVideo.muted = false;
+    bgVideo.loop = false; // YA NO LOOPEAR, PARA DETECTAR CUANDO TERMINA
+    bgVideo.muted = false; // Permitir audio del video
     bgVideo.playsInline = true;
     screen.insertBefore(bgVideo, screen.firstChild);
   }
@@ -1006,16 +1006,48 @@ function launchBadEnding() {
   if (staticEl) staticEl.style.display = 'none';
   if (titleEl) titleEl.style.display = 'none';
   if (textEl) textEl.style.display = 'none';
+  if (restartBtn) restartBtn.style.display = 'none'; // ocultar hasta que acabe el video
 
-  if (restartBtn) {
-    restartBtn.style.opacity = '1';
-    restartBtn.style.display = 'block';
-    restartBtn.style.position = 'absolute';
-    restartBtn.style.bottom = '10%';
-    restartBtn.style.left = '50%';
-    restartBtn.style.transform = 'translateX(-50%)';
-    restartBtn.style.zIndex = '10';
+  // Contenedor para la nota final
+  let notaEl = document.getElementById('bad-ending-nota');
+  if (!notaEl) {
+    notaEl = document.createElement('div');
+    notaEl.id = 'bad-ending-nota';
+    notaEl.style.position = 'absolute';
+    notaEl.style.bottom = '20%';
+    notaEl.style.width = '100%';
+    notaEl.style.textAlign = 'center';
+    notaEl.style.color = '#ff3333';
+    notaEl.style.fontFamily = 'monospace';
+    notaEl.style.fontSize = '24px';
+    notaEl.style.textShadow = '0 0 10px red';
+    notaEl.style.display = 'none';
+    notaEl.style.zIndex = '10';
+    screen.appendChild(notaEl);
   }
+  notaEl.innerHTML = 'CALIFICACIÓN FINAL: 0.0 / 10<br>GAME OVER';
+
+  // Al finalizar el video
+  bgVideo.onended = () => {
+    // Reproducir voz de Game Over
+    if (typeof AUDIO !== 'undefined' && !AUDIO.muted) {
+      const s = new Audio('assets/sounds/game-over.mp3');
+      s.volume = 1.0;
+      s.play().catch(() => {});
+    }
+    
+    // Mostrar nota y botón
+    if (notaEl) notaEl.style.display = 'block';
+    if (restartBtn) {
+      restartBtn.style.opacity = '1';
+      restartBtn.style.display = 'block';
+      restartBtn.style.position = 'absolute';
+      restartBtn.style.bottom = '10%';
+      restartBtn.style.left = '50%';
+      restartBtn.style.transform = 'translateX(-50%)';
+      restartBtn.style.zIndex = '10';
+    }
+  };
 }
 
 /* ================================================================
