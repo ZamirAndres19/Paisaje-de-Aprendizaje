@@ -1004,9 +1004,16 @@ function startQuizPhase(node) {
   const overlay = document.getElementById('modal-practice');
   if (overlay) overlay.style.display = 'none';
   setPhasePill('c');
-  typeScreen(node.quizIntro, () => {
-    renderControls([{ label: '[ INICIAR PROTOCOLO DE VERIFICACION TECNICA ]', action: () => openQuiz(node), primary: true }]);
-  });
+  
+  if (completedNodes.includes(node.id)) {
+    typeScreen(['> ESTE MÓDULO YA HA SIDO COMPLETADO SATISFACTORIAMENTE.'], () => {
+      renderControls([{ label: '[ PROTOCOLO COMPLETADO ]', action: () => {}, primary: false }]);
+    });
+  } else {
+    typeScreen(node.quizIntro, () => {
+      renderControls([{ label: '[ INICIAR PROTOCOLO DE VERIFICACION TECNICA ]', action: () => openQuiz(node), primary: true }]);
+    });
+  }
 }
 
 function openQuiz(node) {
@@ -1353,6 +1360,10 @@ function typeScreen(text, callback) {
   const screen = document.getElementById('node-screen');
   if (!screen) { if (callback) callback(); return; }
   screen.innerHTML = '';
+  
+  const c = document.getElementById('terminal-controls');
+  if (c) c.innerHTML = '';
+
   typeInto(screen, text, callback, true);
 }
 
