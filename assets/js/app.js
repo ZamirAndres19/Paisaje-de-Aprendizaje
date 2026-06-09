@@ -950,9 +950,13 @@ function handlePracticeAnswer(opt, idx, node, stepIndex) {
       } else {
         const overlay = document.getElementById('modal-practice');
         if (overlay) overlay.style.display = 'none';
+        // En Práctica Guiada, solo terminamos y marcamos la fase práctica.
+        // El usuario deberá elegir Protocolo de Verificación para avanzar.
         typeScreen(
-          '> PRACTICA COMPLETADA.\n> Preparando protocolo de verificacion tecnica...',
-          () => startQuizPhase(node)
+          '> PRÁCTICA COMPLETADA.\n> Selecciona Protocolo de Verificación para la prueba final.',
+          () => {
+             // Just close it, node remains active.
+          }
         );
       }
     }, 900);
@@ -1018,10 +1022,18 @@ function openQuiz(node) {
   quizState = {
     questions: node.quiz,
     current: 0,
-    onComplete: () => nodeSuccess(node),
+    onComplete: () => {
+      // V2: Al terminar las preguntas de Verificación, iniciar Minijuego sorpresa
+      if (typeof launchDndGame === 'function') {
+        launchDndGame(node);
+      } else {
+        nodeSuccess(node);
+      }
+    },
     damage: node.quizDamage,
     useTimer: true,
-    timer: null
+    timer: null,
+    consecutiveCorrectNeeded: 0 // Para la lógica de pánico
   };
 
   renderQuizQuestion();
@@ -1063,9 +1075,21 @@ function handleQuizAnswer(opt, idx) {
     btns[idx].classList.add('correct');
     feedbackEl.className   = 'quiz-feedback';
     feedbackEl.textContent = '> RESPUESTA CORRECTA.';
+
+    // --- Lógica de Pánico ---
+    if (quizState.consecutiveCorrectNeeded > 0) {
+      quizState.consecutiveCorrectNeeded--;
+      if (quizState.consecutiveCorrectNeeded === 0) {
+        if (typeof stopDndPanic === 'function') stopDndPanic();
+      }
+    }
+    // ------------------------
+
     feedbackEl.style.display = 'block';
     quizState.current++;
     if (quizState.current >= quizState.questions.length) {
+      // Si la partida terminó pero aún quedaba pánico pendiente, lo detenemos forzosamente
+      if (typeof stopDndPanic === 'function') stopDndPanic();
       clearQuizTimer();
       setTimeout(() => {
         document.getElementById('modal-quiz').style.display = 'none';
@@ -1075,14 +1099,27 @@ function handleQuizAnswer(opt, idx) {
       setTimeout(renderQuizQuestion, 900);
     }
   } else {
+    // Respuesta Incorrecta
     btns[idx].classList.add('wrong');
     feedbackEl.className   = 'quiz-feedback error';
     feedbackEl.textContent = '> ERROR: ' + (opt.msg || 'Respuesta incorrecta.');
     feedbackEl.style.display = 'block';
+
+    // --- Lógica de Pánico ---
+    if (typeof startDndPanic === 'function') {
+      startDndPanic(); // Iniciar alarma continua y drenaje
+      quizState.consecutiveCorrectNeeded = 2; // Requiere contestar bien ESTA y la SIGUIENTE
+    }
+    // ------------------------
+
     takeDamage(quizState.damage, opt.msg || 'Respuesta incorrecta.');
+    
+    // Para que el jugador intente de nuevo la misma pregunta
     setTimeout(() => {
       if (!gameActive) return;
-      btns.forEach(b => { b.disabled = false; b.classList.remove('wrong','correct'); });
+      btns.forEach(b => { 
+        if (!b.classList.contains('wrong')) b.disabled = false; // Solo habilitar las que no ha fallado
+      });
       feedbackEl.style.display = 'none';
     }, 1600);
   }

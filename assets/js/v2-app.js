@@ -801,7 +801,8 @@ window.startPracticeFromModal = function() {
 window.startQuizFromModal = function() {
   closePhaseSelect();
   if (window._currentNodeRef) {
-    launchDndGame(window._currentNodeRef);
+    // Protocolo de Verificación: Empieza con el Quiz, y al terminar, pasará al Minijuego.
+    startQuizPhase(window._currentNodeRef);
   }
 };
 
