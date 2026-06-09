@@ -551,8 +551,17 @@ function renderV2DocButton(node) {
   // Botón 2: INICIAR VERIFICACIÓN DE PROTOCOLOS (abre modal de selección)
   const btnVerif = document.createElement('button');
   btnVerif.className = 'primary';
-  btnVerif.innerHTML = '[ INICIAR VERIFICACIÓN DE PROTOCOLOS ]';
+  btnVerif.id = 'btn-verif-protocolos';
+  btnVerif.innerHTML = window._docRead ? '[ INICIAR VERIFICACIÓN DE PROTOCOLOS ]' : '[ LECTURA DE MANUAL REQUERIDA ]';
+  
+  if (!window._docRead) {
+    btnVerif.disabled = true;
+    btnVerif.style.opacity = '0.4';
+    btnVerif.style.cursor = 'not-allowed';
+  }
+
   btnVerif.addEventListener('click', () => {
+    if (btnVerif.disabled) return;
     window._currentNodeRef = node;
     showPhaseSelectModal(node);
   });
@@ -739,6 +748,18 @@ function unlockVideoAfterRead() {
     videoBtn.style.borderColor = 'var(--c-green)';
     videoBtn.style.boxShadow = '0 0 20px rgba(0,255,65,0.3)';
     setTimeout(() => { videoBtn.style.borderColor = ''; videoBtn.style.boxShadow = ''; }, 2000);
+  }
+
+  // DESBLOQUEAR EL BOTON DE VERIFICACIÓN DE PROTOCOLOS
+  const btnVerif = document.getElementById('btn-verif-protocolos');
+  if (btnVerif) {
+    btnVerif.disabled = false;
+    btnVerif.style.opacity = '1';
+    btnVerif.style.cursor = 'pointer';
+    btnVerif.innerHTML = '[ INICIAR VERIFICACIÓN DE PROTOCOLOS ]';
+    // Pequeño flash verde
+    btnVerif.style.boxShadow = '0 0 15px rgba(0,255,65,0.6)';
+    setTimeout(() => { btnVerif.style.boxShadow = ''; }, 1000);
   }
 }
 
