@@ -898,6 +898,7 @@ function syncFirebaseSession() {
 const _originalShowGameOver = window.showGameOver;
 window.showGameOver = function() {
   if (typeof AUDIO !== 'undefined') AUDIO.stopAll();
+  if (typeof stopDndPanic === 'function') stopDndPanic();
   if (typeof clearQuizTimer === 'function') clearQuizTimer();
 
   // Cerrar cualquier modal abierto

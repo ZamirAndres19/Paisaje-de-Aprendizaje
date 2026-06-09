@@ -1285,7 +1285,7 @@
    SKILL 6: ALIEN NOSTROMO CABLES (DND FULLSCREEN)
    ================================================================ */
 .alien-panel-bg {
-  background: url('../img/alien-panel-bg.png') center/cover no-repeat;
+  background: url('../img/alien-panel-bg.png') center/cover no-repeat !important;
   position: relative;
 }
 .alien-panel-bg::before {
