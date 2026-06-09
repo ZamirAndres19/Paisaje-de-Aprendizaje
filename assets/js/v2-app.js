@@ -889,7 +889,8 @@ window.showGameOver = function() {
     if (el) el.style.display = 'none';
   });
 
-  launchXenomorphJumpscare();
+  // Omitir el jumpscare del xenomorfo y mostrar directamente el final con el video
+  launchBadEnding();
 };
 
 function launchXenomorphJumpscare() {
@@ -966,6 +967,34 @@ function launchXenomorphJumpscare() {
 function launchBadEnding() {
   const screen = document.getElementById('bad-ending-screen');
   if (!screen) { location.reload(); return; }
+
+  let bgVideo = document.getElementById('v2-bad-bg-video');
+  if (!bgVideo) {
+    bgVideo = document.createElement('video');
+    bgVideo.id = 'v2-bad-bg-video';
+    bgVideo.style.position = 'absolute';
+    bgVideo.style.top = '0';
+    bgVideo.style.left = '0';
+    bgVideo.style.width = '100%';
+    bgVideo.style.height = '100%';
+    bgVideo.style.objectFit = 'cover';
+    bgVideo.style.zIndex = '0';
+    bgVideo.style.opacity = '0.6';
+    bgVideo.style.pointerEvents = 'none';
+    bgVideo.autoplay = true;
+    bgVideo.loop = true;
+    bgVideo.muted = true;
+    bgVideo.playsInline = true;
+    screen.insertBefore(bgVideo, screen.firstChild);
+  }
+
+  let videoSrc = 'assets/img/FONDO.mp4'; // default
+  if (window._currentNodeId === 'bridge') videoSrc = 'assets/img/PERDISTE 1.mp4';
+  else if (window._currentNodeId === 'lab') videoSrc = 'assets/img/PERDISTE 2.mp4';
+  else if (window._currentNodeId === 'comms') videoSrc = 'assets/img/PERDISTE 3.mp4';
+  else if (window._currentNodeId === 'engines') videoSrc = 'assets/img/PERDISTE 4.mp4';
+  
+  bgVideo.src = videoSrc;
 
   screen.classList.add('active');
 

@@ -727,6 +727,9 @@ function enterNode(node) {
 
   const nodeScene = document.getElementById('scene-node');
   nodeScene.className = 'scene active ' + node.theme;
+  
+  const ctrl = document.getElementById('node-controls');
+  if (ctrl) ctrl.innerHTML = '';
 
   const titleBar = document.getElementById('node-title-bar');
   if (titleBar) titleBar.textContent = node.title;
