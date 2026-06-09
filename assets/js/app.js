@@ -1278,6 +1278,18 @@ function showGameOver() {
   AUDIO.stopAll();
   if (!AUDIO.muted) { const s = new Audio('assets/sounds/game-over.mp3'); s.volume=0.9; s.play().catch(()=>{}); }
   clearQuizTimer();
+  
+  const bgVideo = document.getElementById('gameover-bg-video');
+  if (bgVideo) {
+    let videoSrc = 'assets/img/FONDO.mp4'; // default
+    if (window._currentNodeId === 'bridge') videoSrc = 'assets/img/PERDISTE 1.mp4';
+    else if (window._currentNodeId === 'lab') videoSrc = 'assets/img/PERDISTE 2.mp4';
+    else if (window._currentNodeId === 'comms') videoSrc = 'assets/img/PERDISTE 3.mp4';
+    else if (window._currentNodeId === 'engines') videoSrc = 'assets/img/PERDISTE 4.mp4';
+    
+    bgVideo.src = videoSrc;
+  }
+
   const el = document.getElementById('gameover-screen');
   if (el) el.style.display = 'flex';
 

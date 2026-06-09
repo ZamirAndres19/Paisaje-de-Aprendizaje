@@ -487,7 +487,7 @@ window.startWithoutAudio = function() {
    ================================================================ */
 const _originalEnterNode = window.enterNode;
 window.enterNode = function(node) {
-  window._currentNodeId = node.id;
+  window._currentNodeId = typeof node === 'string' ? node : node.id;
   window._docRead = false;
   window._videoWatched = false;
 

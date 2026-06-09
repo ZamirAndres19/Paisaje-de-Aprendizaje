@@ -537,7 +537,8 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
 
   <!-- ===== GAME OVER (legacy v1) ===== -->
   <div id="gameover-screen" class="gameover-screen" style="display:none">
-    <div class="gameover-inner">
+    <video id="gameover-bg-video" autoplay loop muted playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.6;pointer-events:none;"></video>
+    <div class="gameover-inner" style="position:relative;z-index:1;">
       <div class="gameover-alert blink-fast">⚠ ALERTA CRÍTICA ⚠</div>
       <div class="gameover-title">SOPORTE VITAL TERMINADO</div>
       <div class="gameover-sub">EL ORGANISMO HA GANADO</div>
