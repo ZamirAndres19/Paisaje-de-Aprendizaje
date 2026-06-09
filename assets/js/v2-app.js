@@ -979,11 +979,11 @@ function launchBadEnding() {
     bgVideo.style.height = '100%';
     bgVideo.style.objectFit = 'cover';
     bgVideo.style.zIndex = '0';
-    bgVideo.style.opacity = '0.6';
+    bgVideo.style.opacity = '1';
     bgVideo.style.pointerEvents = 'none';
     bgVideo.autoplay = true;
     bgVideo.loop = true;
-    bgVideo.muted = true;
+    bgVideo.muted = false;
     bgVideo.playsInline = true;
     screen.insertBefore(bgVideo, screen.firstChild);
   }
@@ -1000,61 +1000,22 @@ function launchBadEnding() {
 
   const textEl = document.getElementById('bad-end-text');
   const staticEl = document.getElementById('bad-static');
+  const titleEl = document.querySelector('.ending-title.bad-title');
   const restartBtn = document.getElementById('bad-restart-btn');
 
-  const badEndNarrative = `> REGISTRO FINAL — CÁMARA 7-B — CONDUCTO DE VENTILACIÓN D-4
+  if (staticEl) staticEl.style.display = 'none';
+  if (titleEl) titleEl.style.display = 'none';
+  if (textEl) textEl.style.display = 'none';
 
-El gato Jonesy observa desde la oscuridad.
-Sus pupilas se dilatan ante la penumbra de los pasillos.
-
-Los pasos se detienen. Silencio.
-
-Luego... el sonido.
-El organismo emerge de las sombras.
-
-Uno a uno, la tripulación de la Nostromo
-desaparece en la oscuridad del carguero.
-
-Los sistemas de TI permanecen apagados.
-La misión ha fallado.
-
-> WEYLAND-YUTANI CORP — OBJETIVO ESPECIAL 937:
-> Recuperar organismo. Tripulación: prescindible.
-> EJECUTADO.
-
-La Nostromo derive en silencio hacia las estrellas.
-Solo Jonesy sobrevive.
-
----
-CALIFICACIÓN FINAL: 0.0 / 10
-ESTADO: MISIÓN FALLIDA — GAME OVER`;
-
-  // Fondo oscuro primero
-  setTimeout(() => {
-    if (typeof AUDIO !== 'undefined' && !AUDIO.muted) {
-      const s = new Audio('assets/sounds/game-over.mp3');
-      s.volume = 0.7; s.play().catch(() => {});
-    }
-
-    let charIdx = 0;
-    const chars = badEndNarrative.split('');
-    const typeInterval = setInterval(() => {
-      if (charIdx >= chars.length) {
-        clearInterval(typeInterval);
-        // Mostrar estática total
-        setTimeout(() => {
-          if (staticEl) staticEl.classList.add('show');
-          setTimeout(() => {
-            if (staticEl) staticEl.classList.remove('show');
-            if (restartBtn) restartBtn.style.display = 'block';
-          }, 2500);
-        }, 1500);
-        return;
-      }
-      if (textEl) textEl.textContent += chars[charIdx];
-      charIdx++;
-    }, 28);
-  }, 500);
+  if (restartBtn) {
+    restartBtn.style.opacity = '1';
+    restartBtn.style.display = 'block';
+    restartBtn.style.position = 'absolute';
+    restartBtn.style.bottom = '10%';
+    restartBtn.style.left = '50%';
+    restartBtn.style.transform = 'translateX(-50%)';
+    restartBtn.style.zIndex = '10';
+  }
 }
 
 /* ================================================================
