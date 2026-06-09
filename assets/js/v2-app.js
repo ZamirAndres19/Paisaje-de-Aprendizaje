@@ -521,8 +521,8 @@ window.renderControls = function(actions) {
 
   // Encontrar el nodo activo actual
   let activeNode = window._currentNodeRef || window.currentNode;
-  if (!activeNode && window._currentNodeId && typeof NODES !== 'undefined') {
-    activeNode = NODES[window._currentNodeId];
+  if (!activeNode && window._currentNodeId && typeof GUION !== 'undefined' && GUION.nodes) {
+    activeNode = GUION.nodes[window._currentNodeId];
   }
 
   // Detectar si es la fase de llegada (tiene acción de "leer doc")
