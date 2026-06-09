@@ -1361,7 +1361,7 @@ function typeScreen(text, callback) {
   if (!screen) { if (callback) callback(); return; }
   screen.innerHTML = '';
   
-  const c = document.getElementById('terminal-controls');
+  const c = document.getElementById('node-controls');
   if (c) c.innerHTML = '';
 
   typeInto(screen, text, callback, true);
