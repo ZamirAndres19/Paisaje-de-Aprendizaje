@@ -183,7 +183,6 @@ function initDndGame(containerId, nodeId, onSuccess, onFail) {
     renderSortGame(container, game);
   }
 
-  startDndPanic();
 }
 
 /* ================================================================
@@ -495,15 +494,14 @@ function playDndSuccess() {
     s.volume = 0.8;
     s.play().catch(() => {});
   }
+  // Estabilizar sistema al acertar
+  stopDndPanic();
 }
 
 function playDndError(damage) {
-  if (typeof AUDIO !== 'undefined' && !AUDIO.muted) {
-    const alarm = new Audio('assets/sounds/alarm.mp3');
-    alarm.volume = 0.7;
-    alarm.play().catch(() => {});
-    setTimeout(() => alarm.pause(), 1800);
-  }
+  // Iniciar pánico: alarma continua y drenaje de oxígeno
+  startDndPanic();
+
   if (typeof takeDamage === 'function') {
     takeDamage(damage, 'CONEXIÓN INCORRECTA — El organismo avanza por los conductos.');
   }
