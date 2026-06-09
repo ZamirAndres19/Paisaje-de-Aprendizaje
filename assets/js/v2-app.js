@@ -836,34 +836,25 @@ window.closeDoc = function() {
    MOTOR DnD — Integración con "Protocolo de Verificación"
    ================================================================ */
 function launchDndGame(node) {
-  const modal   = document.getElementById('modal-quiz');
-  const mount   = document.getElementById('dnd-game-mount');
-  const labelEl = document.getElementById('quiz-label');
-  const timerWrap = document.getElementById('quiz-timer-wrap');
-  const progressBar = document.getElementById('quiz-progress-bar');
-
+  const modal   = document.getElementById('modal-dnd-fullscreen');
+  const mount   = document.getElementById('dnd-fullscreen-mount');
+  
   if (!modal || !mount) return;
 
-  // Configurar header
-  if (labelEl) labelEl.textContent = '⚡ PROTOCOLO DE VERIFICACIÓN — ' + node.title;
-  if (timerWrap) timerWrap.style.display = 'none'; // No timer en DnD
-  if (progressBar) progressBar.style.width = '0%';
-
   mount.innerHTML = '';
-  modal.style.display = 'flex';
+  modal.style.display = 'block';
 
   // Inicializar el minijuego DnD correspondiente
   const gameMap = { bridge: 'bridge', lab: 'lab', comms: 'comms', engines: 'engines' };
   const gameId = gameMap[node.id];
 
   if (gameId && typeof initDndGame === 'function') {
-    mount.id = 'dnd-game-mount'; // asegurar ID
-    initDndGame('dnd-game-mount', gameId,
+    initDndGame('dnd-fullscreen-mount', gameId,
       () => dndGameSuccess(node),  // onSuccess
       () => {}                      // onFail (manejado internamente con takeDamage)
     );
   } else {
-    // Fallback: usar quiz original
+    // Fallback
     if (typeof openQuiz === 'function') {
       modal.style.display = 'none';
       openQuiz(node);
@@ -872,9 +863,13 @@ function launchDndGame(node) {
 }
 
 function dndGameSuccess(node) {
-  // Cerrar modal quiz
-  const modal = document.getElementById('modal-quiz');
+  // Cerrar modal fullscreen
+  const modal = document.getElementById('modal-dnd-fullscreen');
   if (modal) modal.style.display = 'none';
+
+  // Limpiar cables del SVG
+  const svgLayer = document.getElementById('dnd-svg-layer');
+  if (svgLayer) svgLayer.innerHTML = '';
 
   // Actualizar intentos en Firebase
   window._sessionAttempts += (window._sessionAttempts || 0);

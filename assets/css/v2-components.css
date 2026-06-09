@@ -1085,3 +1085,41 @@
   letter-spacing: 1px;
   margin-top: 4px;
 }
+
+/* ================================================================
+   SKILL 6: ALIEN NOSTROMO CABLES (DND FULLSCREEN)
+   ================================================================ */
+.alien-panel-bg {
+  background: url('../img/alien-panel-bg.png') center/cover no-repeat;
+  position: relative;
+}
+.alien-panel-bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(0, 10, 0, 0.75); /* Darken to match the alien terminal feel */
+  pointer-events: none;
+}
+#dnd-svg-layer line {
+  stroke-width: 8;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 10px currentColor);
+  transition: stroke 0.2s ease;
+}
+.cable-node.source {
+  cursor: grab;
+  position: relative;
+  z-index: 5;
+}
+.cable-node.source:active { cursor: grabbing; }
+.cable-node.source[data-connected="true"] { opacity: 0.5; pointer-events: none; }
+.cable-drop-zone { position: relative; z-index: 5; }
+.dnd-game-container.fullscreen-dnd {
+  width: 90vw;
+  max-width: 1200px;
+  height: 80vh;
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid var(--c-green);
+  box-shadow: 0 0 50px rgba(0,255,65,0.2), inset 0 0 40px rgba(0,0,0,0.9);
+  display: flex; flex-direction: column;
+  position: relative; z-index: 10;
+}

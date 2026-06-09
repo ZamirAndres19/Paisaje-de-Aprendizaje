@@ -19,9 +19,9 @@ const DND_GAMES = {
     subtitle: '[MADRE] Conecta las fuentes de energía a los nodos del servidor para restaurar el Active Directory.',
     type: 'cable',
     sources: [
-      { id: 'pwr-a', label: 'FUENTE\nPRINCIPAL', icon: '⚡', targets: ['srv-a'] },
-      { id: 'pwr-b', label: 'REDUNDANCIA\nUPS',    icon: '🔋', targets: ['srv-b'] },
-      { id: 'pwr-c', label: 'EMERGENCIA\nDC',      icon: '⚠', targets: ['net-a'] },
+      { id: 'pwr-a', label: 'FUENTE\nPRINCIPAL', icon: '⚡', targets: ['srv-a'], color: '#ff0055' },
+      { id: 'pwr-b', label: 'REDUNDANCIA\nUPS',    icon: '🔋', targets: ['srv-b'], color: '#00ccff' },
+      { id: 'pwr-c', label: 'EMERGENCIA\nDC',      icon: '⚠', targets: ['net-a'], color: '#ffcc00' },
     ],
     dropZones: [
       { id: 'srv-a',  label: 'SRV-PRIMARY\n(AD DS)',  icon: '🖥',  expects: 'pwr-a' },
@@ -192,26 +192,29 @@ function renderCableGame(container, game) {
   const shuffledSources = [...game.sources].sort(() => Math.random() - 0.5);
 
   const board = document.createElement('div');
-  board.className = 'dnd-game-container';
+  // Se añade fullscreen-dnd a la clase
+  board.className = 'dnd-game-container fullscreen-dnd';
 
   board.innerHTML = `
     <div class="dnd-game-title">⚡ ${game.title}</div>
     <div class="dnd-game-subtitle">${game.subtitle}</div>
     <div class="dnd-progress-bar"><div class="dnd-progress-fill" id="dnd-progress" style="width:0%"></div></div>
-    <div class="cable-game-board" id="cable-board">
+    <div class="cable-game-board" id="cable-board" style="position:relative; z-index:10; height:100%;">
       <div class="cable-column">
         <div class="cable-column-label">◈ FUENTES DE ENERGÍA</div>
         ${shuffledSources.map(s => `
           <div class="cable-node source" 
                id="node-${s.id}" 
                data-id="${s.id}"
-               draggable="true">
-            <div class="cable-node-icon">${s.icon}</div>
+               data-color="${s.color || '#00ff41'}">
+            <div class="cable-node-icon" style="color:${s.color || '#00ff41'}">${s.icon}</div>
             <div class="cable-node-label">${s.label}</div>
+            <!-- Socket dot for visual connection -->
+            <div class="cable-socket" style="position:absolute; right:-15px; top:50%; transform:translateY(-50%); width:16px; height:16px; border-radius:50%; background:${s.color || '#00ff41'}; box-shadow:0 0 10px ${s.color || '#00ff41'};"></div>
           </div>
         `).join('')}
       </div>
-      <div class="cable-column" style="justify-content:center;padding-top:40px;">
+      <div class="cable-column" style="justify-content:center;padding-top:40px; pointer-events:none;">
         <div style="font-size:2rem;opacity:0.3;letter-spacing:4px">→→→</div>
       </div>
       <div class="cable-column">
@@ -220,7 +223,10 @@ function renderCableGame(container, game) {
           <div class="cable-drop-zone" 
                id="zone-${z.id}" 
                data-id="${z.id}"
-               data-expects="${z.expects}">
+               data-expects="${z.expects}"
+               style="position:relative;">
+            <!-- Socket dot -->
+            <div class="cable-socket-dest" style="position:absolute; left:-15px; top:50%; transform:translateY(-50%); width:16px; height:16px; border-radius:50%; background:#444; border:2px solid #666;"></div>
             <div class="cable-node-icon">${z.icon}</div>
             <div style="font-size:0.7rem;font-family:var(--font-body);text-align:center;line-height:1.3">${z.label}</div>
           </div>
@@ -236,55 +242,110 @@ function renderCableGame(container, game) {
   container.appendChild(board);
   dndState.totalSlots = game.dropZones.length;
 
-  // Bind drag events
-  board.querySelectorAll('.cable-node.source').forEach(node => {
-    node.addEventListener('dragstart', e => {
-      e.dataTransfer.setData('text/plain', node.dataset.id);
-      node.classList.add('dragging');
-      setTimeout(() => node.classList.remove('dragging'), 0);
-    });
-  });
+  const svgLayer = document.getElementById('dnd-svg-layer');
+  if (svgLayer) svgLayer.innerHTML = ''; // clear previous lines
 
-  board.querySelectorAll('.cable-drop-zone').forEach(zone => {
-    zone.addEventListener('dragover', e => {
-      e.preventDefault();
-      zone.classList.add('drag-over');
-    });
-    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-    zone.addEventListener('drop', e => {
-      e.preventDefault();
-      zone.classList.remove('drag-over');
-      const cardId = e.dataTransfer.getData('text/plain');
-      handleCableDrop(cardId, zone, game);
-    });
-  });
-}
+  let isDragging = false;
+  let activeLine = null;
+  let activeSourceId = null;
+  let startX = 0, startY = 0;
 
-function handleCableDrop(cardId, zoneEl, game) {
-  dndState.attempts++;
-  updateAttempts();
-
-  const expects = zoneEl.dataset.expects;
-  const isCorrect = cardId === expects;
-
-  if (isCorrect) {
-    stopDndPanic();
-    zoneEl.classList.add('filled');
-    const sourceEl = document.getElementById('node-' + cardId);
-    if (sourceEl) { sourceEl.classList.add('connected'); sourceEl.setAttribute('draggable', 'false'); }
-    dndState.matches[zoneEl.dataset.id] = cardId;
-    dndState.correctMatches++;
-    playDndSuccess();
-    updateDndProgress();
-
-    if (dndState.correctMatches >= dndState.totalSlots) {
-      showDndSuccess(game.successMsg);
-    }
-  } else {
-    zoneEl.classList.add('wrong-connect');
-    setTimeout(() => zoneEl.classList.remove('wrong-connect'), 500);
-    playDndError(game.damage);
+  function getCenter(el) {
+    const rect = el.getBoundingClientRect();
+    return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
   }
+
+  // Bind mouse events for drawing cables
+  board.querySelectorAll('.cable-node.source').forEach(node => {
+    node.addEventListener('mousedown', e => {
+      if (node.dataset.connected === 'true') return;
+      isDragging = true;
+      activeSourceId = node.dataset.id;
+      const color = node.dataset.color || '#00ff41';
+      
+      const socket = node.querySelector('.cable-socket');
+      const center = getCenter(socket);
+      startX = center.x;
+      startY = center.y;
+
+      activeLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      activeLine.setAttribute('x1', startX);
+      activeLine.setAttribute('y1', startY);
+      activeLine.setAttribute('x2', e.clientX);
+      activeLine.setAttribute('y2', e.clientY);
+      activeLine.setAttribute('stroke', color);
+      
+      if (svgLayer) svgLayer.appendChild(activeLine);
+    });
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!isDragging || !activeLine) return;
+    activeLine.setAttribute('x2', e.clientX);
+    activeLine.setAttribute('y2', e.clientY);
+  });
+
+  document.addEventListener('mouseup', e => {
+    if (!isDragging || !activeLine) return;
+    isDragging = false;
+
+    // Detect if mouse is over a drop zone socket
+    const dropZones = Array.from(board.querySelectorAll('.cable-drop-zone'));
+    let matchedZone = null;
+    
+    // Check intersection with mouse coords
+    for (let zone of dropZones) {
+      if (zone.dataset.connected === 'true') continue;
+      const rect = zone.getBoundingClientRect();
+      // Expand hit area slightly
+      if (e.clientX >= rect.left - 30 && e.clientX <= rect.right + 30 &&
+          e.clientY >= rect.top - 20 && e.clientY <= rect.bottom + 20) {
+        matchedZone = zone;
+        break;
+      }
+    }
+
+    if (matchedZone) {
+      const expects = matchedZone.dataset.expects;
+      const isCorrect = activeSourceId === expects;
+
+      if (isCorrect) {
+        // Snap to center
+        const destSocket = matchedZone.querySelector('.cable-socket-dest');
+        const endCenter = getCenter(destSocket);
+        activeLine.setAttribute('x2', endCenter.x);
+        activeLine.setAttribute('y2', endCenter.y);
+        
+        destSocket.style.background = activeLine.getAttribute('stroke');
+        destSocket.style.borderColor = activeLine.getAttribute('stroke');
+        destSocket.style.boxShadow = '0 0 10px ' + activeLine.getAttribute('stroke');
+        
+        matchedZone.dataset.connected = 'true';
+        document.getElementById('node-' + activeSourceId).dataset.connected = 'true';
+        
+        stopDndPanic();
+        matchedZone.classList.add('filled');
+        dndState.correctMatches++;
+        playDndSuccess();
+        updateDndProgress();
+
+        if (dndState.correctMatches >= dndState.totalSlots) {
+          showDndSuccess(game.successMsg);
+        }
+      } else {
+        // Wrong connection
+        activeLine.remove();
+        matchedZone.classList.add('wrong-connect');
+        setTimeout(() => matchedZone.classList.remove('wrong-connect'), 500);
+        playDndError(game.damage);
+      }
+    } else {
+      // Dropped nowhere
+      activeLine.remove();
+    }
+    activeLine = null;
+    activeSourceId = null;
+  });
 }
 
 /* ================================================================
