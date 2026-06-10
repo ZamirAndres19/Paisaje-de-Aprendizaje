@@ -33,23 +33,29 @@ const DND_GAMES = {
   },
 
   /* --- ZONA 02: LABORATORIO ---
-     "TERMINAL DE RECUPERACIÓN — REGISTROS DE ASH"
-     Matching de comandos Linux ↔ su función */
+     "TERMINAL ASH — RECUPERACIÓN DE REGISTROS"
+     Arrastrar comandos Linux a su función correcta */
   lab: {
     title: 'TERMINAL ASH — RECUPERACIÓN DE REGISTROS',
     subtitle: '[MADRE] Ash encriptó los comandos. Arrastra cada instrucción a su función correcta.',
     type: 'match',
     cards: [
-      { id: 'cmd-1', content: '<code>sudo apt-get install postgresql</code>',   matchId: 'def-1' },
-      { id: 'cmd-2', content: '<code>systemctl start postgresql</code>',        matchId: 'def-2' },
-      { id: 'cmd-3', content: '<code>SELECT * FROM organismos WHERE acido=1;</code>', matchId: 'def-3' },
-      { id: 'cmd-4', content: '<code>sudo apt-get update</code>',               matchId: 'def-4' },
+      { id: 'cmd-1', content: '<code>sudo apt-get update</code>',                matchId: 'def-1' },
+      { id: 'cmd-2', content: '<code>sudo apt-get install postgresql</code>',     matchId: 'def-2' },
+      { id: 'cmd-3', content: '<code>systemctl status postgresql</code>',         matchId: 'def-3' },
+      { id: 'cmd-4', content: '<code>sudo systemctl start postgresql</code>',     matchId: 'def-4' },
+      { id: 'cmd-5', content: '<code>sudo -u postgres psql</code>',               matchId: 'def-5' },
+      { id: 'cmd-6', content: '<code>\\l</code>',                                 matchId: 'def-6' },
+      { id: 'cmd-7', content: '<code>\\dt</code>',                                matchId: 'def-7' },
     ],
     slots: [
-      { id: 'def-1', label: 'INSTALA el motor de base de datos en el sistema',      expects: 'cmd-1' },
-      { id: 'def-2', label: 'INICIA el servicio (demonio) de PostgreSQL',           expects: 'cmd-2' },
-      { id: 'def-3', label: 'EXTRAE registros de organismos ácidos de la tabla',    expects: 'cmd-3' },
-      { id: 'def-4', label: 'ACTUALIZA los repositorios del sistema operativo',     expects: 'cmd-4' },
+      { id: 'def-1', label: 'Actualiza la lista de paquetes',                    expects: 'cmd-1' },
+      { id: 'def-2', label: 'Instala PostgreSQL',                                expects: 'cmd-2' },
+      { id: 'def-3', label: 'Verifica el estado del servicio',                   expects: 'cmd-3' },
+      { id: 'def-4', label: 'Inicia el servicio',                                expects: 'cmd-4' },
+      { id: 'def-5', label: 'Entra a la consola PostgreSQL',                     expects: 'cmd-5' },
+      { id: 'def-6', label: 'Lista bases de datos',                              expects: 'cmd-6' },
+      { id: 'def-7', label: 'Lista tablas',                                      expects: 'cmd-7' },
     ],
     damage: 15,
     successMsg: '> REGISTROS DESCIFRADOS. BASE DE DATOS OPERATIVA.'
@@ -57,40 +63,48 @@ const DND_GAMES = {
 
   /* --- ZONA 03: COMUNICACIONES ---
      "CONFIGURADOR DE FIREWALL — ESCUDO ELECTROMAGNÉTICO"
-     Arrastrar puertos a reglas Allow/Deny Inbound/Outbound */
+     Arrastrar puertos/protocolos a su regla correcta */
   comms: {
     title: 'CONFIGURADOR DE FIREWALL — ESCUDO ELECTROMAGNÉTICO',
-    subtitle: '[MADRE] Arrastra cada puerto a su regla de Firewall correcta para bloquear a Weyland-Yutani.',
+    subtitle: '[MADRE] Arrastra cada puerto/protocolo a su regla de Firewall correcta.',
     type: 'match',
     cards: [
-      { id: 'port-1', content: 'TCP 443 (HTTPS)',   matchId: 'rule-1' },
-      { id: 'port-2', content: 'TCP 22  (SSH)',     matchId: 'rule-2' },
-      { id: 'port-3', content: 'TCP 3389 (RDP)',    matchId: 'rule-3' },
-      { id: 'port-4', content: 'TCP 80  (HTTP)',    matchId: 'rule-4' },
+      { id: 'port-1', content: 'HTTP',                          matchId: 'rule-1' },
+      { id: 'port-2', content: 'HTTPS',                         matchId: 'rule-2' },
+      { id: 'port-3', content: 'SSH',                            matchId: 'rule-3' },
+      { id: 'port-4', content: 'RDP',                            matchId: 'rule-4' },
+      { id: 'port-5', content: 'PostgreSQL',                     matchId: 'rule-5' },
+      { id: 'port-6', content: 'Outbound 443',                   matchId: 'rule-6' },
+      { id: 'port-7', content: 'Inbound 22/3389 DENY',           matchId: 'rule-7' },
     ],
     slots: [
-      { id: 'rule-1', label: '✅ ALLOW — OUTBOUND (señal S.O.S. encriptada)',   expects: 'port-1' },
-      { id: 'rule-2', label: '🚫 DENY  — INBOUND  (acceso remoto Linux W-Y)',   expects: 'port-2' },
-      { id: 'rule-3', label: '🚫 DENY  — INBOUND  (escritorio remoto W-Y)',     expects: 'port-3' },
-      { id: 'rule-4', label: '⚠ ALLOW — OUTBOUND (tráfico HTTP sin cifrar)',    expects: 'port-4' },
+      { id: 'rule-1', label: '80/TCP',                                           expects: 'port-1' },
+      { id: 'rule-2', label: '443/TCP',                                          expects: 'port-2' },
+      { id: 'rule-3', label: '22/TCP',                                           expects: 'port-3' },
+      { id: 'rule-4', label: '3389/TCP',                                         expects: 'port-4' },
+      { id: 'rule-5', label: '5432/TCP',                                         expects: 'port-5' },
+      { id: 'rule-6', label: 'Permite enviar S.O.S. seguro',                     expects: 'port-6' },
+      { id: 'rule-7', label: 'Bloquea control remoto',                           expects: 'port-7' },
     ],
     damage: 15,
     successMsg: '> FIREWALL CONFIGURADO. SEÑAL S.O.S. TRANSMITIENDO.'
   },
 
   /* --- ZONA 04: SALA DE MÁQUINAS ---
-     "ENSAMBLADOR DE SECUENCIA DE AUTODESTRUCCIÓN"
-     Reordenar bloques de script en el orden correcto */
+     "ENSAMBLADOR DE SECUENCIA DE PURGA"
+     Ordenar pasos de backup en el orden correcto */
   engines: {
     title: 'ENSAMBLADOR DE SECUENCIA DE PURGA',
-    subtitle: '[MADRE] El núcleo colapsa. Ordena los bloques del script antes de que sea demasiado tarde.',
+    subtitle: '[MADRE] Ordena los pasos del respaldo antes de que el núcleo colapse.',
     type: 'sort',
     blocks: [
-      { id: 'blk-1', content: '<code>#!/bin/bash<br># Script de autodestrucción NOSTROMO</code>', correctPos: 0 },
-      { id: 'blk-2', content: '<code>tar -czvf caja_negra.tar.gz /datos</code><br><span style="font-family:var(--font-body);font-size:0.75rem;opacity:0.6"># Comprimir registros críticos</span>', correctPos: 1 },
-      { id: 'blk-3', content: '<code>systemctl stop coolant-primary</code><br><span style="font-family:var(--font-body);font-size:0.75rem;opacity:0.6"># Forzar fallo de refrigeración</span>', correctPos: 2 },
-      { id: 'blk-4', content: '<code>kill -9 $(cat /var/run/core.pid)</code><br><span style="font-family:var(--font-body);font-size:0.75rem;opacity:0.6"># Purgar proceso del núcleo</span>', correctPos: 3 },
-      { id: 'blk-5', content: '<code>echo "NOSTROMO DESTRUIDA. MISION CUMPLIDA."</code>', correctPos: 4 },
+      { id: 'blk-1', content: '<code>1. Identificar datos críticos</code>', correctPos: 0 },
+      { id: 'blk-2', content: '<code>2. Crear backup_nostromo.sh</code>', correctPos: 1 },
+      { id: 'blk-3', content: '<code>3. Comprimir caja negra con tar</code>', correctPos: 2 },
+      { id: 'blk-4', content: '<code>4. Dar permisos de ejecución</code>', correctPos: 3 },
+      { id: 'blk-5', content: '<code>5. Programar ejecución automática</code>', correctPos: 4 },
+      { id: 'blk-6', content: '<code>6. Verificar archivo generado</code>', correctPos: 5 },
+      { id: 'blk-7', content: '<code>7. Transferir respaldo a Narcissus</code>', correctPos: 6 },
     ],
     damage: 20,
     successMsg: '> SCRIPT ENSAMBLADO. SECUENCIA DE AUTODESTRUCCIÓN INICIADA.'
@@ -356,7 +370,7 @@ function renderMatchGame(container, game) {
   const shuffled = [...game.cards].sort(() => Math.random() - 0.5);
 
   const board = document.createElement('div');
-  board.className = 'dnd-game-container';
+  board.className = 'dnd-game-container fullscreen-dnd';
 
   board.innerHTML = `
     <div class="dnd-game-title">🔌 ${game.title}</div>
@@ -455,7 +469,7 @@ function renderSortGame(container, game) {
   const shuffled = [...game.blocks].sort(() => Math.random() - 0.5);
 
   const board = document.createElement('div');
-  board.className = 'dnd-game-container';
+  board.className = 'dnd-game-container fullscreen-dnd';
 
   board.innerHTML = `
     <div class="dnd-game-title">⚙ ${game.title}</div>

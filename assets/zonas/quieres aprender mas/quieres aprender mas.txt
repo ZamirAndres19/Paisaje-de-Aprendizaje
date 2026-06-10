@@ -1,0 +1,8 @@
+ZONA 1 WINDOWS SERVER + ACTIVE DIRECTORY:
+https://books.google.com.ec/books?hl=es&lr=&id=Ug88EQAAQBAJ&oi=fnd&pg=PP1&dq=windows+server+active+directory+2025&ots=ddOR5ZqG75&sig=PbpzYrV1agkkGSuN6Y8SD3i6-HE&redir_esc=y#v=onepage&q&f=false
+ZONA 2 LINUX SERVER + POSTGRESQL:
+https://repository.ucc.edu.co/server/api/core/bitstreams/0699109f-207d-4e11-b66b-807527d8d120/content
+ZONA 3 SERVIDORES WEB + PUERTOS FIREWALL :
+https://www.dspace.espol.edu.ec/bitstream/123456789/39705/1/T-103018%20DELGADO%20QUISHPE.pdf
+ZONA 4 SCRIPTS BASH/POWERSHELL + BACKUPS :
+https://books.google.com.ec/books?hl=es&lr=&id=CHhmEQAAQBAJ&oi=fnd&pg=PA1&dq=Scripts+Bash/+PowerShell+%2B+Backups&ots=eUjUHlkZhb&sig=gy_AfLF5SbEY3TfgvffCFZBSGwE&redir_esc=y#v=onepage&q=Scripts%20Bash%2F%20PowerShell%20%2B%20Backups&f=false

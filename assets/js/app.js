@@ -106,6 +106,16 @@ const NODE_VIDEOS = {
     youtubeId: '2HjPb9xT8sI',    // <-- ID del video de instalación Ubuntu Server
     title: 'TRANSMISION INTERCEPTADA — INSTALACION UBUNTU SERVER',
     subtitle: 'Diario recuperado de Ash · Ver antes de proceder'
+  },
+  comms: {
+    youtubeId: '5bLA9tYD7r4',
+    title: 'TRANSMISION INTERCEPTADA — SERVIDORES WEB Y FIREWALL',
+    subtitle: 'Registro de comunicaciones Nostromo · Ver antes de proceder'
+  },
+  engines: {
+    youtubeId: '0tIZhTAuNuU',
+    title: 'TRANSMISION INTERCEPTADA — SCRIPTS Y COPIAS DE SEGURIDAD',
+    subtitle: 'Bitácora del departamento de ingeniería · Ver antes de proceder'
   }
 };
 
@@ -250,17 +260,17 @@ const GUION = {
       madreStatus: 'MODULO DE LINUX SERVER',
       hasVideo: true,
       objectives: [
-        'Instalar Ubuntu Server CLI (sin GUI)',
-        'Instalar PostgreSQL con apt-get',
-        'Iniciar el servicio con systemctl'
+        'Identificar por qué Linux CLI ahorra recursos',
+        'Instalar PostgreSQL',
+        'Activar y verificar el servicio de base de datos'
       ],
       arrival:
-        "> INICIANDO DESCENSO AL SECTOR MEDICO Y LABORATORIO DE CUARENTENA.\n" +
-        "> ADVERTENCIA: Brecha de contencion biologica detectada.\n" +
-        "> ESTADO: Servidor de datos biologicos destruido — PH altamente acido.\n\n" +
-        "[MADRE] Los fluidos del organismo han derretido el hardware del servidor principal.\n" +
-        "He recuperado los apuntes tecnicos del oficial Ash antes de su desactivacion.\n\n" +
-        "Para leerlos deben instalar un Servidor Linux y levantar el motor de base de datos.\n" +
+        "> LABORATORIO CIENTIFICO SELLADO.\n" +
+        "> El acido del organismo dañó la interfaz principal.\n" +
+        "> El servidor solo puede iniciar en modo CLI.\n\n" +
+        "[MADRE] PostgreSQL contiene registros biologicos criticos.\n" +
+        "Tripulante, restaura el servicio antes de que la contencion falle.\n\n" +
+        "He recuperado los apuntes tecnicos del oficial Ash.\n" +
         "Lean el DIARIO_ASH.log antes de proceder.",
       docTitle: 'DIARIO_ASH.log',
       docContent:
@@ -272,7 +282,7 @@ const GUION = {
         '<code>sudo apt-get install postgresql</code></p>' +
         '<h3>SERVICIOS</h3>' +
         '<p>Para arrancar el demonio de la base de datos:<br>' +
-        '<code>systemctl start postgresql</code></p>' +
+        '<code>sudo systemctl start postgresql</code></p>' +
         '<h3>CONSULTAS SQL</h3>' +
         '<p>Sintaxis de extraccion rapida:<br>' +
         '<code>SELECT [columna] FROM [tabla] WHERE [condicion];</code></p>',
@@ -280,23 +290,34 @@ const GUION = {
         {
           text:
             "> INICIANDO MODO DE RECUPERACION MANUAL.\n" +
-            "> PASO 1: Seleccione la arquitectura del SO para este entorno de bajos recursos.\n\n" +
-            "[MADRE] ¿Qué versión de Linux instala para maximizar los recursos disponibles?",
+            "> PASO 1: Seleccione el sistema para este entorno de bajos recursos.\n\n" +
+            "[MADRE] ¿Qué sistema conviene usar en un servidor de bajos recursos?",
           options: [
-            { text: '> Ubuntu Desktop GUI', correct: false, msg: 'La GUI consume recursos innecesarios. Revise el diario.' },
-            { text: '> Ubuntu Server CLI (Consola)', correct: true },
-            { text: '> Windows Server Core', correct: false, msg: 'No es Linux. Revise el diario.' }
+            { text: '> Ubuntu Server CLI', correct: true, msg: 'Correcto. El modo CLI conserva recursos para el análisis biológico.' },
+            { text: '> Windows 11 Home', correct: false, msg: 'MADRE detecta recursos insuficientes para entorno gráfico.' },
+            { text: '> Ubuntu Desktop con efectos gráficos', correct: false, msg: 'MADRE detecta recursos insuficientes para entorno gráfico.' }
           ]
         },
         {
           text:
             "> INSTALACION BASE COMPLETADA. MODO CONSOLA ACTIVO.\n" +
             "> PASO 2: Ingrese el comando para instalar el motor de base de datos.\n\n" +
-            "[MADRE] Extraido de los registros de Ash. ¿Cuál es el comando correcto?",
+            "[MADRE] ¿Qué comando instala PostgreSQL?",
           options: [
-            { text: '> sudo apt-get install postgresql', correct: true },
-            { text: '> systemctl start postgresql', correct: false, msg: 'systemctl inicia el servicio, no lo instala. Revise el diario.' },
-            { text: '> apt remove postgresql', correct: false, msg: 'apt remove desinstala. Revise el diario.' }
+            { text: '> sudo apt-get install postgresql', correct: true, msg: 'Motor PostgreSQL instalado.' },
+            { text: '> mkdir postgresql', correct: false, msg: 'Comando inválido. Debes instalar el paquete desde apt.' },
+            { text: '> ping postgresql', correct: false, msg: 'Comando inválido. Debes instalar el paquete desde apt.' }
+          ]
+        },
+        {
+          text:
+            "> PAQUETE INSTALADO. SERVICIO INACTIVO.\n" +
+            "> PASO 3: Inicie el servicio de base de datos.\n\n" +
+            "[MADRE] ¿Qué comando inicia PostgreSQL?",
+          options: [
+            { text: '> sudo systemctl start postgresql', correct: true, msg: 'Demonio PostgreSQL activo.' },
+            { text: '> run sql screen', correct: false, msg: 'PostgreSQL no puede responder si el servicio no está activo.' },
+            { text: '> start acid database', correct: false, msg: 'PostgreSQL no puede responder si el servicio no está activo.' }
           ]
         }
       ],
@@ -308,27 +329,27 @@ const GUION = {
         "CADA FALLO RESTA 15% DE OXIGENO.",
       quiz: [
         {
-          q: 'Q1: ¿Qué distribución de Linux es óptima para servidores con pocos recursos?',
+          q: 'Q1: ¿Por qué se usa Linux CLI en servidores?',
           options: [
-            { text: '> Ubuntu Desktop GUI', correct: false, msg: 'La GUI consume recursos innecesarios. Revise el diario.' },
-            { text: '> Ubuntu Server CLI', correct: true },
-            { text: '> Windows Server Core', correct: false, msg: 'No es Linux. Revise el diario.' }
+            { text: '> Porque consume menos recursos que una interfaz gráfica', correct: true },
+            { text: '> Porque abre todos los puertos', correct: false, msg: 'Eso no es cierto. Revise el diario.' },
+            { text: '> Porque elimina la base de datos', correct: false, msg: 'Eso es incorrecto. Revise el diario.' }
           ]
         },
         {
-          q: 'Q2: ¿Qué comando instala PostgreSQL en Ubuntu Server?',
+          q: 'Q2: ¿Qué comando instala PostgreSQL?',
           options: [
-            { text: '> systemctl start postgresql', correct: false, msg: 'systemctl inicia el servicio, no lo instala. Revise el diario.' },
             { text: '> sudo apt-get install postgresql', correct: true },
-            { text: '> apt remove postgresql', correct: false, msg: 'Ese comando desinstala. Revise el diario.' }
+            { text: '> mkdir postgresql', correct: false, msg: 'mkdir crea directorios. Revise el diario.' },
+            { text: '> ping postgresql', correct: false, msg: 'ping prueba conectividad. Revise el diario.' }
           ]
         },
         {
-          q: 'Q3: ¿Qué comando arranca el demonio de PostgreSQL?',
+          q: 'Q3: ¿Qué comando inicia PostgreSQL?',
           options: [
-            { text: '> sudo apt-get install postgresql', correct: false, msg: 'Ese instala, no arranca. Revise el diario.' },
-            { text: '> SELECT * FROM tabla;', correct: false, msg: 'Eso es SQL, no un comando de sistema. Revise el diario.' },
-            { text: '> systemctl start postgresql', correct: true }
+            { text: '> sudo systemctl start postgresql', correct: true },
+            { text: '> open database', correct: false, msg: 'Comando inexistente. Revise el diario.' },
+            { text: '> cd postgresql', correct: false, msg: 'cd cambia directorios. Revise el diario.' }
           ]
         }
       ],
@@ -347,7 +368,7 @@ const GUION = {
       visorImg: 'assets/img/radar_alien.gif',
       visorLabel: 'RADAR — SECTOR COMMS',
       madreStatus: 'MODULO DE RED Y FIREWALL',
-      hasVideo: false,
+      hasVideo: true,
       objectives: [
         'Instalar Servidor Web (IIS o Apache)',
         'Habilitar puerto TCP 443 (Outbound) para S.O.S.',
@@ -459,11 +480,11 @@ const GUION = {
       visorImg: 'assets/img/mother_interface.gif',
       visorLabel: 'NUCLEO — SALA DE MAQUINAS',
       madreStatus: 'MODULO DE SCRIPTS Y BACKUPS',
-      hasVideo: false,
+      hasVideo: true,
       objectives: [
-        'Comprimir datos con tar para la cápsula Narcissus',
-        'Automatizar script con crontab / Task Scheduler',
-        'Forzar apagado del sistema de refrigeración'
+        'Crear Backups con tar (Linux) o Robocopy (Windows)',
+        'Automatizar scripts con crontab o Task Scheduler',
+        'Forzar parada de servicios con kill (Bash) o Stop-Process (PowerShell)'
       ],
       arrival:
         "> ACCESO A SALA DE MAQUINAS CONCEDIDO.\n" +
@@ -486,29 +507,43 @@ const GUION = {
         '<h3>SCRIPTS DE PURGA</h3>' +
         '<p>Un script (.sh o .ps1) agrupa comandos ejecutables.<br>' +
         'Para forzar el apagado critico:<br>' +
-        '<code>kill -9 [PID]</code> (Linux) — <code>Stop-Process</code> (PowerShell)</p>',
+        '<code>kill -9 [PID]</code> (Linux) — <code>Stop-Process</code> (PowerShell)</p>' +
+        '<div class="highlight"><b>RESUMEN COMPARATIVO W-Y</b>:<br>' +
+        '• <b>Linux</b>: scripts <code>.sh</code>, automatización <code>crontab</code>, compresión <code>tar</code>, purga <code>kill -9</code>.<br>' +
+        '• <b>Windows</b>: scripts <code>.ps1</code>, automatización <code>Task Scheduler</code>, copia <code>Robocopy</code>, purga <code>Stop-Process</code>.</div>',
       faseB: [
         {
           text:
             "> INICIANDO SECUENCIA DE MIGRACION Y PURGA.\n" +
             "> TEMPERATURA DEL NUCLEO AUMENTANDO...\n" +
             "> PASO 1: Asegurar los registros de la Caja Negra.\n\n" +
-            "[MADRE] ¿Qué comando empaqueta y comprime los datos del servidor?",
+            "[MADRE] ¿Qué comando empaqueta y comprime los datos en Linux o espeja directorios en Windows?",
           options: [
             { text: '> rm -rf /datos', correct: false, msg: 'DESTRUCCION DE PRUEBAS NO AUTORIZADA. Ese comando borra todo.' },
-            { text: '> tar -czvf caja_negra.tar.gz /datos', correct: true },
+            { text: '> tar -czvf (Linux) / Robocopy (Windows)', correct: true },
             { text: '> systemctl stop backup', correct: false, msg: 'systemctl stop detiene un servicio. Revise el manual.' }
           ]
         },
         {
           text:
             "> RESPALDO CREADO. MIGRACION A LA CAPSULA NARCISSUS EN CURSO.\n" +
-            "> PASO 2: El nucleo debe sobrecargarse exactamente al terminar.\n\n" +
-            "[MADRE] ¿Qué herramienta automatiza la ejecución del script de autodestrucción?",
+            "> PASO 2: El script de autodestrucción debe calendarizarse.\n\n" +
+            "[MADRE] ¿Qué herramientas automatizan la ejecución del script en Linux y Windows Server?",
           options: [
             { text: '> Active Directory', correct: false, msg: 'Active Directory gestiona usuarios, no tareas programadas. Revise el manual.' },
             { text: '> Crontab / Task Scheduler', correct: true },
             { text: '> apt-get install script', correct: false, msg: 'Ese instala paquetes, no programa tareas. Revise el manual.' }
+          ]
+        },
+        {
+          text:
+            "> PLANIFICACIÓN REGISTRADA EN EL PLANIFICADOR.\n" +
+            "> PASO 3: Es necesario forzar la parada inmediata del refrigerante del núcleo.\n\n" +
+            "[MADRE] En PowerShell de Windows, ¿cuál es el comando correcto para detener un proceso por su nombre?",
+          options: [
+            { text: '> Stop-Process -Name "coolant"', correct: true },
+            { text: '> kill -9 coolant', correct: false, msg: 'kill -9 es sintaxis de Linux Bash. Revise el manual.' },
+            { text: '> systemctl stop coolant', correct: false, msg: 'systemctl es de administración de servicios en Linux. Revise el manual.' }
           ]
         }
       ],
@@ -520,27 +555,27 @@ const GUION = {
         "CADA FALLO RESTA 20% DE OXIGENO.",
       quiz: [
         {
-          q: 'Q1: ¿Qué comando empaqueta y comprime datos en Linux?',
+          q: 'Q1: ¿Qué herramientas realizan backups (copias de seguridad) comprimidas o espejadas en Linux y Windows respectivamente?',
           options: [
-            { text: '> rm -rf /datos', correct: false, msg: 'Ese comando borra los datos permanentemente. Revise el manual.' },
-            { text: '> tar -czvf caja_negra.tar.gz /datos', correct: true },
-            { text: '> systemctl stop backup', correct: false, msg: 'Ese detiene un servicio. Revise el manual.' }
+            { text: '> rm -rf (Linux) y systemctl (Windows)', correct: false, msg: 'rm borra datos y systemctl administra servicios.' },
+            { text: '> tar -czvf (Linux) y Robocopy (Windows)', correct: true },
+            { text: '> apt-get (Linux) y Active Directory (Windows)', correct: false, msg: 'apt-get instala paquetes y AD gestiona directorios.' }
           ]
         },
         {
-          q: 'Q2: ¿Qué herramienta programa la ejecución automática de scripts en Linux?',
+          q: 'Q2: ¿Qué herramientas programan la ejecución automática de scripts en Linux y Windows Server?',
           options: [
-            { text: '> Active Directory', correct: false, msg: 'Active Directory gestiona usuarios, no tareas programadas.' },
-            { text: '> Crontab', correct: true },
-            { text: '> apt-get install script', correct: false, msg: 'Ese instala paquetes, no programa tareas.' }
+            { text: '> Active Directory y File Explorer', correct: false, msg: 'Ninguno automatiza ejecuciones de scripts.' },
+            { text: '> Crontab y Task Scheduler', correct: true },
+            { text: '> apt-get y Server Manager', correct: false, msg: 'Son para instalación de software y gestión del servidor.' }
           ]
         },
         {
-          q: 'Q3: ¿Qué extensión tienen los scripts en Linux?',
+          q: 'Q3: ¿Qué extensiones de archivo se emplean para scripts en Linux (Bash) y Windows (PowerShell) respectivamente?',
           options: [
-            { text: '> .ps1', correct: false, msg: '.ps1 es PowerShell (Windows). Revise el manual.' },
-            { text: '> .bat', correct: false, msg: '.bat es Windows. Revise el manual.' },
-            { text: '> .sh', correct: true }
+            { text: '> .bat y .vbs', correct: false, msg: 'Son extensiones de scripting heredadas de Windows (MS-DOS/VBScript).' },
+            { text: '> .sh y .ps1', correct: true },
+            { text: '> .exe y .bin', correct: false, msg: 'Son ejecutables binarios y no archivos de script.' }
           ]
         }
       ],
@@ -897,6 +932,7 @@ function startFaseB(node, stepIndex) {
 
   showPracticeModal(node, stepIndex);
 }
+window.startFaseB = startFaseB;
 
 function showPracticeModal(node, stepIndex) {
   const step = node.faseB[stepIndex];
@@ -955,7 +991,12 @@ function handlePracticeAnswer(opt, idx, node, stepIndex) {
         typeScreen(
           '> PRÁCTICA COMPLETADA.\n> Selecciona Protocolo de Verificación para la prueba final.',
           () => {
-             // Just close it, node remains active.
+             // Restaurar los botones para que el usuario pueda avanzar
+             if (typeof renderV2DocButton === 'function') {
+               renderV2DocButton(node);
+             } else {
+               renderControls([{ label: '[ INICIAR PROTOCOLO DE VERIFICACION ]', action: () => startQuizPhase(node), primary: true }]);
+             }
           }
         );
       }
@@ -982,6 +1023,8 @@ function skipPractice() {
   if (node) {
     if (typeof launchDndGame === 'function') {
       launchDndGame(node);
+    } else if (typeof window.openQuiz === 'function') {
+      window.openQuiz(node);
     } else if (typeof openQuiz === 'function') {
       openQuiz(node);
     }
@@ -1000,75 +1043,119 @@ function closePractice() {
 
 let quizState = { questions: [], current: 0, onComplete: null, damage: 15, timer: null };
 
+window.startQuizPhase = startQuizPhase;
 function startQuizPhase(node) {
   const overlay = document.getElementById('modal-practice');
   if (overlay) overlay.style.display = 'none';
   setPhasePill('c');
   
   if (completedNodes.includes(node.id)) {
-    typeScreen(['> ESTE MÓDULO YA HA SIDO COMPLETADO SATISFACTORIAMENTE.'], () => {
+    typeScreen('> ESTE MÓDULO YA HA SIDO COMPLETADO SATISFACTORIAMENTE.', () => {
       renderControls([{ label: '[ PROTOCOLO COMPLETADO ]', action: () => {}, primary: false }]);
     });
   } else {
     typeScreen(node.quizIntro, () => {
-      renderControls([{ label: '[ INICIAR PROTOCOLO DE VERIFICACION TECNICA ]', action: () => openQuiz(node), primary: true }]);
+      renderControls([{ label: '[ INICIAR PROTOCOLO DE VERIFICACION TECNICA ]', action: () => {
+        if (typeof window.openQuiz === 'function') window.openQuiz(node);
+        else openQuiz(node);
+      }, primary: true }]);
     });
   }
 }
 
+window.openQuiz = openQuiz; // Expose globally BEFORE v2-app.js runs
 function openQuiz(node) {
-  const overlay   = document.getElementById('modal-quiz');
-  const labelEl   = document.getElementById('quiz-label');
-  const timerWrap = document.getElementById('quiz-timer-wrap');
+  try {
+    if (!node) {
+      throw new Error("El argumento node pasado a openQuiz es null o undefined.");
+    }
+    console.log('[DEBUG] openQuiz iniciado para el nodo:', node.id || node);
+    const overlay   = document.getElementById('modal-quiz');
+    const labelEl   = document.getElementById('quiz-label');
+    const timerWrap = document.getElementById('quiz-timer-wrap');
 
-  labelEl.textContent = 'PROTOCOLO — ' + node.title;
-  if (timerWrap) timerWrap.style.display = 'flex';
+    if (!overlay) {
+      throw new Error("No se encontro el elemento modal-quiz en el DOM.");
+    }
 
-  overlay.style.display = 'flex';
+    if (labelEl) labelEl.textContent = 'PROTOCOLO — ' + (node.title || node.id || 'ZONA');
+    if (timerWrap) timerWrap.style.display = 'flex';
 
-  quizState = {
-    questions: node.quiz,
-    current: 0,
-    onComplete: () => {
-      // V2: Al terminar las preguntas de Verificación, iniciar Minijuego sorpresa
-      if (typeof launchDndGame === 'function') {
-        launchDndGame(node);
-      } else {
-        nodeSuccess(node);
-      }
-    },
-    damage: node.quizDamage,
-    useTimer: true,
-    timer: null,
-    consecutiveCorrectNeeded: 0 // Para la lógica de pánico
-  };
+    overlay.style.display = 'flex';
 
-  renderQuizQuestion();
-  startQuizTimer();
+    quizState = {
+      questions: node.quiz || [],
+      current: 0,
+      onComplete: () => {
+        try {
+          if (typeof launchDndGame === 'function') {
+            launchDndGame(node);
+          } else {
+            nodeSuccess(node);
+          }
+        } catch (e) {
+          console.error("Error en onComplete de quiz:", e);
+          alert("Error en onComplete de quiz: " + e.message);
+        }
+      },
+      damage: node.quizDamage || 15,
+      useTimer: true,
+      timer: null,
+      consecutiveCorrectNeeded: 0
+    };
+
+    if (!node.quiz || node.quiz.length === 0) {
+      throw new Error("El nodo " + (node.id || 'actual') + " no tiene preguntas de quiz definidas.");
+    }
+
+    renderQuizQuestion();
+    startQuizTimer();
+  } catch (err) {
+    console.error("Error en openQuiz:", err);
+    alert("Error al abrir el quiz (openQuiz): " + err.message + "\nStack: " + err.stack);
+  }
 }
 
 function renderQuizQuestion() {
-  const q = quizState.questions[quizState.current];
-  const total = quizState.questions.length;
+  try {
+    const q = quizState.questions[quizState.current];
+    if (!q) {
+      throw new Error("No hay pregunta en el indice " + quizState.current);
+    }
+    const total = quizState.questions.length;
 
-  document.getElementById('quiz-q-num').textContent    = `PREGUNTA ${quizState.current + 1} / ${total}`;
-  document.getElementById('quiz-question').textContent = q.q;
-  document.getElementById('quiz-progress-bar').style.width = ((quizState.current / total) * 100) + '%';
-  document.getElementById('quiz-o2-val').textContent   = oxygen + '%';
+    const qNumEl = document.getElementById('quiz-q-num');
+    const qQuestionEl = document.getElementById('quiz-question');
+    const qProgressBarEl = document.getElementById('quiz-progress-bar');
+    const qO2ValEl = document.getElementById('quiz-o2-val');
 
-  const feedbackEl = document.getElementById('quiz-feedback');
-  feedbackEl.style.display = 'none';
-  feedbackEl.className = 'quiz-feedback';
+    if (qNumEl) qNumEl.textContent = `PREGUNTA ${quizState.current + 1} / ${total}`;
+    if (qQuestionEl) qQuestionEl.textContent = q.q;
+    if (qProgressBarEl) qProgressBarEl.style.width = ((quizState.current / total) * 100) + '%';
+    if (qO2ValEl) qO2ValEl.textContent = oxygen + '%';
 
-  const optionsEl = document.getElementById('quiz-options');
-  optionsEl.innerHTML = '';
-  const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
-  shuffledOptions.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.textContent = opt.text;
-    btn.addEventListener('click', () => handleQuizAnswer(opt, i));
-    optionsEl.appendChild(btn);
-  });
+    const feedbackEl = document.getElementById('quiz-feedback');
+    if (feedbackEl) {
+      feedbackEl.style.display = 'none';
+      feedbackEl.className = 'quiz-feedback';
+    }
+
+    const optionsEl = document.getElementById('quiz-options');
+    if (optionsEl) {
+      optionsEl.innerHTML = '';
+      if (!q.options) throw new Error("La pregunta " + quizState.current + " no tiene opciones definidas.");
+      const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+      shuffledOptions.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt.text;
+        btn.addEventListener('click', () => handleQuizAnswer(opt, i));
+        optionsEl.appendChild(btn);
+      });
+    }
+  } catch (err) {
+    console.error("Error en renderQuizQuestion:", err);
+    alert("Error al renderizar la pregunta del quiz: " + err.message + "\nStack: " + err.stack);
+  }
 }
 
 function handleQuizAnswer(opt, idx) {
@@ -1368,6 +1455,10 @@ function typeScreen(text, callback) {
 }
 
 function typeInto(el, text, callback, useHtml) {
+  if (el.typeTimeoutId) {
+    clearTimeout(el.typeTimeoutId);
+    el.typeTimeoutId = null;
+  }
   el.innerHTML = '';
   const parts = text.split('\n');
   let partIdx = 0, charIdx = 0;
@@ -1415,7 +1506,7 @@ function typeInto(el, text, callback, useHtml) {
       }
     }
     smartScroll();
-    setTimeout(tick, tickDelay());
+    el.typeTimeoutId = setTimeout(tick, tickDelay());
   }
   tick();
 }

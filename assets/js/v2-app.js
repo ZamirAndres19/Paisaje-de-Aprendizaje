@@ -49,9 +49,9 @@ Tripulante — tu misión empieza ahora.`;
 const NODE_DOCS = {
   bridge: {
     title: 'MANUAL_DESPLIEGUE_W-Y_01.pdf',
-    pdfPath: '',
-    learnMoreUrl: 'https://ieeexplore.ieee.org/document/6823453',
-    learnMoreText: '¿Quieres aprender más? — IEEE Xplore: Infraestructura TI en Centros de Datos (ANSI/TIA-942)',
+    pdfPath: 'assets/zonas/PDF/zona_01_presentacion_puente_de_mando_windows_ad(3).pdf',
+    learnMoreUrl: 'https://books.google.com.ec/books?hl=es&lr=&id=Ug88EQAAQBAJ&oi=fnd&pg=PP1&dq=windows+server+active+directory+2025&ots=ddOR5ZqG75&sig=PbpzYrV1agkkGSuN6Y8SD3i6-HE&redir_esc=y#v=onepage&q&f=false',
+    learnMoreText: '¿Quieres aprender más? — Windows Server + Active Directory (Google Books)',
     summary: [
       'Windows Server 2022 requiere mínimo 512 MB RAM y 32 GB de almacenamiento.',
       'El Active Directory Domain Services (AD DS) centraliza la autenticación de usuarios.',
@@ -62,9 +62,9 @@ const NODE_DOCS = {
   },
   lab: {
     title: 'MANUAL_POSTGRESQL_ASH_02.pdf',
-    pdfPath: '',
-    learnMoreUrl: 'https://www.postgresql.org/docs/current/',
-    learnMoreText: '¿Quieres aprender más? — Documentación oficial PostgreSQL + IEEE: Gestión de Bases de Datos',
+    pdfPath: 'assets/zonas/PDF/zona_02_presentacion_laboratorio_linux_postgresql(3).pdf',
+    learnMoreUrl: 'https://repository.ucc.edu.co/server/api/core/bitstreams/0699109f-207d-4e11-b66b-807527d8d120/content',
+    learnMoreText: '¿Quieres aprender más? — Linux Server + PostgreSQL (Repositorio UCC)',
     summary: [
       'PostgreSQL es un SGBD relacional de código abierto con conformidad ACID.',
       'El comando apt-get install postgresql instala el motor en distribuciones Debian/Ubuntu.',
@@ -75,9 +75,9 @@ const NODE_DOCS = {
   },
   comms: {
     title: 'MANUAL_FIREWALL_COMMS_03.pdf',
-    pdfPath: '',
-    learnMoreUrl: 'https://ieeexplore.ieee.org/document/7876269',
-    learnMoreText: '¿Quieres aprender más? — IEEE: Seguridad en Redes y Configuración de Firewalls',
+    pdfPath: 'assets/zonas/PDF/zona_03_presentacion_sala_comunicaciones_web_firewall(3).pdf',
+    learnMoreUrl: 'https://www.dspace.espol.edu.ec/bitstream/123456789/39705/1/T-103018%20DELGADO%20QUISHPE.pdf',
+    learnMoreText: '¿Quieres aprender más? — Servidores Web + Puertos Firewall (ESPOL)',
     summary: [
       'Un Firewall filtra tráfico de red basándose en reglas de Allow/Deny por puerto y protocolo.',
       'El puerto 443 (HTTPS) es el estándar para comunicaciones web cifradas con TLS/SSL.',
@@ -88,15 +88,15 @@ const NODE_DOCS = {
   },
   engines: {
     title: 'MANUAL_SCRIPTS_MOTORES_04.pdf',
-    pdfPath: '',
-    learnMoreUrl: 'https://ieeexplore.ieee.org/document/9382481',
-    learnMoreText: '¿Quieres aprender más? — IEEE: Automatización con Bash/PowerShell en Infraestructura',
+    pdfPath: 'assets/zonas/PDF/zona_04_presentacion_sala_maquinas_scripts_backups(3).pdf',
+    learnMoreUrl: 'https://books.google.com.ec/books?hl=es&lr=&id=CHhmEQAAQBAJ&oi=fnd&pg=PA1&dq=Scripts+Bash/+PowerShell+%2B+Backups&ots=eUjUHlkZhb&sig=gy_AfLF5SbEY3TfgvffCFZBSGwE&redir_esc=y#v=onepage&q=Scripts%20Bash%2F%20PowerShell%20%2B%20Backups&f=false',
+    learnMoreText: '¿Quieres aprender más? — Scripts Bash/PowerShell + Backups (Google Books)',
     summary: [
       'Los scripts Bash (Linux) y PowerShell (Windows) automatizan tareas de administración.',
-      'El shebang #!/bin/bash indica al sistema el intérprete a usar para el script.',
-      'tar -czvf comprime archivos: c=crear, z=gzip, v=verbose, f=nombre del archivo.',
-      'systemctl stop [servicio] detiene un proceso del sistema de forma ordenada.',
-      'kill -9 fuerza la terminación inmediata de un proceso por su PID.',
+      'En Linux el shebang #!/bin/bash indica el intérprete; en Windows se usa la extensión .ps1.',
+      'tar -czvf (Linux) comprime archivos; Robocopy (Windows) realiza copias de seguridad de directorios.',
+      'systemctl stop (Linux) y Stop-Process (PowerShell) detienen servicios y procesos respectivamente.',
+      'La automatización se programa con crontab en Linux y Task Scheduler en Windows Server.',
     ]
   }
 };
@@ -487,6 +487,8 @@ window.startWithoutAudio = function() {
    ================================================================ */
 const _originalEnterNode = window.enterNode;
 window.enterNode = function(node) {
+  window._currentNodeRef = node;
+  window.currentNode = node;
   window._currentNodeId = typeof node === 'string' ? node : node.id;
   window._docRead = false;
   window._videoWatched = false;
@@ -496,11 +498,16 @@ window.enterNode = function(node) {
     _originalEnterNode(node);
   }
 
-  // Luego SOBREESCRIBIR los controles para nueva lógica
-  // (typeScreen del original llama renderControls al terminar)
-  // Lo hacemos con un pequeño delay para que typeScreen termine primero
-  // La función renderControls del original mostrará los botones
-  // pero nosotros necesitamos que solo aparezca UN botón: "LEER MANUAL"
+  // Forzar re-render de botones después de que typeScreen termine
+  // para garantizar que _docRead=false ya esté aplicado en los botones
+  setTimeout(() => {
+    const nodeRef = (typeof GUION !== 'undefined' && GUION.nodes ? GUION.nodes[window._currentNodeId] : null) || window._currentNodeRef || window.currentNode;
+    if (nodeRef) {
+      window._currentNodeRef = nodeRef;
+      window.currentNode = nodeRef;
+      renderV2DocButton(nodeRef);
+    }
+  }, 300);
 };
 
 /* Override de renderControls para Fase A solamente */
@@ -520,9 +527,12 @@ window.renderControls = function(actions) {
   }
 
   // Encontrar el nodo activo actual
-  let activeNode = window._currentNodeRef || window.currentNode;
-  if (!activeNode && window._currentNodeId && typeof GUION !== 'undefined' && GUION.nodes) {
+  let activeNode = null;
+  if (window._currentNodeId && typeof GUION !== 'undefined' && GUION.nodes) {
     activeNode = GUION.nodes[window._currentNodeId];
+  }
+  if (!activeNode) {
+    activeNode = window._currentNodeRef || window.currentNode;
   }
 
   // Detectar si es la fase de llegada (tiene acción de "leer doc")
@@ -586,6 +596,10 @@ window.openDocV2 = function openDocV2(node) {
   const pdfBtn      = document.getElementById('btn-open-pdf');
 
   if (!overlay) return;
+
+  // Aplicar clase de tema de la zona activa al modal
+  overlay.classList.remove('node-theme-bridge', 'node-theme-lab', 'node-theme-comms', 'node-theme-engines');
+  overlay.classList.add(node.theme);
 
   // Título
   const titleEl = document.getElementById('modal-doc-title');
@@ -659,80 +673,156 @@ window.openPdfModal = function() {
   const docData = NODE_DOCS[node.id] || {};
 
   const pdfPath = docData.pdfPath || '';
-  if (pdfPath && (pdfPath.startsWith('http://') || pdfPath.startsWith('https://'))) {
-    window.open(pdfPath, '_blank');
-    unlockVideoAfterRead();
-    return;
-  }
-
   const modal = document.getElementById('modal-pdf');
-  const iframe = document.getElementById('pdf-iframe');
-  const fallback = document.getElementById('pdf-fallback-content');
-  const fallbackBody = document.getElementById('pdf-fallback-body');
-  const titleEl = document.getElementById('pdf-modal-title');
-  const sentinelEl = document.getElementById('pdf-scroll-sentinel');
-
   if (!modal) return;
+
+  // Aplicar tema de la zona activa
+  modal.classList.remove('node-theme-bridge', 'node-theme-lab', 'node-theme-comms', 'node-theme-engines');
+  if (node.theme) modal.classList.add(node.theme);
+
+  const titleEl       = document.getElementById('pdf-modal-title');
+  const iframe        = document.getElementById('pdf-iframe');
+  const fallback      = document.getElementById('pdf-fallback-content');
+  const fallbackBody  = document.getElementById('pdf-fallback-body');
+  const sentinelEl    = document.getElementById('pdf-scroll-sentinel');
+
   if (titleEl) titleEl.textContent = docData.title || 'MANUAL_W-Y.pdf';
 
-  const isLocal = window.location.protocol === 'file:';
-  const pdfExists = pdfPath !== '' && !isLocal;
+  // --- Siempre mostrar la barra inferior con los dos botones ---
+  // (independientemente de si el PDF carga o no)
+  _injectPdfBottomBar(modal, pdfPath, docData);
 
-  if (pdfExists) {
-    // Usar viewer de Google Docs para PDFs (no requiere plugin)
+  const isLocal  = window.location.protocol === 'file:';
+  const isRemote = pdfPath && (pdfPath.startsWith('http://') || pdfPath.startsWith('https://'));
+  const pdfExists = pdfPath !== '' && !isLocal && !isRemote;
+
+  if (isRemote || pdfExists) {
+    // Determinar la URL a incrustar
+    let embedUrl;
+    if (isRemote) {
+      // PDF externo: incrustamos directamente (Google Viewer)
+      embedUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(pdfPath)}&embedded=true`;
+    } else {
+      // PDF local en servidor: Google Viewer con ruta relativa al origen
+      embedUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + '/' + pdfPath)}&embedded=true`;
+    }
     if (iframe) {
-      iframe.src = `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + '/' + pdfPath)}&embedded=true`;
+      iframe.src = embedUrl;
       iframe.style.display = 'block';
     }
     if (fallback) fallback.style.display = 'none';
-
-    // Desbloquear video tras 8 segundos de "lectura" (simulado para PDFs)
+    // Desbloquear tras 8 s de lectura visual
     setTimeout(() => unlockVideoAfterRead(), 8000);
   } else {
-    // Fallback: mostrar contenido HTML del nodo como documento
-    if (iframe) iframe.style.display = 'none';
+    // Fallback HTML cuando es archivo local (file://) o no hay ruta
+    if (iframe) { iframe.src = ''; iframe.style.display = 'none'; }
     if (fallback) fallback.style.display = 'flex';
     if (fallbackBody) {
       fallbackBody.innerHTML = node.docContent || `
-        <div style="padding:20px;font-family:Share Tech Mono,monospace;font-size:0.88rem;line-height:1.8;color:rgba(0,255,65,0.7);">
-        <div style="color:rgba(255,176,0,0.6);font-size:0.75rem;letter-spacing:3px;margin-bottom:16px;">
-        ARCHIVO: ${docData.title || 'MANUAL_W-Y.pdf'} — PENDIENTE DE CARGA<br>
-        Sube el PDF a assets/docs/ para activar el visor completo.<br>
-        Mientras tanto, consulta el resumen ejecutivo.
-        </div>
-        ${(docData.summary || []).map((p, i) => `
-          <div style="margin-bottom:14px;padding-left:20px;position:relative;">
-            <span style="position:absolute;left:0;color:rgba(255,176,0,0.5);">${String(i+1).padStart(2,'0')}.</span>
-            ${p}
+        <div style="padding:20px;font-family:'Share Tech Mono',monospace;font-size:0.88rem;line-height:1.8;color:rgba(0,255,65,0.7);">
+          <div style="color:rgba(255,176,0,0.6);font-size:0.75rem;letter-spacing:3px;margin-bottom:16px;">
+            ARCHIVO: ${docData.title || 'MANUAL_W-Y.pdf'}<br>
+            Usa el botón <strong>ABRIR PDF EN PESTAÑA</strong> para verlo en tu navegador.
           </div>
-        `).join('')}
+          ${(docData.summary || []).map((p, i) => `
+            <div style="margin-bottom:14px;padding-left:20px;position:relative;">
+              <span style="position:absolute;left:0;color:rgba(255,176,0,0.5);">${String(i+1).padStart(2,'0')}.</span>
+              ${p}
+            </div>
+          `).join('')}
         </div>
       `;
     }
-
-    // IntersectionObserver en el sentinel
     if (sentinelEl && fallback) {
       const obs = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          obs.disconnect();
-          unlockVideoAfterRead();
-        }
+        if (entries[0].isIntersecting) { obs.disconnect(); unlockVideoAfterRead(); }
       }, { root: fallback, threshold: 0.5 });
       obs.observe(sentinelEl);
-
-      // También desbloquear tras 5s de lectura (fallback time-based)
       setTimeout(() => unlockVideoAfterRead(), 5000);
     }
   }
 
+  modal.style.display = 'flex';
   modal.classList.add('active');
 };
+
+/* ----------------------------------------------------------------
+   Barra inferior del modal PDF:
+   [ 📄 ABRIR PDF EN PESTAÑA ]  [ ✓ YA LEÍ EL MANUAL ]
+   ---------------------------------------------------------------- */
+function _injectPdfBottomBar(modal, pdfPath, docData) {
+  // Eliminar barra anterior si existe
+  const old = modal.querySelector('.pdf-bottom-bar');
+  if (old) old.remove();
+
+  const bar = document.createElement('div');
+  bar.className = 'pdf-bottom-bar';
+  bar.style.cssText = [
+    'display:flex', 'align-items:center', 'gap:12px',
+    'padding:14px 20px',
+    'background:rgba(0,0,0,0.85)',
+    'border-top:1px solid rgba(0,255,65,0.25)',
+    'font-family:\'Share Tech Mono\',monospace'
+  ].join(';');
+
+  // Mensaje de info
+  const info = document.createElement('div');
+  info.style.cssText = 'flex:1;font-size:0.78rem;color:rgba(0,255,65,0.75);line-height:1.5;';
+  info.innerHTML =
+    `<strong style="color:rgba(0,255,65,1);">PDF conectado: ${docData.title || 'MANUAL_W-Y.pdf'}</strong><br>` +
+    'Si el visor queda negro, usa el botón externo.';
+
+  // Botón 1: abrir en pestaña
+  const btnOpen = document.createElement('button');
+  btnOpen.innerHTML = '📄 ABRIR PDF EN PESTAÑA';
+  btnOpen.style.cssText = [
+    'padding:8px 16px', 'background:transparent',
+    'border:1px solid rgba(0,255,65,0.5)',
+    'color:rgba(0,255,65,0.9)',
+    'font-family:\'Share Tech Mono\',monospace',
+    'font-size:0.78rem', 'cursor:pointer',
+    'white-space:nowrap', 'transition:all 0.2s'
+  ].join(';');
+  btnOpen.onmouseover = () => { btnOpen.style.background = 'rgba(0,255,65,0.15)'; };
+  btnOpen.onmouseout  = () => { btnOpen.style.background = 'transparent'; };
+  btnOpen.addEventListener('click', () => {
+    const url = pdfPath || (docData.pdfPath || '');
+    if (url) window.open(url, '_blank');
+    // Marcar como leído al abrir la pestaña
+    unlockVideoAfterRead();
+  });
+
+  // Botón 2: ya leí el manual
+  const btnDone = document.createElement('button');
+  btnDone.innerHTML = '✓ YA LEÍ EL MANUAL';
+  btnDone.style.cssText = [
+    'padding:8px 16px',
+    'background:rgba(0,255,65,0.15)',
+    'border:1px solid rgba(0,255,65,0.8)',
+    'color:rgba(0,255,65,1)',
+    'font-family:\'Share Tech Mono\',monospace',
+    'font-size:0.78rem', 'cursor:pointer',
+    'white-space:nowrap', 'font-weight:bold',
+    'transition:all 0.2s'
+  ].join(';');
+  btnDone.onmouseover = () => { btnDone.style.background = 'rgba(0,255,65,0.3)'; };
+  btnDone.onmouseout  = () => { btnDone.style.background = 'rgba(0,255,65,0.15)'; };
+  btnDone.addEventListener('click', () => {
+    unlockVideoAfterRead();
+    window.closePdfModal();
+  });
+
+  bar.appendChild(info);
+  bar.appendChild(btnOpen);
+  bar.appendChild(btnDone);
+  modal.querySelector('.pdf-modal-box').appendChild(bar);
+}
 
 function unlockVideoAfterRead() {
   if (window._docRead) return; // Ya desbloqueado
   window._docRead = true;
 
-  // Actualizar botón de video en modal doc
+  // Actualizar botón de video dentro del modal-doc
   const videoBtn  = document.getElementById('btn-open-video');
   const videoLock = document.getElementById('doc-video-lock-status');
   const unlockDot = document.getElementById('doc-unlock-dot');
@@ -743,30 +833,52 @@ function unlockVideoAfterRead() {
   if (unlockDot) unlockDot.className = 'doc-unlock-dot unlocked';
   if (unlockMsg) unlockMsg.textContent = '✓ Documento leído — Video desbloqueado';
 
-  // Pequeño flash en el botón
   if (videoBtn) {
     videoBtn.style.borderColor = 'var(--c-green)';
     videoBtn.style.boxShadow = '0 0 20px rgba(0,255,65,0.3)';
     setTimeout(() => { videoBtn.style.borderColor = ''; videoBtn.style.boxShadow = ''; }, 2000);
   }
 
-  // DESBLOQUEAR EL BOTON DE VERIFICACIÓN DE PROTOCOLOS
-  const btnVerif = document.getElementById('btn-verif-protocolos');
+  // DESBLOQUEAR EL BOTÓN DE VERIFICACIÓN EN node-controls
+  // Intentar por ID primero
+  let btnVerif = document.getElementById('btn-verif-protocolos');
   if (btnVerif) {
     btnVerif.disabled = false;
     btnVerif.style.opacity = '1';
     btnVerif.style.cursor = 'pointer';
     btnVerif.innerHTML = '[ INICIAR VERIFICACIÓN DE PROTOCOLOS ]';
-    // Pequeño flash verde
     btnVerif.style.boxShadow = '0 0 15px rgba(0,255,65,0.6)';
     setTimeout(() => { btnVerif.style.boxShadow = ''; }, 1000);
+  } else {
+    // Si no existe en el DOM aún, re-renderizar los botones del nodo
+    const nodeRef = window._currentNodeRef ||
+      window._currentDocNode ||
+      (typeof GUION !== 'undefined' && GUION.nodes ? GUION.nodes[window._currentNodeId] : null);
+    if (nodeRef) {
+      renderV2DocButton(nodeRef);
+      // Ahora sí debe existir, aplicar desbloq
+      setTimeout(() => {
+        const btn = document.getElementById('btn-verif-protocolos');
+        if (btn) {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
+          btn.innerHTML = '[ INICIAR VERIFICACIÓN DE PROTOCOLOS ]';
+          btn.style.boxShadow = '0 0 15px rgba(0,255,65,0.6)';
+          setTimeout(() => { btn.style.boxShadow = ''; }, 1000);
+        }
+      }, 50);
+    }
   }
 }
 
 window.closePdfModal = function() {
   const modal = document.getElementById('modal-pdf');
   const iframe = document.getElementById('pdf-iframe');
-  if (modal) modal.classList.remove('active');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none'; // Ocultar completamente el modal
+  }
   if (iframe) iframe.src = '';
 };
 
@@ -779,10 +891,18 @@ function showPhaseSelectModal(node) {
   const title = document.getElementById('phase-select-title');
   const o2El  = document.getElementById('phase-o2-val');
 
-  if (title) title.textContent = 'SELECCIONAR PROTOCOLO — ' + node.title;
+  let activeNode = null;
+  if (window._currentNodeId && typeof GUION !== 'undefined' && GUION.nodes) {
+    activeNode = GUION.nodes[window._currentNodeId];
+  }
+  if (!activeNode) activeNode = node || window._currentNodeRef || window.currentNode;
+
+  window._currentNodeRef = activeNode;
+  window.currentNode = activeNode;
+
+  if (title) title.textContent = 'SELECCIONAR PROTOCOLO — ' + activeNode.title;
   if (o2El)  o2El.textContent = (typeof oxygen !== 'undefined' ? oxygen : 100) + '%';
 
-  window._currentNodeRef = node;
   if (modal) modal.style.display = 'flex';
 }
 
@@ -792,17 +912,62 @@ window.closePhaseSelect = function() {
 };
 
 window.startPracticeFromModal = function() {
-  closePhaseSelect();
-  if (window._currentNodeRef && typeof startFaseB === 'function') {
-    startFaseB(window._currentNodeRef, 0);
+  try {
+    closePhaseSelect();
+    let activeNode = null;
+    if (window._currentNodeId && typeof GUION !== 'undefined' && GUION.nodes) {
+      activeNode = GUION.nodes[window._currentNodeId];
+    }
+    if (!activeNode) activeNode = window._currentNodeRef || window.currentNode;
+
+    if (!activeNode) {
+      throw new Error("No se pudo determinar el nodo activo actual en startPracticeFromModal. window._currentNodeId=" + window._currentNodeId);
+    }
+
+    console.log('[DEBUG] startPracticeFromModal iniciando para el nodo:', activeNode.id || activeNode);
+    window._currentNodeRef = activeNode;
+    window.currentNode = activeNode;
+
+    if (typeof window.startFaseB === 'function') {
+      window.startFaseB(activeNode, 0);
+    } else if (typeof startFaseB === 'function') {
+      startFaseB(activeNode, 0);
+    } else {
+      throw new Error("La función startFaseB o window.startFaseB no está definida en el ámbito global.");
+    }
+  } catch (err) {
+    console.error("Error en startPracticeFromModal:", err);
+    alert("Error al iniciar la Práctica Guiada: " + err.message + "\nStack: " + err.stack);
   }
 };
 
 window.startQuizFromModal = function() {
-  closePhaseSelect();
-  if (window._currentNodeRef) {
-    // Protocolo de Verificación: Empieza con el Quiz, y al terminar, pasará al Minijuego.
-    startQuizPhase(window._currentNodeRef);
+  try {
+    closePhaseSelect();
+    let activeNode = null;
+    if (window._currentNodeId && typeof GUION !== 'undefined' && GUION.nodes) {
+      activeNode = GUION.nodes[window._currentNodeId];
+    }
+    if (!activeNode) activeNode = window._currentNodeRef || window.currentNode;
+
+    if (!activeNode) {
+      throw new Error("No se pudo determinar el nodo activo actual en startQuizFromModal. window._currentNodeId=" + window._currentNodeId);
+    }
+
+    console.log('[DEBUG] startQuizFromModal iniciando para el nodo:', activeNode.id || activeNode);
+    window._currentNodeRef = activeNode;
+    window.currentNode = activeNode;
+
+    if (typeof window.openQuiz === 'function') {
+      window.openQuiz(activeNode);
+    } else if (typeof openQuiz === 'function') {
+      openQuiz(activeNode);
+    } else {
+      throw new Error("La función openQuiz o window.openQuiz no está definida en el ámbito global.");
+    }
+  } catch (err) {
+    console.error("Error en startQuizFromModal:", err);
+    alert("Error al iniciar el Protocolo de Verificación: " + err.message + "\nStack: " + err.stack);
   }
 };
 
@@ -823,12 +988,26 @@ window.closeDoc = function() {
   const overlay = document.getElementById('modal-doc');
   if (overlay) overlay.style.display = 'none';
 
-  // Mostrar selector de fase si hay un nodo activo
-  if (window.currentNode && window._docRead) {
-    setTimeout(() => showPhaseSelectModal(window.currentNode), 200);
-  } else if (window.currentNode && !window._docRead) {
-    // No leyó el doc — mostrar solo práctica (sin minijuego)
-    setTimeout(() => showPhaseSelectModal(window.currentNode), 200);
+  // NO se lanza automáticamente el selector de fase aquí.
+  // El usuario controla el avance desde los botones del nodo:
+  // [ LEER MANUAL ] y [ INICIAR VERIFICACIÓN DE PROTOCOLOS ]
+  // Solo actualizamos el botón de verificación si el doc fue leído
+  if (window._docRead) {
+    const btnVerif = document.getElementById('btn-verif-protocolos');
+    if (btnVerif) {
+      btnVerif.disabled = false;
+      btnVerif.style.opacity = '1';
+      btnVerif.style.cursor = 'pointer';
+      btnVerif.innerHTML = '[ INICIAR VERIFICACIÓN DE PROTOCOLOS ]';
+    } else {
+      // Re-renderizar si no existe
+      const nodeRef = (typeof GUION !== 'undefined' && GUION.nodes ? GUION.nodes[window._currentNodeId] : null) || window._currentNodeRef || window._currentDocNode || window.currentNode;
+      if (nodeRef) {
+        window._currentNodeRef = nodeRef;
+        window.currentNode = nodeRef;
+        renderV2DocButton(nodeRef);
+      }
+    }
   }
 };
 
@@ -1234,11 +1413,20 @@ window.typeInto = function(el, text, callback, useHtml, speed) {
   if (_typeIntoRef) { clearTimeout(_typeIntoRef); _typeIntoRef = null; }
   
   el.innerHTML = '';
+  
+  if (!text) {
+    if(callback) callback();
+    return;
+  }
+  
+  if (Array.isArray(text)) text = text.join('\n');
+  if (typeof text !== 'string') text = String(text);
+  
   const parts = text.split('\n');
   let partIdx = 0, charIdx = 0;
   
   function nextTick() {
-    if (!document.contains(el) && el.id !== 'boot-text' && el.id !== 'ending-text') {
+    if (!document.contains(el) && el.id !== 'boot-text' && el.id !== 'ending-text' && el.id !== 'node-screen') {
       return; // Stop if element removed
     }
     

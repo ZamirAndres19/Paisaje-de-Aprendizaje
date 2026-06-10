@@ -1318,3 +1318,167 @@
   display: flex; flex-direction: column;
   position: relative; z-index: 10;
 }
+
+/* ================================================================
+   THEMED MODALS (BRIDGE, LAB, COMMS, ENGINES)
+   ================================================================ */
+#modal-doc, #modal-pdf {
+  --modal-color: var(--c-green);
+  --modal-color-rgba: rgba(57, 255, 20, 0.9);
+  --modal-border: rgba(57, 255, 20, 0.4);
+  --modal-shadow: rgba(57, 255, 20, 0.2);
+  --modal-bg-glow: rgba(0, 10, 0, 0.92);
+  --modal-bg-glow-inner: rgba(0, 5, 0, 0.95);
+  --modal-btn-bg: rgba(57, 255, 20, 0.04);
+  --modal-btn-hover-bg: rgba(57, 255, 20, 0.1);
+}
+
+#modal-doc.node-theme-bridge, #modal-pdf.node-theme-bridge {
+  --modal-color: var(--c-green);
+  --modal-color-rgba: rgba(57, 255, 20, 0.9);
+  --modal-border: rgba(57, 255, 20, 0.4);
+  --modal-shadow: rgba(57, 255, 20, 0.2);
+  --modal-bg-glow: rgba(0, 10, 0, 0.92);
+  --modal-bg-glow-inner: rgba(0, 5, 0, 0.95);
+  --modal-btn-bg: rgba(57, 255, 20, 0.04);
+  --modal-btn-hover-bg: rgba(57, 255, 20, 0.1);
+}
+
+#modal-doc.node-theme-lab, #modal-pdf.node-theme-lab {
+  --modal-color: var(--c-amber);
+  --modal-color-rgba: rgba(255, 176, 0, 0.9);
+  --modal-border: rgba(255, 176, 0, 0.3);
+  --modal-shadow: rgba(255, 176, 0, 0.15);
+  --modal-bg-glow: rgba(15, 10, 0, 0.92);
+  --modal-bg-glow-inner: rgba(10, 5, 0, 0.95);
+  --modal-btn-bg: rgba(255, 176, 0, 0.04);
+  --modal-btn-hover-bg: rgba(255, 176, 0, 0.1);
+}
+
+#modal-doc.node-theme-comms, #modal-pdf.node-theme-comms {
+  --modal-color: var(--c-cyan);
+  --modal-color-rgba: rgba(0, 229, 255, 0.9);
+  --modal-border: rgba(0, 229, 255, 0.3);
+  --modal-shadow: rgba(0, 229, 255, 0.15);
+  --modal-bg-glow: rgba(0, 10, 15, 0.92);
+  --modal-bg-glow-inner: rgba(0, 5, 10, 0.95);
+  --modal-btn-bg: rgba(0, 229, 255, 0.04);
+  --modal-btn-hover-bg: rgba(0, 229, 255, 0.1);
+}
+
+#modal-doc.node-theme-engines, #modal-pdf.node-theme-engines {
+  --modal-color: var(--c-red);
+  --modal-color-rgba: rgba(255, 34, 68, 0.9);
+  --modal-border: rgba(255, 34, 68, 0.35);
+  --modal-shadow: rgba(255, 34, 68, 0.2);
+  --modal-bg-glow: rgba(15, 0, 0, 0.92);
+  --modal-bg-glow-inner: rgba(10, 0, 0, 0.95);
+  --modal-btn-bg: rgba(255, 34, 68, 0.04);
+  --modal-btn-hover-bg: rgba(255, 34, 68, 0.1);
+}
+
+/* Aplicación de las variables a los elementos del documento */
+#modal-doc .modal-doc-box {
+  border-color: var(--modal-color) !important;
+  box-shadow: 0 0 40px var(--modal-shadow), inset 0 0 30px rgba(0,0,0,0.6) !important;
+  background: linear-gradient(var(--modal-bg-glow), var(--modal-bg-glow-inner)),
+              url('../../assets/images/bg-modal.jpg') center/cover no-repeat !important;
+}
+#modal-doc .modal-doc-header {
+  border-bottom-color: var(--modal-border) !important;
+}
+#modal-doc .modal-doc-title {
+  color: var(--modal-color) !important;
+  text-shadow: 0 0 10px var(--modal-color) !important;
+}
+#modal-doc .modal-close-btn {
+  border-color: var(--modal-border) !important;
+  color: var(--modal-color) !important;
+}
+#modal-doc .modal-close-btn:hover {
+  background: var(--c-red) !important;
+  color: #fff !important;
+  border-color: var(--c-red) !important;
+}
+#modal-doc .modal-doc-body {
+  color: var(--modal-color-rgba) !important;
+}
+#modal-doc .modal-doc-body h3 {
+  border-bottom-color: var(--modal-border) !important;
+  color: var(--modal-color) !important;
+  text-shadow: 0 0 8px var(--modal-color) !important;
+}
+#modal-doc .modal-doc-body code {
+  border-color: var(--modal-border) !important;
+  color: var(--modal-color) !important;
+  background: var(--modal-btn-bg) !important;
+}
+#modal-doc .doc-summary-section {
+  border-bottom-color: var(--modal-border) !important;
+  background: rgba(0,0,0,0.4) !important;
+}
+#modal-doc .doc-summary-title {
+  color: var(--modal-color) !important;
+  opacity: 0.65 !important;
+}
+#modal-doc .doc-summary-list li {
+  color: var(--modal-color) !important;
+}
+#modal-doc .doc-summary-list li::before {
+  color: var(--modal-color) !important;
+}
+#modal-doc .doc-actions-row {
+  border-bottom-color: var(--modal-border) !important;
+}
+#modal-doc .btn-doc-action {
+  border-color: var(--modal-border) !important;
+  background: var(--modal-btn-bg) !important;
+  color: var(--modal-color) !important;
+  text-shadow: 0 0 4px var(--modal-color) !important;
+}
+#modal-doc .btn-doc-action:hover:not(:disabled) {
+  border-color: var(--modal-color) !important;
+  background: var(--modal-btn-hover-bg) !important;
+  box-shadow: 0 0 12px var(--modal-shadow) !important;
+}
+#modal-doc .doc-unlock-status {
+  border-top-color: var(--modal-border) !important;
+}
+#modal-doc .doc-unlock-dot.unlocked {
+  background: var(--modal-color) !important;
+}
+#modal-doc .btn-secondary-action {
+  border-color: var(--modal-border) !important;
+  color: var(--modal-color) !important;
+  opacity: 0.75 !important;
+}
+#modal-doc .btn-secondary-action:hover {
+  background: var(--modal-btn-hover-bg) !important;
+  border-color: var(--modal-color) !important;
+  color: var(--modal-color) !important;
+  opacity: 1 !important;
+}
+
+/* Aplicación de las variables al modal PDF */
+#modal-pdf .pdf-modal-box {
+  border-color: var(--modal-border) !important;
+}
+#modal-pdf .pdf-modal-header {
+  border-bottom-color: var(--modal-border) !important;
+}
+#modal-pdf .pdf-modal-title {
+  color: var(--modal-color) !important;
+  text-shadow: 0 0 8px var(--modal-color) !important;
+}
+#modal-pdf .pdf-scroll-note {
+  color: var(--modal-border) !important;
+  opacity: 0.75 !important;
+}
+#modal-pdf .btn-close-pdf {
+  border-color: var(--modal-border) !important;
+  color: var(--modal-color) !important;
+}
+#modal-pdf .btn-close-pdf:hover {
+  background: var(--modal-btn-hover-bg) !important;
+}
+

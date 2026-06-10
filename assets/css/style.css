@@ -682,6 +682,7 @@ CSS
   object-fit: cover;
   opacity: 0.65; 
   z-index: 5; 
+  background-color: #000;
 }
 .visor-scanlines {
   position: absolute; inset: 0;

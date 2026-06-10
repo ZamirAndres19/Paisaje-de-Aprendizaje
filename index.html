@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>USCSS Nostromo — Paisaje de Aprendizaje</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Orbitron:wght@500;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/video-modal.css">
   <link rel="stylesheet" href="assets/css/v2-components.css">
   <link rel="stylesheet" href="assets/css/cinematic-intro.css">
 </head>
+
 <body>
 
   <!-- ===== AUDIO PROMPT — aparece ANTES del boot ===== -->
@@ -37,9 +42,11 @@
   <!-- ===== CINEMÁTICA INTRODUCTORIA v2 ===== -->
   <div id="cinematic-intro" class="cinematic-intro">
     <!-- Canvas renderer para evadir el bug de aceleración por hardware del navegador -->
-    <canvas id="cin-canvas" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;"></canvas>
-    
-    <div class="cin-slide hidden" id="cin-bridge-scene" style="z-index: 2; position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+    <canvas id="cin-canvas"
+      style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;"></canvas>
+
+    <div class="cin-slide hidden" id="cin-bridge-scene"
+      style="z-index: 2; position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
       <div class="cin-bg" style="background-image: url('assets/img/nostromo_bridge.png')"></div>
       <div class="cin-overlay cin-overlay-amber"></div>
       <div class="cin-content">
@@ -53,10 +60,12 @@
       <div class="cin-scanlines"></div>
       <div class="cin-film-grain"></div>
     </div>
-    
+
     <!-- Videos ocultos, se dibujan en el canvas -->
-    <video id="cin-video" src="assets/img/inicio.mp4" preload="auto" playsinline style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
-    <video id="cin-video-2" src="assets/img/0531 (2)(1).mp4" preload="auto" playsinline style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
+    <video id="cin-video" src="assets/img/inicio.mp4" preload="auto" playsinline
+      style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
+    <video id="cin-video-2" src="assets/img/0531 (2)(1).mp4" preload="auto" playsinline
+      style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;"></video>
 
     <div class="cin-skip-bar" style="z-index: 10;">
       <span class="cin-skip-label">TRANSMISIÓN EN CURSO...</span>
@@ -72,16 +81,17 @@
         <span class="cred-sub">Building Better Worlds™</span>
       </div>
       <div class="cred-terminal" id="cred-terminal-text">
-> TRANSMISIÓN ENCRIPTADA — INICIANDO CONEXIÓN SEGURA...
-> ORIGEN: USCSS NOSTROMO — CARGUERO COMERCIAL CLASE M.
-> SISTEMA MU/TH/UR 6000 — EN LÍNEA.
+        > TRANSMISIÓN ENCRIPTADA — INICIANDO CONEXIÓN SEGURA...
+        > ORIGEN: USCSS NOSTROMO — CARGUERO COMERCIAL CLASE M.
+        > SISTEMA MU/TH/UR 6000 — EN LÍNEA.
 
-IDENTIFICACIÓN DE TRIPULANTE REQUERIDA.
-USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
-</div>
+        IDENTIFICACIÓN DE TRIPULANTE REQUERIDA.
+        USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
+      </div>
       <div class="cred-input-row">
         <span class="cred-input-label">CORREO:</span>
-        <input type="email" id="cred-name-input" class="cred-input" placeholder="usuario@institucion.edu" maxlength="60" autocomplete="email" spellcheck="false">
+        <input type="email" id="cred-name-input" class="cred-input" placeholder="usuario@institucion.edu" maxlength="60"
+          autocomplete="email" spellcheck="false">
       </div>
       <div class="cred-error" id="cred-error"></div>
       <button class="cred-btn" id="cred-submit-btn" onclick="submitCredentials()">
@@ -105,7 +115,8 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
       <div id="boot-text" class="boot-text"></div>
       <div class="boot-bottom-actions">
         <button id="boot-fast-btn" class="btn-secondary-action" onclick="accelerateBoot()">⚡ ACELERAR TEXTO</button>
-        <button id="boot-btn" class="btn-boot hidden" onclick="playBootBtn(); goToMap()">INICIAR RESCATE DE SISTEMA</button>
+        <button id="boot-btn" class="btn-boot hidden" onclick="playBootBtn(); goToMap()">INICIAR RESCATE DE
+          SISTEMA</button>
       </div>
     </div>
   </div>
@@ -124,11 +135,14 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
       </div>
       <div class="hud-section">
         <span class="hud-label">TRIPULANTE</span>
-        <span class="hud-value" id="map-hud-player-name" style="color: var(--c-amber); text-shadow: 0 0 8px var(--c-amber);">GAQUIROZR</span>
+        <span class="hud-value" id="map-hud-player-name"
+          style="color: var(--c-amber); text-shadow: 0 0 8px var(--c-amber);">GAQUIROZR</span>
       </div>
       <div class="hud-section hud-center">
         <span class="hud-label">SOPORTE VITAL — O₂</span>
-        <div class="o2-bar-wrap"><div id="map-o2-bar" class="o2-bar"></div></div>
+        <div class="o2-bar-wrap">
+          <div id="map-o2-bar" class="o2-bar"></div>
+        </div>
         <span id="map-o2-pct" class="hud-value o2-pct">100%</span>
       </div>
       <div class="hud-section">
@@ -217,10 +231,14 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
 
       <aside class="progress-side">
         <div class="progress-title">▸ PROGRESO</div>
-        <div class="progress-item" id="prog-bridge"><span class="prog-dot"></span> 01 Puente <span id="prog-bridge-status" class="prog-status">EN CURSO</span></div>
-        <div class="progress-item locked" id="prog-lab"><span class="prog-dot"></span> 02 Laboratorio <span id="prog-lab-status" class="prog-status">BLOQUEADO</span></div>
-        <div class="progress-item locked" id="prog-comms"><span class="prog-dot"></span> 03 Comunicaciones <span id="prog-comms-status" class="prog-status">BLOQUEADO</span></div>
-        <div class="progress-item locked" id="prog-engines"><span class="prog-dot"></span> 04 Motores <span id="prog-engines-status" class="prog-status">BLOQUEADO</span></div>
+        <div class="progress-item" id="prog-bridge"><span class="prog-dot"></span> 01 Puente <span
+            id="prog-bridge-status" class="prog-status">EN CURSO</span></div>
+        <div class="progress-item locked" id="prog-lab"><span class="prog-dot"></span> 02 Laboratorio <span
+            id="prog-lab-status" class="prog-status">BLOQUEADO</span></div>
+        <div class="progress-item locked" id="prog-comms"><span class="prog-dot"></span> 03 Comunicaciones <span
+            id="prog-comms-status" class="prog-status">BLOQUEADO</span></div>
+        <div class="progress-item locked" id="prog-engines"><span class="prog-dot"></span> 04 Motores <span
+            id="prog-engines-status" class="prog-status">BLOQUEADO</span></div>
         <div class="progress-divider"></div>
         <div class="progress-title">▸ CALIFICACIÓN</div>
         <div class="grade-preview" id="grade-preview"><span id="grade-val">—</span>&nbsp;/&nbsp;10</div>
@@ -238,7 +256,9 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
       <div class="node-header-right">
         <div class="node-o2-wrap">
           <span class="node-o2-label">O₂</span>
-          <div class="node-o2-bar-outer"><div id="node-o2-bar" class="node-o2-bar"></div></div>
+          <div class="node-o2-bar-outer">
+            <div id="node-o2-bar" class="node-o2-bar"></div>
+          </div>
           <span id="node-o2-val" class="node-o2-val">100%</span>
         </div>
         <button class="btn-hud-exit node-exit-btn" onclick="confirmExit()" title="Salir">✕</button>
@@ -279,10 +299,14 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
             <!-- Retícula central -->
             <div class="visor-crosshair"></div>
             <!-- Telemetría en esquinas -->
-            <div class="visor-telemetry tl"><span class="telemetry-lbl">TRK:</span>&nbsp;<span class="telemetry-val-azm"></span></div>
-            <div class="visor-telemetry tr"><span class="telemetry-lbl">RNG:</span>&nbsp;<span class="telemetry-val-rng"></span></div>
-            <div class="visor-telemetry bl"><span class="telemetry-lbl">SYS:</span>&nbsp;<span class="telemetry-val-sys"></span></div>
-            <div class="visor-telemetry br"><span class="telemetry-lbl">SEC:</span>&nbsp;<span class="telemetry-val-sec"></span></div>
+            <div class="visor-telemetry tl"><span class="telemetry-lbl">TRK:</span>&nbsp;<span
+                class="telemetry-val-azm"></span></div>
+            <div class="visor-telemetry tr"><span class="telemetry-lbl">RNG:</span>&nbsp;<span
+                class="telemetry-val-rng"></span></div>
+            <div class="visor-telemetry bl"><span class="telemetry-lbl">SYS:</span>&nbsp;<span
+                class="telemetry-val-sys"></span></div>
+            <div class="visor-telemetry br"><span class="telemetry-lbl">SEC:</span>&nbsp;<span
+                class="telemetry-val-sec"></span></div>
           </div>
           <img id="node-visor-img" src="" alt="Visor" style="display:none">
           <div class="visor-scanlines"></div>
@@ -393,7 +417,8 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
       <div class="modal-doc-header">
         <div id="phase-select-title" class="modal-doc-title">SELECCIONAR PROTOCOLO</div>
         <div class="modal-doc-actions">
-          <span style="font-size:0.85rem; letter-spacing:2px; opacity:0.5;">O₂: <span id="phase-o2-val">100%</span></span>
+          <span style="font-size:0.85rem; letter-spacing:2px; opacity:0.5;">O₂: <span
+              id="phase-o2-val">100%</span></span>
           <button class="modal-close-btn" onclick="closePhaseSelect()">✕</button>
         </div>
       </div>
@@ -465,11 +490,15 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
         <div id="practice-title" class="practice-title">SECUENCIA DE INSTALACIÓN</div>
         <div class="practice-header-actions">
           <button class="btn-secondary-action" onclick="skipPractice()">⏭ SALTAR</button>
-          <button class="modal-close-btn" style="margin-left:8px; padding: 4px 8px;" onclick="closePractice()">✕</button>
-          <div class="practice-step-wrap"><span class="practice-step-label">PASO</span><span id="practice-step-num" class="practice-step-num">1 / 3</span></div>
+          <button class="modal-close-btn" style="margin-left:8px; padding: 4px 8px;"
+            onclick="closePractice()">✕</button>
+          <div class="practice-step-wrap"><span class="practice-step-label">PASO</span><span id="practice-step-num"
+              class="practice-step-num">1 / 3</span></div>
         </div>
       </div>
-      <div class="practice-progress-wrap"><div id="practice-progress-bar" class="practice-progress-bar"></div></div>
+      <div class="practice-progress-wrap">
+        <div id="practice-progress-bar" class="practice-progress-bar"></div>
+      </div>
       <div id="practice-instruction" class="practice-instruction"></div>
       <div id="practice-options" class="practice-options"></div>
       <div id="practice-feedback" class="practice-feedback" style="display:none"></div>
@@ -487,8 +516,15 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
         <div id="quiz-label" class="quiz-label">PROTOCOLO DE VERIFICACIÓN TÉCNICA</div>
         <div id="quiz-o2" class="quiz-o2">O₂: <span id="quiz-o2-val">100%</span></div>
       </div>
-      <div class="quiz-progress-wrap"><div id="quiz-progress-bar" class="quiz-progress-bar"></div></div>
-      <div class="quiz-o2-bar-wrap" style="height: 4px; background: rgba(0,0,0,0.5); border-bottom: 1px solid rgba(0,255,65,0.1);"><div id="quiz-o2-bar" style="height: 100%; width: 100%; background: var(--c-green); box-shadow: 0 0 8px var(--c-green); transition: width 0.5s ease, background-color 0.5s ease;"></div></div>
+      <div class="quiz-progress-wrap">
+        <div id="quiz-progress-bar" class="quiz-progress-bar"></div>
+      </div>
+      <div class="quiz-o2-bar-wrap"
+        style="height: 4px; background: rgba(0,0,0,0.5); border-bottom: 1px solid rgba(0,255,65,0.1);">
+        <div id="quiz-o2-bar"
+          style="height: 100%; width: 100%; background: var(--c-green); box-shadow: 0 0 8px var(--c-green); transition: width 0.5s ease, background-color 0.5s ease;">
+        </div>
+      </div>
       <div id="quiz-q-num" class="quiz-q-num">PREGUNTA 1 / 3</div>
       <div id="quiz-question" class="quiz-question"></div>
       <div id="quiz-options" class="quiz-options"></div>
@@ -521,7 +557,8 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
     <div class="modal-exit-box">
       <div class="modal-exit-icon">⚠</div>
       <div class="modal-exit-title" id="modal-exit-title">ADVERTENCIA DEL SISTEMA</div>
-      <div class="modal-exit-msg" id="modal-exit-msg">Esta acción terminará la sesión.<br>Perderás todo el progreso actual.</div>
+      <div class="modal-exit-msg" id="modal-exit-msg">Esta acción terminará la sesión.<br>Perderás todo el progreso
+        actual.</div>
       <div class="modal-exit-actions">
         <button class="modal-exit-btn confirm" id="modal-exit-confirm-btn">CONFIRMAR</button>
         <button class="modal-exit-btn cancel" onclick="closeExitModal()">CANCELAR</button>
@@ -537,7 +574,8 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
 
   <!-- ===== GAME OVER (legacy v1) ===== -->
   <div id="gameover-screen" class="gameover-screen" style="display:none">
-    <video id="gameover-bg-video" autoplay loop muted playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.6;pointer-events:none;"></video>
+    <video id="gameover-bg-video" autoplay loop muted playsinline
+      style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.6;pointer-events:none;"></video>
     <div class="gameover-inner" style="position:relative;z-index:1;">
       <div class="gameover-alert blink-fast">⚠ ALERTA CRÍTICA ⚠</div>
       <div class="gameover-title">SOPORTE VITAL TERMINADO</div>
@@ -629,7 +667,7 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
     const db = getFirestore(app);
 
     // v1 legacy: Enviar puntaje simple
-    window.enviarPuntajeFirebase = async function(nombre, puntaje, oxigeno) {
+    window.enviarPuntajeFirebase = async function (nombre, puntaje, oxigeno) {
       try {
         const docRef = await addDoc(collection(db, "puntajes_nostromo"), {
           jugador: nombre,
@@ -644,7 +682,7 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
     };
 
     // v2: Registrar jugador con correo (devuelve docId para seguimiento de sesión)
-    window.firebaseRegisterPlayer = async function(correo) {
+    window.firebaseRegisterPlayer = async function (correo) {
       try {
         // Buscar si el correo ya existe
         const q = query(
@@ -688,7 +726,7 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
     };
 
     // v2: Actualizar sesión en progreso
-    window.firebaseUpdateSession = async function(docId, data) {
+    window.firebaseUpdateSession = async function (docId, data) {
       if (!docId) return;
       try {
         const docRef = doc(db, "sesiones_nostromo", docId);
@@ -702,7 +740,7 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
     };
 
     // v2: Finalizar sesión (victoria o game over)
-    window.firebaseFinalizeSession = async function(docId, data) {
+    window.firebaseFinalizeSession = async function (docId, data) {
       if (!docId) return;
       try {
         const docRef = doc(db, "sesiones_nostromo", docId);
@@ -730,13 +768,14 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
     };
   </script>
 
-  <script src="assets/js/app.js"></script>
-  <script src="assets/js/dnd-games.js"></script>
-  <script src="assets/js/v2-app.js"></script>
-  <script src="assets/js/ieee-patch.js"></script>
+  <script src="assets/js/app.js?v=2.2"></script>
+  <script src="assets/js/dnd-games.js?v=2.2"></script>
+  <script src="assets/js/drag-drop-touch.js?v=2.2"></script>
+  <script src="assets/js/v2-app.js?v=2.2"></script>
+  <script src="assets/js/ieee-patch.js?v=2.2"></script>
   <script>
     // MutationObserver to sync bottom HUD player name to the top HUD
-    (function() {
+    (function () {
       const targetNode = document.getElementById('hud-player-name');
       const topHudName = document.getElementById('map-hud-player-name');
       if (targetNode && topHudName) {
@@ -750,81 +789,30 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
       }
     })();
 
-    // Interceptar y filtrar el botón de video de referencia para que no se renderice
-    (function() {
-      const originalRenderControls = window.renderControls;
-      window.renderControls = function(actions) {
-        const filteredActions = actions.filter(a => {
-          const label = a.label || '';
-          return !label.includes('VIDEO DE REFERENCIA');
-        });
-        if (typeof originalRenderControls === 'function') {
-          originalRenderControls(filteredActions);
-        }
-      };
-    })();
+    // VIDEO DE REFERENCIA habilitado en todas las zonas (filtro eliminado)
 
-    // Chequeador periódico para deshabilitar el botón de práctica guiada hasta leer el manual
-    setInterval(function() {
-      const sceneNode = document.getElementById('scene-node');
-      const isNodeActive = sceneNode && sceneNode.classList.contains('active');
-      if (!isNodeActive) {
-        window._guidedPracticeUnlocked = false;
-        return;
-      }
-      const docModal = document.getElementById('modal-doc');
-      const isDocOpen = docModal && docModal.style.display === 'flex';
-      
-      if (isDocOpen && typeof window._docRead === 'undefined') {
-        window._guidedPracticeUnlocked = true;
-      } else if (window._docRead === true) {
-        window._guidedPracticeUnlocked = true;
-      } else if (isDocOpen && window._docRead === false && !document.getElementById('modal-pdf')) {
-        window._guidedPracticeUnlocked = true;
-      }
+    // [REMOVIDO] setInterval de 150ms redundante — el PATCH FINAL (syncNodeButtons) maneja esto
 
-      const ctrl = document.getElementById('node-controls');
-      if (ctrl) {
-        const buttons = ctrl.getElementsByTagName('button');
-        for (let i = 0; i < buttons.length; i++) {
-          const btn = buttons[i];
-          if (btn.textContent.includes('PRACTICA GUIADA')) {
-            if (!window._guidedPracticeUnlocked) {
-              btn.disabled = true;
-              btn.setAttribute('title', 'Lee el manual primero para desbloquear');
-            } else {
-              btn.disabled = false;
-              btn.removeAttribute('title');
-            }
-          }
-        }
-      }
-    }, 150);
-
-    // Mutar los IDs de video globales para usar los IDs válidos sin tocar app.js
-    if (typeof NODE_VIDEOS !== 'undefined') {
-      if (NODE_VIDEOS.bridge) NODE_VIDEOS.bridge.youtubeId = 'P0YuVZj3ny0';
-      if (NODE_VIDEOS.lab) NODE_VIDEOS.lab.youtubeId = '2HjPb9xT8sI';
-    }
+    // IDs de video ya definidos correctamente en app.js NODE_VIDEOS (bridge/lab/comms/engines)
 
     // Interceptar y reemplazar openVideoModal para renderizar una miniatura con enlace externo seguro
-    (function() {
-      window.openVideoModal = function(nodeId) {
+    (function () {
+      window.openVideoModal = function (nodeId) {
         if (typeof AUDIO !== 'undefined' && !AUDIO.muted) {
           const s = new Audio('assets/sounds/efecto-manual.mp3');
-          s.volume = 0.8; s.play().catch(() => {});
+          s.volume = 0.8; s.play().catch(() => { });
         }
         const data = NODE_VIDEOS[nodeId];
         if (!data) return;
 
-        const overlay    = document.getElementById('modal-video');
-        const titleEl    = document.getElementById('video-modal-title');
+        const overlay = document.getElementById('modal-video');
+        const titleEl = document.getElementById('video-modal-title');
         const subtitleEl = document.getElementById('video-modal-subtitle');
-        const frameWrap  = document.getElementById('video-frame-wrap');
+        const frameWrap = document.getElementById('video-frame-wrap');
 
         if (!overlay) return;
 
-        titleEl.textContent    = data.title;
+        titleEl.textContent = data.title;
         subtitleEl.textContent = data.subtitle;
 
         if (!data.youtubeId || data.youtubeId.startsWith('REEMPLAZAR')) {
@@ -837,7 +825,7 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
         } else {
           const thumbnailUrl = `https://img.youtube.com/vi/${data.youtubeId}/hqdefault.jpg`;
           const videoUrl = `https://www.youtube.com/watch?v=${data.youtubeId}`;
-          
+
           frameWrap.innerHTML = `
             <div class="video-preview-card" onclick="window.open('${videoUrl}', '_blank')" style="position:relative; width:100%; height:100%; background: url('${thumbnailUrl}') center/cover no-repeat; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-direction:column; border:1px solid currentColor;">
               <div class="video-preview-overlay" style="position:absolute; inset:0; background:rgba(0,0,0,0.55); transition:background 0.3s; z-index: 1;"></div>
@@ -859,24 +847,486 @@ USA TU CORREO INSTITUCIONAL PARA ACCEDER O REGISTRARTE.
 
         overlay.style.display = 'flex';
       };
-      })();
-    </script>
+    })();
+  </script>
 
-    <!-- ===== MODAL DND PANTALLA COMPLETA (ALIEN NOSTROMO) ===== -->
-    <div id="modal-dnd-fullscreen" class="modal-overlay alien-panel-bg" style="display:none; z-index: 9000;">
-      <!-- O2 Header UI for DnD -->
-      <div style="position:absolute; top:20px; right:40px; z-index:20; text-align:right;">
-        <div style="color:var(--c-green); font-size:1.5rem; font-weight:bold; letter-spacing:2px; text-shadow:0 0 10px currentColor;">
-          O₂: <span id="dnd-o2-val">100%</span>
-        </div>
-        <div style="width:200px; height:8px; background:rgba(0,0,0,0.5); border:1px solid var(--c-green); margin-top:8px;">
-          <div id="dnd-o2-bar" style="width:100%; height:100%; background:var(--c-green); transition:width 0.3s, background 0.3s;"></div>
-        </div>
+  <!-- ===== MODAL DND PANTALLA COMPLETA (ALIEN NOSTROMO) ===== -->
+  <div id="modal-dnd-fullscreen" class="modal-overlay alien-panel-bg" style="display:none; z-index: 9000;">
+    <!-- O2 Header UI for DnD -->
+    <div style="position:absolute; top:20px; right:40px; z-index:20; text-align:right;">
+      <div
+        style="color:var(--c-green); font-size:1.5rem; font-weight:bold; letter-spacing:2px; text-shadow:0 0 10px currentColor;">
+        O₂: <span id="dnd-o2-val">100%</span>
       </div>
-
-      <!-- SVG para dibujar cables -->
-      <svg id="dnd-svg-layer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index: 2;"></svg>
-      <div id="dnd-fullscreen-mount" style="position:relative; z-index: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"></div>
+      <div
+        style="width:200px; height:8px; background:rgba(0,0,0,0.5); border:1px solid var(--c-green); margin-top:8px;">
+        <div id="dnd-o2-bar"
+          style="width:100%; height:100%; background:var(--c-green); transition:width 0.3s, background 0.3s;"></div>
+      </div>
     </div>
-  </body>
+
+    <!-- SVG para dibujar cables -->
+    <svg id="dnd-svg-layer"
+      style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index: 2;"></svg>
+    <div id="dnd-fullscreen-mount"
+      style="position:relative; z-index: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+    </div>
+  </div>
+
+  <!-- ===== PATCH FINAL FUNCIONAL: PDF + CIERRES + DESBLOQUEO DE ZONAS ===== -->
+  <script>
+    (function () {
+      const FIX_KEY = 'nostromo_progress_fix_v9';
+
+      // RESET: Al recargar la página, el juego SIEMPRE empieza desde cero
+      localStorage.removeItem(FIX_KEY);
+
+      const ZONE_ORDER = ['bridge', 'lab', 'comms', 'engines'];
+
+      const ZONE_CFG = {
+        bridge: {
+          num: '01',
+          title: 'PUENTE DE MANDO',
+          next: 'lab',
+          pdf: 'assets/zonas/PDF/zona_01_presentacion_puente_de_mando_windows_ad(3).pdf'
+        },
+        lab: {
+          num: '02',
+          title: 'LABORATORIO CIENTÍFICO',
+          next: 'comms',
+          pdf: 'assets/zonas/PDF/zona_02_presentacion_laboratorio_linux_postgresql(3).pdf'
+        },
+        comms: {
+          num: '03',
+          title: 'SALA DE COMUNICACIONES',
+          next: 'engines',
+          pdf: 'assets/zonas/PDF/zona_03_presentacion_sala_comunicaciones_web_firewall(3).pdf'
+        },
+        engines: {
+          num: '04',
+          title: 'SALA DE MÁQUINAS',
+          next: null,
+          pdf: 'assets/zonas/PDF/zona_04_presentacion_sala_maquinas_scripts_backups(3).pdf'
+        }
+      };
+
+      const STATE_DEFAULT = {
+        completed: { bridge: false, lab: false, comms: false, engines: false },
+        docRead: { bridge: false, lab: false, comms: false, engines: false },
+        videoSeen: { bridge: false, lab: false, comms: false, engines: false },
+        dndWasOpen: false,
+        currentZone: 'bridge'
+      };
+
+      function loadState() {
+        try {
+          return Object.assign({}, STATE_DEFAULT, JSON.parse(localStorage.getItem(FIX_KEY) || '{}'));
+        } catch (e) {
+          return structuredClone(STATE_DEFAULT);
+        }
+      }
+
+      let state = loadState();
+
+      function saveState() {
+        localStorage.setItem(FIX_KEY, JSON.stringify(state));
+      }
+
+      function isUnlocked(zone) {
+        if (zone === 'bridge') return true;
+        if (zone === 'lab') return !!state.completed.bridge;
+        if (zone === 'comms') return !!state.completed.lab;
+        if (zone === 'engines') return !!state.completed.comms;
+        return false;
+      }
+
+      function absUrl(path) {
+        return new URL(path, window.location.href).href;
+      }
+
+      function detectZone() {
+        if (state.currentZone && ZONE_CFG[state.currentZone]) return state.currentZone;
+
+        const title = (document.getElementById('node-title-bar')?.textContent || '').toLowerCase();
+        if (title.includes('puente')) return 'bridge';
+        if (title.includes('laboratorio')) return 'lab';
+        if (title.includes('comunicaciones')) return 'comms';
+        if (title.includes('máquinas') || title.includes('maquinas') || title.includes('motores')) return 'engines';
+
+        return 'bridge';
+      }
+
+      function hideModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.display = 'none';
+        el.classList.remove('active', 'show', 'visible');
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById('damage-toast');
+        const txt = document.getElementById('damage-msg');
+        if (toast && txt) {
+          txt.textContent = msg;
+          toast.style.display = 'flex';
+          setTimeout(() => toast.style.display = 'none', 2400);
+        } else {
+          console.log('[NOSTROMO]', msg);
+        }
+      }
+
+      function unlockVideo(zone) {
+        state.docRead[zone] = true;
+        saveState();
+
+        window._docRead = true;
+        window._guidedPracticeUnlocked = true;
+
+        const btnVideo = document.getElementById('btn-open-video');
+        const videoStatus = document.getElementById('doc-video-lock-status');
+        const unlockMsg = document.getElementById('doc-unlock-msg');
+        const unlockDot = document.getElementById('doc-unlock-dot');
+
+        if (btnVideo) {
+          btnVideo.disabled = false;
+          btnVideo.removeAttribute('disabled');
+          btnVideo.style.opacity = '1';
+          btnVideo.style.pointerEvents = 'auto';
+        }
+        if (videoStatus) videoStatus.textContent = 'VIDEO DISPONIBLE';
+        if (unlockMsg) unlockMsg.textContent = 'Video desbloqueado. Continúa con la transmisión de referencia.';
+        if (unlockDot) unlockDot.classList.add('unlocked');
+
+        syncNodeButtons();
+      }
+
+      function unlockPractice(zone) {
+        state.videoSeen[zone] = true;
+        saveState();
+
+        window._guidedPracticeUnlocked = true;
+
+        syncNodeButtons();
+      }
+
+      function markComplete(zone) {
+        if (!ZONE_CFG[zone]) return;
+        if (!state.completed[zone]) {
+          state.completed[zone] = true;
+          saveState();
+          const next = ZONE_CFG[zone].next;
+          if (next) showToast(`${ZONE_CFG[next].title} desbloqueada.`);
+          else showToast('Misión completada. Final victorioso disponible.');
+        }
+        updateMapLocks();
+      }
+
+      function updateMapLocks() {
+        for (const zone of ZONE_ORDER) {
+          const btn = document.getElementById('zone-' + zone);
+          const badge = document.getElementById('badge-' + zone);
+          const prog = document.getElementById('prog-' + zone);
+          const progStatus = document.getElementById('prog-' + zone + '-status');
+          const overlay = btn?.querySelector('.zone-overlay');
+
+          const unlocked = isUnlocked(zone);
+          const completed = !!state.completed[zone];
+
+          if (btn) {
+            btn.onclick = function () {
+              if (unlocked) window.goToScene(zone);
+              else showToast('Zona bloqueada. Completa la zona anterior primero.');
+            };
+
+            btn.classList.toggle('locked-zone', !unlocked);
+            btn.classList.toggle('completed-zone', completed);
+            btn.style.pointerEvents = 'auto';
+          }
+
+          if (overlay) overlay.classList.toggle('locked-overlay', !unlocked);
+
+          if (badge) {
+            badge.classList.remove('locked', 'available', 'completed');
+            if (completed) {
+              badge.classList.add('completed');
+              badge.textContent = '✓ COMPLETADO';
+            } else if (unlocked) {
+              badge.classList.add('available');
+              badge.textContent = '▶ ACCEDER';
+            } else {
+              badge.classList.add('locked');
+              badge.textContent = '🔒 BLOQUEADO';
+            }
+          }
+
+          if (prog) {
+            prog.classList.toggle('locked', !unlocked);
+            prog.classList.toggle('completed', completed);
+          }
+
+          if (progStatus) {
+            if (completed) progStatus.textContent = 'COMPLETADO';
+            else if (unlocked) progStatus.textContent = zone === state.currentZone ? 'EN CURSO' : 'DISPONIBLE';
+            else progStatus.textContent = 'BLOQUEADO';
+          }
+        }
+      }
+
+      function syncDocLabels(zone) {
+        const cfg = ZONE_CFG[zone];
+        if (!cfg) return;
+
+        const pdfName = cfg.pdf.split('/').pop();
+
+        const pdfFile = document.getElementById('doc-pdf-filename');
+        const modalTitle = document.getElementById('modal-doc-title');
+        const pdfTitle = document.getElementById('pdf-modal-title');
+
+        if (pdfFile) pdfFile.textContent = pdfName;
+        if (modalTitle) modalTitle.textContent = `${cfg.num}: ${cfg.title} — DOCUMENTO CLASIFICADO`;
+        if (pdfTitle) pdfTitle.textContent = pdfName;
+
+        if (state.docRead[zone]) unlockVideo(zone);
+        else {
+          const btnVideo = document.getElementById('btn-open-video');
+          const videoStatus = document.getElementById('doc-video-lock-status');
+          const unlockMsg = document.getElementById('doc-unlock-msg');
+
+          if (btnVideo) btnVideo.disabled = true;
+          if (videoStatus) videoStatus.textContent = '🔒 LEE EL DOCUMENTO PRIMERO';
+          if (unlockMsg) unlockMsg.textContent = 'Abre el documento para desbloquear el video de referencia';
+        }
+      }
+
+      function syncNodeButtons() {
+        const zone = detectZone();
+        
+        // V2: Evitamos reescribir los botones creados por v2-app.js
+        // Solo actualizamos las fases visuales en el sidebar
+        const phaseB = document.getElementById('phase-b');
+        const phaseC = document.getElementById('phase-c');
+        if (phaseB) phaseB.classList.toggle('active', !!(state.videoSeen[zone] || window._docRead));
+        if (phaseC) phaseC.classList.toggle('active', !!(state.videoSeen[zone] || window._docRead));
+      }
+
+      const oldGoToScene = window.goToScene;
+      window.goToScene = function (zone) {
+        if (!ZONE_CFG[zone]) return oldGoToScene ? oldGoToScene.apply(this, arguments) : undefined;
+
+        if (!isUnlocked(zone)) {
+          showToast('Zona bloqueada. Completa la zona anterior primero.');
+          updateMapLocks();
+          return;
+        }
+
+        state.currentZone = zone;
+        saveState();
+
+        const result = oldGoToScene ? oldGoToScene.apply(this, arguments) : undefined;
+
+        setTimeout(() => {
+          syncDocLabels(zone);
+          syncNodeButtons();
+          updateMapLocks();
+        }, 250);
+
+        return result;
+      };
+
+      window.tryZone = function (zone) {
+        if (!isUnlocked(zone)) {
+          showToast('Zona bloqueada. Completa la zona anterior primero.');
+          updateMapLocks();
+          return;
+        }
+        window.goToScene(zone);
+      };
+
+      const oldGoToMap = window.goToMap;
+      window.goToMap = function () {
+        closeAllFloatingModals();
+        const result = oldGoToMap ? oldGoToMap.apply(this, arguments) : undefined;
+        setTimeout(updateMapLocks, 120);
+        return result;
+      };
+
+      window.openPdfModal = function () {
+        const zone = detectZone();
+        const cfg = ZONE_CFG[zone];
+        if (!cfg) return;
+
+        const pdfAbsolute = absUrl(cfg.pdf);
+        const pdfName = cfg.pdf.split('/').pop();
+
+        const modal = document.getElementById('modal-pdf');
+        const iframe = document.getElementById('pdf-iframe');
+        const fallback = document.getElementById('pdf-fallback-content');
+        const fallbackBody = document.getElementById('pdf-fallback-body');
+        const title = document.getElementById('pdf-modal-title');
+
+        if (title) title.textContent = pdfName;
+
+        if (iframe) {
+          iframe.style.display = 'block';
+          iframe.src = pdfAbsolute;
+        }
+
+        if (fallback && fallbackBody) {
+          fallback.style.display = 'block';
+          fallbackBody.innerHTML = `
+            <div style="border:1px solid var(--c-green);padding:14px;margin-bottom:12px;">
+              <div style="font-weight:bold;margin-bottom:8px;">PDF conectado: ${pdfName}</div>
+              <div style="opacity:.75;margin-bottom:12px;">Si el visor queda negro por abrir el proyecto como archivo local, usa el botón externo.</div>
+              <button class="btn-secondary-action" id="pdf-open-new-tab">📄 ABRIR PDF EN PESTAÑA</button>
+              <button class="btn-secondary-action" id="pdf-mark-read" style="margin-left:8px;">✓ YA LEÍ EL MANUAL</button>
+            </div>`;
+          setTimeout(() => {
+            document.getElementById('pdf-open-new-tab')?.addEventListener('click', () => window.open(pdfAbsolute, '_blank'));
+            document.getElementById('pdf-mark-read')?.addEventListener('click', () => window.closePdfModal());
+          }, 0);
+        }
+
+        if (modal) modal.style.display = 'flex';
+
+        // Abrir también en pestaña nueva para evitar visor negro en file://.
+        window.open(pdfAbsolute, '_blank');
+
+        unlockVideo(zone);
+      };
+
+      window.closePdfModal = function () {
+        const zone = detectZone();
+
+        const iframe = document.getElementById('pdf-iframe');
+        if (iframe) {
+          iframe.style.display = 'none';
+          iframe.removeAttribute('src');
+        }
+
+        hideModal('modal-pdf');
+        unlockVideo(zone);
+      };
+
+      const oldCloseDoc = window.closeDoc;
+      window.closeDoc = function () {
+        const zone = detectZone();
+        hideModal('modal-pdf');
+        hideModal('modal-doc');
+        const iframe = document.getElementById('pdf-iframe');
+        if (iframe) iframe.removeAttribute('src');
+        if (state.docRead[zone] || window._docRead) unlockVideo(zone);
+        if (oldCloseDoc) {
+          try { oldCloseDoc.apply(this, arguments); } catch (e) { }
+        }
+      };
+
+      const oldOpenVideoFromDoc = window.openVideoFromDoc;
+      window.openVideoFromDoc = function () {
+        const zone = detectZone();
+        if (!state.docRead[zone] && !window._docRead) {
+          showToast('Primero abre el PDF del módulo.');
+          return;
+        }
+
+        unlockPractice(zone);
+
+        if (typeof window.openVideoModal === 'function') {
+          window.openVideoModal(zone);
+        } else if (oldOpenVideoFromDoc) {
+          oldOpenVideoFromDoc.apply(this, arguments);
+        }
+
+        setTimeout(syncNodeButtons, 200);
+      };
+
+      const oldCloseVideoModal = window.closeVideoModal;
+      window.closeVideoModal = function () {
+        const zone = detectZone();
+        hideModal('modal-video');
+        unlockPractice(zone);
+        if (oldCloseVideoModal) {
+          try { oldCloseVideoModal.apply(this, arguments); } catch (e) { }
+        }
+      };
+
+      function closeAllFloatingModals() {
+        ['modal-pdf', 'modal-doc', 'modal-video', 'modal-practice', 'modal-quiz', 'modal-phase-select'].forEach(hideModal);
+        const iframe = document.getElementById('pdf-iframe');
+        if (iframe) iframe.removeAttribute('src');
+      }
+
+      // Envolver funciones de finalización si existen en los JS externos.
+      [
+        'completeNode', 'completeZone', 'finishNode', 'finishZone',
+        'unlockNextZone', 'unlockNextNode', 'completeCurrentNode',
+        'finishDndGame', 'endCurrentZone'
+      ].forEach(name => {
+        const oldFn = window[name];
+        if (typeof oldFn === 'function') {
+          window[name] = function () {
+            const zone = detectZone();
+            const result = oldFn.apply(this, arguments);
+            markComplete(zone);
+            return result;
+          };
+        }
+      });
+
+      // Detectar cierre del minijuego DnD: si estuvo abierto y se cierra, cuenta como zona completada.
+      setInterval(() => {
+        const dnd = document.getElementById('modal-dnd-fullscreen');
+        const isOpen = dnd && dnd.style.display !== 'none' && getComputedStyle(dnd).display !== 'none';
+
+        if (isOpen) state.dndWasOpen = true;
+
+        if (state.dndWasOpen && !isOpen) {
+          state.dndWasOpen = false;
+          markComplete(detectZone());
+          saveState();
+        }
+
+        updateMapLocks();
+        if (document.getElementById('scene-node')?.classList.contains('active')) syncNodeButtons();
+      }, 650);
+
+      // Detectar mensajes de módulo completado que escriben los JS externos.
+      const completionObserver = new MutationObserver(() => {
+        const txt = (document.body.innerText || '').toUpperCase();
+        if (
+          txt.includes('MÓDULO COMPLETADO') ||
+          txt.includes('MODULO COMPLETADO') ||
+          txt.includes('ZONA COMPLETADA') ||
+          txt.includes('SISTEMA RESTAURADO') ||
+          txt.includes('SIGUIENTE ZONA DESBLOQUEADA')
+        ) {
+          markComplete(detectZone());
+        }
+      });
+
+      setTimeout(() => {
+        completionObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+        updateMapLocks();
+      }, 500);
+
+      // Comandos de emergencia para depurar desde consola.
+      window.nostromoFix = {
+        reset: function () {
+          localStorage.removeItem(FIX_KEY);
+          state = loadState();
+          updateMapLocks();
+          location.reload();
+        },
+        complete: function (zone) {
+          markComplete(zone || detectZone());
+        },
+        state: function () {
+          return JSON.parse(JSON.stringify(state));
+        },
+        closeAll: closeAllFloatingModals
+      };
+    })();
+  </script>
+
+</body>
+
 </html>
