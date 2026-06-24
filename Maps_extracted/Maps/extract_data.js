@@ -24,4 +24,5 @@ workbook.SheetNames.forEach(sheetName => {
         console.log(`\n--- ALL DATA ---`);
         console.log(JSON.stringify(data, null, 2));
     }
+
 });
