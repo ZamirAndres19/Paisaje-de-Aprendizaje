@@ -1655,3 +1655,5 @@ window.addEventListener('DOMContentLoaded', () => {
     bootScene.style.display = 'none';
   }
 });
+
+// EOF
